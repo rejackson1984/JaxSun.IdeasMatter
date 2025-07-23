@@ -1,0 +1,214 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  NODE_VERSION: '20.x'
+
+jobs:
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build solution
+      run: dotnet build --no-restore --configuration Release
+      
+    - name: Run unit tests
+      run: dotnet test --no-build --configuration Release --verbosity normal --collect:"XPlat Code Coverage"
+      
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        directory: ./coverage
+        fail_ci_if_error: false
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Run security analysis
+      run: |
+        dotnet list package --vulnerable --include-transitive
+        dotnet list package --deprecated
+        
+    - name: Run CodeQL Analysis
+      uses: github/codeql-action/init@v2
+      with:
+        languages: csharp
+        
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+      
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+
+  build-mock:
+    name: Build Mock Application
+    runs-on: ubuntu-latest
+    needs: [test, security-scan]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore dependencies
+      run: dotnet restore src/Jackson.Ideas.Mock/
+      
+    - name: Build Mock application
+      run: dotnet build src/Jackson.Ideas.Mock/ --configuration Release --no-restore
+      
+    - name: Publish Mock application
+      run: dotnet publish src/Jackson.Ideas.Mock/ --configuration Release --output ./publish/mock --no-build
+      
+    - name: Upload Mock artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: mock-application
+        path: ./publish/mock
+        retention-days: 30
+
+  build-api:
+    name: Build API Application
+    runs-on: ubuntu-latest
+    needs: [test, security-scan]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore dependencies
+      run: dotnet restore src/Jackson.Ideas.Api/
+      
+    - name: Build API application
+      run: dotnet build src/Jackson.Ideas.Api/ --configuration Release --no-restore
+      
+    - name: Publish API application
+      run: dotnet publish src/Jackson.Ideas.Api/ --configuration Release --output ./publish/api --no-build
+      
+    - name: Upload API artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: api-application
+        path: ./publish/api
+        retention-days: 30
+
+  deploy-mock-staging:
+    name: Deploy Mock to Staging
+    runs-on: ubuntu-latest
+    needs: build-mock
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: mock-application
+        path: ./mock-app
+        
+    - name: Deploy to staging
+      run: |
+        echo "Deploying Mock application to staging environment"
+        echo "Would deploy to staging server here"
+        # Add actual deployment commands here (e.g., Azure CLI, AWS CLI, etc.)
+
+  deploy-mock-production:
+    name: Deploy Mock to Production
+    runs-on: ubuntu-latest
+    needs: build-mock
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: mock-application
+        path: ./mock-app
+        
+    - name: Deploy to production
+      run: |
+        echo "Deploying Mock application to production environment"
+        echo "Would deploy to production server here"
+        # Add actual deployment commands here
+
+  deploy-api-production:
+    name: Deploy API to Production
+    runs-on: ubuntu-latest
+    needs: build-api
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: api-application
+        path: ./api-app
+        
+    - name: Deploy API to production
+      run: |
+        echo "Deploying API application to production environment"
+        echo "Would deploy API to production server here"
+        # Add actual deployment commands here
+
+  notify:
+    name: Notify Team
+    runs-on: ubuntu-latest
+    needs: [deploy-mock-production, deploy-api-production]
+    if: always() && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Notify on success
+      if: needs.deploy-mock-production.result == 'success' && needs.deploy-api-production.result == 'success'
+      run: |
+        echo "✅ Deployment successful!"
+        echo "Mock App: Deployed to production"
+        echo "API: Deployed to production"
+        
+    - name: Notify on failure
+      if: needs.deploy-mock-production.result == 'failure' || needs.deploy-api-production.result == 'failure'
+      run: |
+        echo "❌ Deployment failed!"
+        echo "Please check the deployment logs"

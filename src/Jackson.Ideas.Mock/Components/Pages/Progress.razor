@@ -100,6 +100,23 @@
                 }
             </div>
 
+            <!-- Real-time Activity Feed -->
+            <div class="activity-feed-section">
+                <h3 class="activity-title">🔴 Live Activity Feed</h3>
+                <div class="activity-feed">
+                    @foreach (var activity in recentActivities.TakeLast(5))
+                    {
+                        <div class="activity-item">
+                            <div class="activity-timestamp">@activity.Time.ToString("HH:mm:ss")</div>
+                            <div class="activity-content">
+                                <div class="activity-icon">@activity.Icon</div>
+                                <div class="activity-text">@activity.Message</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
             <!-- Encouragement Messages -->
             <div class="encouragement-section">
                 <div class="encouragement-card">
@@ -118,9 +135,11 @@
     private int currentStepIndex = 0;
     private int progressPercentage = 0;
     private Timer? progressTimer;
+    private Timer? activityTimer;
     private string strategy = "quick";
 
     private List<AnalysisStep> analysisSteps = new();
+    private List<ActivityItem> recentActivities = new();
 
     protected override void OnInitialized()
     {
@@ -131,6 +150,9 @@
 
         // Initialize steps based on strategy
         InitializeSteps();
+        
+        // Initialize activity feed
+        InitializeActivityFeed();
         
         // Start progress simulation
         StartProgressSimulation();
@@ -309,12 +331,59 @@
         _ => "Your complete analysis is ready! We can't wait to share what we found."
     };
 
+    private void InitializeActivityFeed()
+    {
+        recentActivities.Add(new ActivityItem(DateTime.Now, "🚀", "Analysis started - Your AI team is assembling!"));
+        
+        // Start activity feed updates
+        activityTimer = new Timer((_) =>
+        {
+            InvokeAsync(() =>
+            {
+                AddRandomActivity();
+                StateHasChanged();
+            });
+        }, null, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(Random.Shared.Next(2, 8)));
+    }
+
+    private void AddRandomActivity()
+    {
+        var activities = new[]
+        {
+            ("🔍", "Analyzing market trends and opportunities..."),
+            ("📊", "Processing competitor data and insights..."),
+            ("💰", "Calculating revenue potential and projections..."),
+            ("🎯", "Identifying target customer segments..."),
+            ("⚡", "Generating strategic recommendations..."),
+            ("🧠", "AI models are finding interesting patterns..."),
+            ("📈", "Market research database accessed..."),
+            ("💡", "Discovering unique value propositions..."),
+            ("🔬", "Deep-diving into industry analysis..."),
+            ("🎉", "Found promising market opportunities!"),
+            ("💪", "Your idea is showing strong potential..."),
+            ("✨", "Insights are being synthesized...")
+        };
+
+        var random = Random.Shared.Next(activities.Length);
+        var activity = activities[random];
+        
+        recentActivities.Add(new ActivityItem(DateTime.Now, activity.Item1, activity.Item2));
+        
+        // Keep only recent activities
+        if (recentActivities.Count > 10)
+        {
+            recentActivities.RemoveAt(0);
+        }
+    }
+
     public void Dispose()
     {
         progressTimer?.Dispose();
+        activityTimer?.Dispose();
     }
 
     private record AnalysisStep(string Icon, string Title, string Description);
+    private record ActivityItem(DateTime Time, string Icon, string Message);
 }
 
 <style>
@@ -644,6 +713,82 @@
     color: #718096;
     line-height: 1.5;
     margin: 0;
+}
+
+/* Activity Feed Section */
+.activity-feed-section {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.activity-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.activity-feed {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f7fafc;
+    animation: fadeInUp 0.3s ease;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-timestamp {
+    font-size: 11px;
+    color: #a0aec0;
+    font-weight: 500;
+    min-width: 60px;
+    margin-top: 2px;
+}
+
+.activity-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1;
+}
+
+.activity-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.activity-text {
+    font-size: 14px;
+    color: #4a5568;
+    line-height: 1.4;
+}
+
+@@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Encouragement Section */

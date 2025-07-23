@@ -1,8 +1,13 @@
 @page "/dashboard"
 @using Jackson.Ideas.Mock.Services
+@using Jackson.Ideas.Mock.Services.Interfaces
 @using Jackson.Ideas.Mock.Models
+@using Microsoft.AspNetCore.Components
 @inject NavigationManager Navigation
 @inject BusinessTranslationService TranslationService
+@inject IPdfGenerationService PdfService
+@inject IDataExportService DataExportService
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Your Business Analysis - Ideas Matter</PageTitle>
 
@@ -115,17 +120,89 @@
                 </div>
             </div>
 
+            <!-- Recent Ideas Section -->
+            <div class="recent-ideas-section">
+                <h2 class="section-title">Your Recent Ideas</h2>
+                <div class="ideas-grid">
+                    <div class="idea-card current">
+                        <div class="idea-status-badge current">Current Analysis</div>
+                        <h3 class="idea-title">@scenario.Title</h3>
+                        <p class="idea-description">@scenario.Description</p>
+                        <div class="idea-metrics">
+                            <div class="metric">
+                                <span class="metric-value">@GetScoreEmoji() @businessHealthScore/10</span>
+                                <span class="metric-name">Health Score</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">$@(scenario.FinancialProjections.Revenue.Year1Total.ToString("N0"))</span>
+                                <span class="metric-name">Revenue Potential</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="idea-card completed">
+                        <div class="idea-status-badge completed">Completed</div>
+                        <h3 class="idea-title">AI-Powered Fitness Coach</h3>
+                        <p class="idea-description">Personal AI trainer that creates custom workout plans based on your goals and progress</p>
+                        <div class="idea-metrics">
+                            <div class="metric">
+                                <span class="metric-value">🟢 9/10</span>
+                                <span class="metric-name">Health Score</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">$320,000</span>
+                                <span class="metric-name">Revenue Potential</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="idea-card draft">
+                        <div class="idea-status-badge draft">Draft</div>
+                        <h3 class="idea-title">Smart Home Energy Monitor</h3>
+                        <p class="idea-description">IoT device that helps homeowners optimize energy usage and reduce bills</p>
+                        <div class="idea-metrics">
+                            <div class="metric">
+                                <span class="metric-value">⏳ Pending</span>
+                                <span class="metric-name">Health Score</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">-</span>
+                                <span class="metric-name">Revenue Potential</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Action Cards -->
             <div class="action-cards-section">
                 <h2 class="section-title">Ready to Take Action?</h2>
                 <div class="action-cards">
-                    <div class="action-card primary" @onclick="NavigateToBusinessPlan">
+                    <div class="action-card primary" @onclick="DownloadBusinessAnalysisReport">
                         <div class="action-icon">📄</div>
                         <div class="action-content">
-                            <h3 class="action-title">Get Your Business Plan</h3>
-                            <p class="action-description">Download a complete business plan written in plain English, perfect for sharing with investors or partners.</p>
+                            <h3 class="action-title">Download Business Analysis Report</h3>
+                            <p class="action-description">Get a comprehensive PDF report with your business analysis, metrics, and recommendations.</p>
                         </div>
-                        <div class="action-arrow">→</div>
+                        <div class="action-arrow">⬇</div>
+                    </div>
+                    
+                    <div class="action-card" @onclick="DownloadSwotAnalysis">
+                        <div class="action-icon">📊</div>
+                        <div class="action-content">
+                            <h3 class="action-title">SWOT Analysis Report</h3>
+                            <p class="action-description">Download detailed SWOT analysis with strengths, weaknesses, opportunities, and threats.</p>
+                        </div>
+                        <div class="action-arrow">⬇</div>
+                    </div>
+                    
+                    <div class="action-card" @onclick="DownloadExecutiveSummary">
+                        <div class="action-icon">📋</div>
+                        <div class="action-content">
+                            <h3 class="action-title">Executive Summary</h3>
+                            <p class="action-description">Get a concise executive summary perfect for presentations and quick reviews.</p>
+                        </div>
+                        <div class="action-arrow">⬇</div>
                     </div>
                     
                     <div class="action-card" @onclick="NavigateToActionPlan">
@@ -135,6 +212,24 @@
                             <p class="action-description">Get step-by-step guidance on exactly what to do next to turn your idea into reality.</p>
                         </div>
                         <div class="action-arrow">→</div>
+                    </div>
+                    
+                    <div class="action-card" @onclick="ExportDataToCsv">
+                        <div class="action-icon">📊</div>
+                        <div class="action-content">
+                            <h3 class="action-title">Export Data (CSV)</h3>
+                            <p class="action-description">Download your business analysis data in CSV format for spreadsheet analysis.</p>
+                        </div>
+                        <div class="action-arrow">⬇</div>
+                    </div>
+                    
+                    <div class="action-card" @onclick="ExportDataToJson">
+                        <div class="action-icon">📄</div>
+                        <div class="action-content">
+                            <h3 class="action-title">Export Data (JSON)</h3>
+                            <p class="action-description">Download structured data in JSON format for integration with other tools.</p>
+                        </div>
+                        <div class="action-arrow">⬇</div>
                     </div>
                     
                     <div class="action-card" @onclick="NavigateHome">
@@ -297,7 +392,118 @@
         };
     }
 
-    private void NavigateToBusinessPlan() => Navigation.NavigateTo("/business-plan");
+    private async Task DownloadBusinessAnalysisReport()
+    {
+        try
+        {
+            var pdfBytes = PdfService.GenerateBusinessAnalysisReport(scenario, businessHealthScore);
+            var fileName = $"Business_Analysis_{scenario.Title.Replace(" ", "_")}_{DateTime.Now:yyyyMMdd}.pdf";
+            await DownloadFile(pdfBytes, fileName, "application/pdf");
+        }
+        catch (Exception ex)
+        {
+            // Handle error (could show toast notification)
+            Console.WriteLine($"Error generating PDF: {ex.Message}");
+        }
+    }
+
+    private async Task DownloadSwotAnalysis()
+    {
+        try
+        {
+            var swotAnalysis = GenerateMockSwotAnalysis();
+            var pdfBytes = PdfService.GenerateSwotAnalysisReport(scenario, swotAnalysis);
+            var fileName = $"SWOT_Analysis_{scenario.Title.Replace(" ", "_")}_{DateTime.Now:yyyyMMdd}.pdf";
+            await DownloadFile(pdfBytes, fileName, "application/pdf");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error generating SWOT PDF: {ex.Message}");
+        }
+    }
+
+    private async Task DownloadExecutiveSummary()
+    {
+        try
+        {
+            var pdfBytes = PdfService.GenerateExecutiveSummary(scenario, businessHealthScore);
+            var fileName = $"Executive_Summary_{scenario.Title.Replace(" ", "_")}_{DateTime.Now:yyyyMMdd}.pdf";
+            await DownloadFile(pdfBytes, fileName, "application/pdf");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error generating Executive Summary PDF: {ex.Message}");
+        }
+    }
+
+    private async Task DownloadFile(byte[] fileBytes, string fileName, string contentType)
+    {
+        var base64 = Convert.ToBase64String(fileBytes);
+        await JSRuntime.InvokeVoidAsync("downloadFile", fileName, contentType, base64);
+    }
+
+    private SwotAnalysis GenerateMockSwotAnalysis()
+    {
+        return new SwotAnalysis(
+            Strengths: new List<string>
+            {
+                "Innovative approach to addressing sustainability in food delivery",
+                "Growing consumer awareness and demand for eco-friendly options",
+                "Potential for strong brand differentiation in competitive market",
+                "Scalable business model with multiple revenue streams"
+            },
+            Weaknesses: new List<string>
+            {
+                "Higher operational costs due to sustainable packaging and electric bikes",
+                "Limited initial geographic coverage compared to established competitors",
+                "Dependency on weather conditions for bike deliveries",
+                "Need for significant upfront investment in sustainable infrastructure"
+            },
+            Opportunities: new List<string>
+            {
+                "Increasing government support for sustainable business practices",
+                "Growing market of environmentally conscious consumers",
+                "Potential partnerships with eco-friendly restaurants and suppliers",
+                "Expansion opportunities in urban areas with sustainability initiatives"
+            },
+            Threats: new List<string>
+            {
+                "Established competitors may adopt similar sustainability practices",
+                "Economic downturns could reduce consumer willingness to pay premium prices",
+                "Regulatory changes in food delivery or environmental standards",
+                "Rising costs of sustainable materials and electric vehicle technology"
+            }
+        );
+    }
+
+    private async Task ExportDataToCsv()
+    {
+        try
+        {
+            var csvBytes = DataExportService.ExportScenarioToCsv(scenario, businessHealthScore);
+            var fileName = $"Business_Data_{scenario.Title.Replace(" ", "_")}_{DateTime.Now:yyyyMMdd}.csv";
+            await DownloadFile(csvBytes, fileName, "text/csv");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error exporting CSV: {ex.Message}");
+        }
+    }
+
+    private async Task ExportDataToJson()
+    {
+        try
+        {
+            var jsonBytes = DataExportService.ExportScenarioToJson(scenario, businessHealthScore);
+            var fileName = $"Business_Data_{scenario.Title.Replace(" ", "_")}_{DateTime.Now:yyyyMMdd}.json";
+            await DownloadFile(jsonBytes, fileName, "application/json");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error exporting JSON: {ex.Message}");
+        }
+    }
+
     private void NavigateToActionPlan() => Navigation.NavigateTo("/action-plan");
     private void NavigateHome() => Navigation.NavigateTo("/");
 }
@@ -700,6 +906,128 @@
 
 .button-icon {
     font-size: 16px;
+}
+
+/* Recent Ideas Section */
+.recent-ideas-section {
+    margin-bottom: 40px;
+}
+
+.ideas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.idea-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.idea-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.idea-card.current {
+    border-color: #4299e1;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
+.idea-card.completed {
+    border-color: #10b981;
+}
+
+.idea-card.draft {
+    border-color: #f59e0b;
+    opacity: 0.8;
+}
+
+.idea-status-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.idea-status-badge.current {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #93c5fd;
+}
+
+.idea-status-badge.completed {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+.idea-status-badge.draft {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+.idea-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a202c;
+    margin: 16px 16px 8px 16px;
+    padding-right: 100px;
+    line-height: 1.3;
+}
+
+.idea-description {
+    color: #718096;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 16px 16px 16px;
+    padding-right: 20px;
+}
+
+.idea-metrics {
+    display: flex;
+    padding: 16px;
+    background: #f8f9fa;
+    border-top: 1px solid #e2e8f0;
+    gap: 24px;
+}
+
+.idea-card.current .idea-metrics {
+    background: rgba(66, 153, 225, 0.05);
+    border-top-color: rgba(66, 153, 225, 0.2);
+}
+
+.metric {
+    flex: 1;
+    text-align: center;
+}
+
+.metric-value {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 4px;
+}
+
+.metric-name {
+    display: block;
+    font-size: 12px;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* Action Cards Section */

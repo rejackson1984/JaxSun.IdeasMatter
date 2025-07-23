@@ -57,11 +57,67 @@
             <h2>See What You'll Get</h2>
             <div class="demo-preview">
                 <h3>Sample Analysis: "Food Delivery App for College Students"</h3>
-                <div class="result-card">
-                    <div class="score-badge good">8/10</div>
-                    <h4>Business Health Score</h4>
-                    <p><strong>Great idea!</strong> There's definitely demand for this.</p>
+                <div class="result-cards">
+                    <div class="result-card">
+                        <div class="score-badge good">8/10</div>
+                        <h4>Business Health Score</h4>
+                        <p><strong>Great idea!</strong> There's definitely demand for this.</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="insight-icon">💰</div>
+                        <h4>Revenue Potential</h4>
+                        <p>Market size: $2.3B annually with 15% growth rate</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="insight-icon">🎯</div>
+                        <h4>Target Market</h4>
+                        <p>18-24 year olds, busy lifestyle, tech-savvy</p>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="container">
+            <h2>What Makes Us Different</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h4>AI-Powered Research</h4>
+                    <p>We analyze thousands of data points to give you insights that would take weeks to gather manually.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h4>Real Market Data</h4>
+                    <p>Get actual market sizes, competitor analysis, and customer insights - not generic advice.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h4>Fast Results</h4>
+                    <p>From idea to business plan in under 30 minutes. No more months of research and analysis.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <h4>Actionable Plans</h4>
+                    <p>Get clear next steps and priorities, not just theoretical advice you can't act on.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Turn Your Idea Into Reality?</h2>
+            <p>Join hundreds of entrepreneurs who've already validated their ideas with us.</p>
+            <button class="btn btn-primary btn-main" @onclick="StartDemo">
+                <span>🚀</span>
+                Start Your Free Analysis Now
+            </button>
+            <div class="trust-indicators">
+                <span>⭐⭐⭐⭐⭐ 4.8/5 rating</span>
+                <span>🔒 No credit card required</span>
+                <span>⚡ Results in 15-30 minutes</span>
             </div>
         </div>
     </section>
@@ -258,7 +314,127 @@
         color: #666;
     }
 
-    /* Mobile styles removed to avoid parsing issues */
+    .result-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .insight-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .features-section {
+        padding: 80px 20px;
+        background: white;
+    }
+
+    .features-section h2 {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 50px;
+        color: #333;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+
+    .feature-card {
+        text-align: center;
+        padding: 30px 20px;
+        border-radius: 15px;
+        background: #f8f9fa;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+
+    .feature-card h4 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 15px 0;
+        color: #333;
+    }
+
+    .feature-card p {
+        color: #666;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .cta-section {
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-align: center;
+    }
+
+    .cta-section h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .cta-section p {
+        font-size: 1.2rem;
+        margin-bottom: 40px;
+        opacity: 0.9;
+    }
+
+    .trust-indicators {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 30px;
+        font-size: 0.95rem;
+        opacity: 0.9;
+    }
+
+    /* Mobile responsive */
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.2rem;
+        }
+        
+        .simple-process {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .arrow {
+            transform: rotate(90deg);
+        }
+        
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .result-cards {
+            grid-template-columns: 1fr;
+        }
+        
+        .confidence-builders,
+        .trust-indicators {
+            flex-direction: column;
+            gap: 15px;
+        }
+    }
 </style>
 
 @code {
