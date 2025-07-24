@@ -9,6 +9,7 @@
 @inject IDataExportService DataExportService
 @inject IJSRuntime JSRuntime
 @inject IMockDataService MockDataService
+@inject BusinessPlanService BusinessPlanService
 
 <PageTitle>Your Business Analysis - Ideas Matter</PageTitle>
 
@@ -148,7 +149,9 @@
                                 </div>
                             </div>
                             <div class="idea-actions">
-                                <button class="action-btn primary" @onclick:stopPropagation="true" @onclick="() => DownloadIdeaPdf(idea)">📄 PDF</button>
+                                <button class="action-btn primary" @onclick:stopPropagation="true" @onclick="() => OpenBusinessPlan(idea)">📋 Business Plan</button>
+                                <button class="action-btn" @onclick:stopPropagation="true" @onclick="() => OpenActionPlan(idea)">✅ Action Plan</button>
+                                <button class="action-btn" @onclick:stopPropagation="true" @onclick="() => DownloadIdeaPdf(idea)">📄 PDF</button>
                                 <button class="action-btn" @onclick:stopPropagation="true" @onclick="() => ExportIdeaData(idea)">📊 Export</button>
                                 <button class="action-btn" @onclick:stopPropagation="true" @onclick="() => ViewIdeaDetails(idea)">👁️ Details</button>
                             </div>
@@ -198,6 +201,20 @@
     </div>
 </div>
 
+<!-- Business Plan Modal -->
+<BusinessPlanModal IsVisible="isBusinessPlanModalVisible" 
+                   SelectedIdea="selectedIdeaForBusinessPlan" 
+                   OnClose="CloseBusinessPlanModal" />
+
+<!-- Idea Details Modal -->
+<IdeaDetailsModal IsVisible="isIdeaDetailsModalVisible" 
+                  SelectedIdea="selectedIdeaForDetails" 
+                  OnClose="CloseIdeaDetailsModal"
+                  OnOpenBusinessPlan="OpenBusinessPlan"
+                  OnOpenActionPlan="OpenActionPlan"
+                  OnDownloadPdf="DownloadIdeaPdf"
+                  OnExportData="ExportIdeaData" />
+
 @code {
     private List<BusinessIdeaScenario> allScenarios = new();
     private List<BusinessIdeaScenario> filteredScenarios = new();
@@ -206,6 +223,14 @@
     private string selectedIndustry = "";
     private string sortBy = "viability";
     private bool isLoading = true;
+    
+    // Business Plan Modal State
+    private bool isBusinessPlanModalVisible = false;
+    private BusinessIdeaScenario? selectedIdeaForBusinessPlan;
+    
+    // Idea Details Modal State
+    private bool isIdeaDetailsModalVisible = false;
+    private BusinessIdeaScenario? selectedIdeaForDetails;
 
     protected override async Task OnInitializedAsync()
     {
@@ -284,8 +309,35 @@
 
     private void ViewIdeaDetails(BusinessIdeaScenario idea)
     {
-        // TODO: Implement detailed modal view
-        selectedIdea = idea;
+        selectedIdeaForDetails = idea;
+        isIdeaDetailsModalVisible = true;
+        StateHasChanged();
+    }
+
+    private async Task CloseIdeaDetailsModal()
+    {
+        isIdeaDetailsModalVisible = false;
+        selectedIdeaForDetails = null;
+        await Task.CompletedTask;
+    }
+
+    private void OpenBusinessPlan(BusinessIdeaScenario idea)
+    {
+        selectedIdeaForBusinessPlan = idea;
+        isBusinessPlanModalVisible = true;
+    }
+
+    private async Task CloseBusinessPlanModal()
+    {
+        isBusinessPlanModalVisible = false;
+        selectedIdeaForBusinessPlan = null;
+        await Task.CompletedTask;
+    }
+
+    private void OpenActionPlan(BusinessIdeaScenario idea)
+    {
+        // Navigate to action plan page with the specific idea ID
+        Navigation.NavigateTo($"/action-plan?ideaId={idea.Id}");
     }
 
     // Portfolio Analytics Methods
@@ -1221,7 +1273,7 @@
     font-size: 18px;
     font-weight: 600;
     color: #1a202c;
-    margin: 16px 16px 8px 16px;
+    margin: 40px 16px 8px 16px;
     padding-right: 100px;
     line-height: 1.3;
 }

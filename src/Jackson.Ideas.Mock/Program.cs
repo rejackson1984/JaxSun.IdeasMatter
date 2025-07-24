@@ -46,6 +46,9 @@ builder.Services.AddScoped<IUserProfileService, MockUserProfileService>();
 // Register Business Translation Service
 builder.Services.AddScoped<BusinessTranslationService>();
 
+// Register Business Plan Service
+builder.Services.AddScoped<BusinessPlanService>();
+
 // Register PDF Generation Service
 builder.Services.AddScoped<IPdfGenerationService, PdfGenerationService>();
 

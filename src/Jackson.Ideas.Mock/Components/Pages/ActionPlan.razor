@@ -1,7 +1,10 @@
 @page "/action-plan"
 @using Jackson.Ideas.Mock.Services
+@using Jackson.Ideas.Mock.Services.Interfaces
 @using Jackson.Ideas.Mock.Models
+@using System.Web
 @inject NavigationManager Navigation
+@inject IMockDataService MockDataService
 
 <PageTitle>Your Action Plan - Ideas Matter</PageTitle>
 
@@ -11,10 +14,16 @@
         <div class="header-content">
             <div class="motivation-section">
                 <div class="motivation-icon">🚀</div>
-                <h1 class="motivation-title">Ready to Turn Your Idea Into Reality?</h1>
+                <h1 class="motivation-title">@(selectedIdea != null ? $"Action Plan: {GetIdeaName(selectedIdea)}" : "Ready to Turn Your Idea Into Reality?")</h1>
                 <p class="motivation-subtitle">
-                    We've broken everything down into simple, bite-sized steps. 
-                    No overwhelm - just clear actions you can take to move forward!
+                    @if (selectedIdea != null)
+                    {
+                        <text>Your personalized action plan for @selectedIdea.Industry success. Follow these steps to launch @GetIdeaName(selectedIdea)!</text>
+                    }
+                    else
+                    {
+                        <text>We've broken everything down into simple, bite-sized steps. No overwhelm - just clear actions you can take to move forward!</text>
+                    }
                 </p>
             </div>
             
@@ -177,14 +186,17 @@
 
             <!-- Action Buttons -->
             <div class="action-buttons">
-                <button class="primary-button" @onclick="NavigateToBusinessPlan">
-                    <span class="button-icon">📄</span>
-                    Get Your Business Plan
-                </button>
+                @if (selectedIdea != null)
+                {
+                    <button class="primary-button" @onclick="() => OpenBusinessPlan()">
+                        <span class="button-icon">📋</span>
+                        View Business Plan
+                    </button>
+                }
                 
                 <button class="secondary-button" @onclick="NavigateToDashboard">
                     <span class="button-icon">📊</span>
-                    View Analysis Results
+                    Back to Dashboard
                 </button>
                 
                 <button class="tertiary-button" @onclick="NavigateHome">
@@ -199,11 +211,32 @@
 @code {
     private List<ActionItem> allActions = new();
     private int businessReadiness = 35;
+    private BusinessIdeaScenario? selectedIdea;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        await LoadSelectedIdea();
         LoadMockActionPlan();
         CalculateBusinessReadiness();
+    }
+
+    private async Task LoadSelectedIdea()
+    {
+        var uri = new Uri(Navigation.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var ideaId = query["ideaId"];
+
+        if (!string.IsNullOrEmpty(ideaId))
+        {
+            try
+            {
+                selectedIdea = await MockDataService.GetScenarioByIdAsync(ideaId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading idea: {ex.Message}");
+            }
+        }
     }
 
     private void LoadMockActionPlan()
@@ -378,9 +411,21 @@
         return achievements;
     }
 
-    private void NavigateToBusinessPlan() => Navigation.NavigateTo("/business-plan");
     private void NavigateToDashboard() => Navigation.NavigateTo("/dashboard");
     private void NavigateHome() => Navigation.NavigateTo("/");
+
+    private string GetIdeaName(BusinessIdeaScenario idea)
+    {
+        return !string.IsNullOrEmpty(idea.Name) ? idea.Name : idea.Title;
+    }
+
+    private void OpenBusinessPlan()
+    {
+        if (selectedIdea != null)
+        {
+            Navigation.NavigateTo($"/dashboard?openBusinessPlan={selectedIdea.Id}");
+        }
+    }
 
     public class ActionItem
     {

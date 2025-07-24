@@ -23,6 +23,11 @@ public interface IPdfGenerationService
     /// Generates an executive summary PDF
     /// </summary>
     byte[] GenerateExecutiveSummary(BusinessIdeaScenario scenario, int healthScore);
+    
+    /// <summary>
+    /// Generates a comprehensive business plan PDF
+    /// </summary>
+    Task GenerateBusinessPlanPdfAsync(BusinessIdeaScenario scenario, Services.BusinessPlan businessPlan);
 }
 
 public record SwotAnalysis(

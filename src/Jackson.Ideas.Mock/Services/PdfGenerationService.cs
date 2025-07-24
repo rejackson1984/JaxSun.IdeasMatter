@@ -527,4 +527,329 @@ public class PdfGenerationService : IPdfGenerationService
 
         return highlights;
     }
+
+    public async Task GenerateBusinessPlanPdfAsync(BusinessIdeaScenario scenario, BusinessPlan businessPlan)
+    {
+        var pdfBytes = Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4);
+                page.Margin(2, Unit.Centimetre);
+                page.PageColor(Colors.White);
+                page.DefaultTextStyle(x => x.FontSize(11).FontFamily("Arial"));
+
+                page.Header()
+                    .Row(row =>
+                    {
+                        row.RelativeItem().Column(col =>
+                        {
+                            col.Item().Text("Ideas Matter - Business Plan")
+                                .SemiBold().FontSize(18).FontColor(Colors.Blue.Medium);
+                            col.Item().Text($"{scenario.Name}")
+                                .SemiBold().FontSize(14).FontColor(Colors.Grey.Darken3);
+                        });
+                        
+                        row.ConstantItem(100).AlignRight()
+                            .Text($"Generated: {DateTime.Now:MM/dd/yyyy}")
+                            .FontSize(10).FontColor(Colors.Grey.Medium);
+                    });
+
+                page.Content()
+                    .PaddingVertical(1, Unit.Centimetre)
+                    .Column(content =>
+                    {
+                        content.Spacing(15);
+
+                        // Executive Summary Section
+                        content.Item().Column(section =>
+                        {
+                            section.Item().Text("Executive Summary")
+                                .FontSize(16).SemiBold().FontColor(Colors.Blue.Darken2);
+                            
+                            section.Item().PaddingTop(10).Row(row =>
+                            {
+                                row.RelativeItem(1).Column(col =>
+                                {
+                                    col.Item().Text("Business Concept:")
+                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text(businessPlan.ExecutiveSummary.BusinessConcept)
+                                        .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                });
+                                row.RelativeItem(1).Column(col =>
+                                {
+                                    col.Item().Text("Target Market:")
+                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text(businessPlan.ExecutiveSummary.TargetMarket)
+                                        .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                });
+                            });
+
+                            section.Item().PaddingTop(10).Row(row =>
+                            {
+                                row.RelativeItem(1).Column(col =>
+                                {
+                                    col.Item().Text("Revenue Model:")
+                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text(businessPlan.ExecutiveSummary.RevenueModel)
+                                        .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                });
+                                row.RelativeItem(1).Column(col =>
+                                {
+                                    col.Item().Text("Funding Required:")
+                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text($"{businessPlan.ExecutiveSummary.FundingRequired:C0}")
+                                        .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                });
+                            });
+
+                            section.Item().PaddingTop(10).Text(businessPlan.ExecutiveSummary.Description)
+                                .FontSize(10).FontColor(Colors.Grey.Darken1).LineHeight(1.4f);
+                        });
+
+                        // Market Analysis Section
+                        content.Item().Column(section =>
+                        {
+                            section.Item().Text("Market Analysis")
+                                .FontSize(16).SemiBold().FontColor(Colors.Blue.Darken2);
+                            
+                            section.Item().PaddingTop(10).Row(row =>
+                            {
+                                row.RelativeItem(1).Column(col =>
+                                {
+                                    col.Item().Text("Market Size:")
+                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text(businessPlan.MarketAnalysis.MarketSize)
+                                        .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                });
+                                row.RelativeItem(1).Column(col =>
+                                {
+                                    col.Item().Text("Competition Level:")
+                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text(businessPlan.MarketAnalysis.CompetitionLevel)
+                                        .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                });
+                                row.RelativeItem(1).Column(col =>
+                                {
+                                    col.Item().Text("Market Growth:")
+                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text(businessPlan.MarketAnalysis.MarketGrowth)
+                                        .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                });
+                            });
+
+                            section.Item().PaddingTop(10).Text("Key Market Insights:")
+                                .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                            
+                            foreach (var insight in businessPlan.MarketAnalysis.KeyInsights.Take(4))
+                            {
+                                section.Item().Row(row =>
+                                {
+                                    row.ConstantItem(10).Text("•").FontSize(10).FontColor(Colors.Blue.Medium);
+                                    row.RelativeItem().Text(insight).FontSize(9).FontColor(Colors.Grey.Darken1);
+                                });
+                            }
+                        });
+
+                        // Financial Projections Section
+                        content.Item().Column(section =>
+                        {
+                            section.Item().Text("Financial Projections")
+                                .FontSize(16).SemiBold().FontColor(Colors.Blue.Darken2);
+                            
+                            section.Item().PaddingTop(10).Row(row =>
+                            {
+                                row.RelativeItem(1).Column(col =>
+                                {
+                                    col.Item().Text("Break-even Month:")
+                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text($"Month {businessPlan.FinancialProjections.BreakEvenMonth}")
+                                        .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                });
+                                row.RelativeItem(1).Column(col =>
+                                {
+                                    col.Item().Text("Initial Investment:")
+                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text($"{businessPlan.FinancialProjections.InitialInvestment:C0}")
+                                        .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                });
+                            });
+
+                            section.Item().PaddingTop(10).Row(row =>
+                            {
+                                row.RelativeItem(1).Column(col =>
+                                {
+                                    col.Item().Text("5-Year ROI:")
+                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text($"{businessPlan.FinancialProjections.ProjectedROI:P1}")
+                                        .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                });
+                                row.RelativeItem(1).Column(col =>
+                                {
+                                    col.Item().Text("Gross Margin:")
+                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text($"{businessPlan.FinancialProjections.GrossMargin:P1}")
+                                        .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                });
+                            });
+
+                            // 5-Year Revenue Projection Table
+                            section.Item().PaddingTop(15).Text("Revenue Projections (5-Year)")
+                                .FontSize(12).SemiBold().FontColor(Colors.Grey.Darken2);
+                            
+                            section.Item().PaddingTop(5).Table(table =>
+                            {
+                                table.ColumnsDefinition(columns =>
+                                {
+                                    columns.RelativeColumn(1);
+                                    columns.RelativeColumn(1);
+                                    columns.RelativeColumn(1);
+                                    columns.RelativeColumn(1);
+                                });
+
+                                table.Header(header =>
+                                {
+                                    header.Cell().Background(Colors.Blue.Lighten3).Padding(5)
+                                        .Text("Year").FontSize(9).SemiBold();
+                                    header.Cell().Background(Colors.Blue.Lighten3).Padding(5)
+                                        .Text("Revenue").FontSize(9).SemiBold();
+                                    header.Cell().Background(Colors.Blue.Lighten3).Padding(5)
+                                        .Text("Expenses").FontSize(9).SemiBold();
+                                    header.Cell().Background(Colors.Blue.Lighten3).Padding(5)
+                                        .Text("Net Income").FontSize(9).SemiBold();
+                                });
+
+                                foreach (var projection in businessPlan.FinancialProjections.YearlyProjections.Take(5))
+                                {
+                                    table.Cell().Border(1).Padding(5)
+                                        .Text($"Year {projection.Year}").FontSize(8);
+                                    table.Cell().Border(1).Padding(5)
+                                        .Text($"{projection.Revenue:C0}").FontSize(8);
+                                    table.Cell().Border(1).Padding(5)
+                                        .Text($"{projection.Expenses:C0}").FontSize(8);
+                                    table.Cell().Border(1).Padding(5)
+                                        .Text($"{projection.NetIncome:C0}").FontSize(8);
+                                }
+                            });
+                        });
+
+                        // Implementation Timeline Section
+                        content.Item().Column(section =>
+                        {
+                            section.Item().Text("Implementation Timeline")
+                                .FontSize(16).SemiBold().FontColor(Colors.Blue.Darken2);
+                            
+                            foreach (var milestone in businessPlan.ImplementationPlan.Milestones.Take(4))
+                            {
+                                section.Item().PaddingTop(10).Column(milestoneCol =>
+                                {
+                                    milestoneCol.Item().Row(row =>
+                                    {
+                                        row.ConstantItem(15).Text("▶").FontSize(10).FontColor(Colors.Blue.Medium);
+                                        row.RelativeItem().Column(col =>
+                                        {
+                                            col.Item().Text($"{milestone.Title} ({milestone.Timeline})")
+                                                .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                            col.Item().Text(milestone.Description)
+                                                .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                        });
+                                    });
+
+                                    if (milestone.Tasks.Any())
+                                    {
+                                        milestoneCol.Item().PaddingLeft(20).PaddingTop(5).Column(tasksCol =>
+                                        {
+                                            foreach (var task in milestone.Tasks.Take(3))
+                                            {
+                                                tasksCol.Item().Row(taskRow =>
+                                                {
+                                                    taskRow.ConstantItem(10).Text("•").FontSize(8).FontColor(Colors.Grey.Medium);
+                                                    taskRow.RelativeItem().Text(task).FontSize(8).FontColor(Colors.Grey.Darken1);
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+
+                        // Risk Analysis Section
+                        content.Item().Column(section =>
+                        {
+                            section.Item().Text("Risk Analysis & Mitigation")
+                                .FontSize(16).SemiBold().FontColor(Colors.Blue.Darken2);
+                            
+                            foreach (var risk in businessPlan.RiskAnalysis.Risks.Take(4))
+                            {
+                                var riskColor = risk.Level.ToLower() switch
+                                {
+                                    "high" => Colors.Red.Lighten3,
+                                    "medium" => Colors.Orange.Lighten3,
+                                    "low" => Colors.Green.Lighten3,
+                                    _ => Colors.Grey.Lighten3
+                                };
+
+                                section.Item().PaddingTop(10).Border(1).BorderColor(riskColor).Padding(8).Column(riskCol =>
+                                {
+                                    riskCol.Item().Row(row =>
+                                    {
+                                        row.RelativeItem().Text(risk.Title)
+                                            .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                        row.ConstantItem(50).AlignRight().Text(risk.Level.ToUpper())
+                                            .FontSize(8).SemiBold().FontColor(Colors.Grey.Darken1);
+                                    });
+                                    
+                                    riskCol.Item().PaddingTop(5).Text(risk.Description)
+                                        .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                    
+                                    riskCol.Item().PaddingTop(5).Row(mitigationRow =>
+                                    {
+                                        mitigationRow.ConstantItem(70).Text("Mitigation:")
+                                            .FontSize(9).SemiBold().FontColor(Colors.Grey.Darken2);
+                                        mitigationRow.RelativeItem().Text(risk.MitigationStrategy)
+                                            .FontSize(9).FontColor(Colors.Grey.Darken1);
+                                    });
+                                });
+                            }
+                        });
+
+                        // Success Factors Section
+                        content.Item().Column(section =>
+                        {
+                            section.Item().Text("Key Success Factors")
+                                .FontSize(16).SemiBold().FontColor(Colors.Blue.Darken2);
+                            
+                            section.Item().PaddingTop(10).Column(factorsCol =>
+                            {
+                                foreach (var factor in businessPlan.SuccessFactors.Take(6))
+                                {
+                                    factorsCol.Item().Row(row =>
+                                    {
+                                        row.ConstantItem(15).Text("✓").FontSize(10).FontColor(Colors.Green.Medium);
+                                        row.RelativeItem().Text(factor).FontSize(9).FontColor(Colors.Grey.Darken1);
+                                    });
+                                }
+                            });
+                        });
+                    });
+
+                page.Footer()
+                    .AlignCenter()
+                    .Text($"Ideas Matter - Business Plan | Page 1 | Generated {DateTime.Now:MM/dd/yyyy}")
+                    .FontSize(8).FontColor(Colors.Grey.Medium);
+            });
+        }).GeneratePdf();
+
+        // Trigger download
+        var fileName = $"Business_Plan_{scenario.Name?.Replace(" ", "_") ?? "Plan"}_{DateTime.Now:yyyyMMdd}.pdf";
+        await DownloadPdfFile(pdfBytes, fileName);
+    }
+
+    private async Task DownloadPdfFile(byte[] pdfBytes, string fileName)
+    {
+        // This method would need to be implemented to handle file download
+        // For now, we'll just save the fact that this was called
+        await Task.CompletedTask;
+        System.IO.File.WriteAllBytes($"/tmp/{fileName}", pdfBytes);
+    }
 }
