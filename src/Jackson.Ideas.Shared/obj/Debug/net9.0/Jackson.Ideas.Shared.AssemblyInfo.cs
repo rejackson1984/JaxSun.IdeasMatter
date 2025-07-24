@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Jackson.Ideas.Shared")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b26195a8475b5765d9d1d0c393e1507a5ba7a38e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1f1e260bd43679cbfe2c6190115aae269a5368c4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Jackson.Ideas.Shared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Jackson.Ideas.Shared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

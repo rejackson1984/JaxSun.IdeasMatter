@@ -117,7 +117,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <!-- Main Preview -->
-                        <div class="col-lg-10">
+                        <div class="col-lg-11">
                             <div class="preview-container">
                                 <div class="device-frame @viewMode">
                                     <div class="device-screen">
@@ -131,8 +131,8 @@
                         </div>
                         
                         <!-- Sidebar -->
-                        <div class="col-lg-2">
-                            <div class="mockup-sidebar">
+                        <div class="col-lg-1">
+                            <div class="mockup-sidebar compact-sidebar">
                                 <!-- Template Info -->
                                 <div class="sidebar-card">
                                     <h4><i class="fas fa-info-circle text-primary me-2"></i>Template Details</h4>
@@ -347,9 +347,13 @@
 .preview-container {
     background: white;
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 1rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     margin-bottom: 2rem;
+    height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .device-frame {
@@ -358,27 +362,31 @@
     overflow: hidden;
     box-shadow: 0 8px 30px rgba(0,0,0,0.15);
     background: #333;
-    padding: 15px;
+    padding: 12px;
+    max-height: 85vh;
 }
 
 .device-frame.desktop {
     width: 100%;
-    max-width: 1400px;
-    min-height: 700px;
+    max-width: 1600px;
+    min-height: 800px;
+    height: 80vh;
     aspect-ratio: 16/10;
 }
 
 .device-frame.tablet {
     width: 100%;
-    max-width: 900px;
-    min-height: 600px;
+    max-width: 1000px;
+    min-height: 700px;
+    height: 75vh;
     aspect-ratio: 4/3;
 }
 
 .device-frame.mobile {
-    width: 400px;
-    max-width: 400px;
-    min-height: 700px;
+    width: 450px;
+    max-width: 450px;
+    min-height: 800px;
+    height: 80vh;
     aspect-ratio: 9/16;
 }
 
@@ -399,6 +407,33 @@
 .mockup-sidebar {
     position: sticky;
     top: 2rem;
+}
+
+.compact-sidebar {
+    font-size: 0.8rem;
+}
+
+.compact-sidebar .sidebar-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.compact-sidebar .sidebar-card h4 {
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+}
+
+.compact-sidebar .detail-item,
+.compact-sidebar .feature-item,
+.compact-sidebar .action-btn {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.compact-sidebar .template-details,
+.compact-sidebar .feature-list,
+.compact-sidebar .action-list {
+    gap: 0.25rem;
 }
 
 .sidebar-card {
@@ -500,6 +535,32 @@
     
     .device-frame.desktop {
         max-width: 100%;
+        height: 60vh;
+        min-height: 400px;
+    }
+    
+    .device-frame.tablet {
+        height: 55vh;
+        min-height: 350px;
+    }
+    
+    .device-frame.mobile {
+        height: 60vh;
+        min-height: 400px;
+        width: 300px;
+    }
+    
+    .preview-container {
+        height: calc(100vh - 250px);
+        padding: 0.5rem;
+    }
+    
+    .mockup-sidebar {
+        margin-top: 1rem;
+    }
+    
+    .compact-sidebar .sidebar-card {
+        padding: 0.75rem;
     }
 }
 </style>

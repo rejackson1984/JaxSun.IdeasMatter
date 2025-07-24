@@ -37,8 +37,8 @@
         <div class="container-fluid">
             <div class="row">
                 <!-- Chat Interface -->
-                <div class="col-lg-6">
-                    <div class="chat-panel">
+                <div class="col-lg-4">
+                    <div class="chat-panel compact-chat">
                         <!-- Chat Messages -->
                         <div class="chat-messages" @ref="chatMessagesRef">
                             @if (!chatMessages.Any())
@@ -159,8 +159,8 @@
                 </div>
 
                 <!-- Live Preview -->
-                <div class="col-lg-6">
-                    <div class="preview-panel">
+                <div class="col-lg-8">
+                    <div class="preview-panel expanded-preview">
                         <div class="preview-header">
                             <h3><i class="fas fa-eye me-2"></i>Live Preview</h3>
                             <div class="preview-controls">
@@ -313,16 +313,17 @@
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    height: 100%;
+    height: calc(100vh - 150px);
+    min-height: 700px;
     display: flex;
     flex-direction: column;
 }
 
 .chat-messages {
     flex: 1;
-    padding: 1.5rem;
+    padding: 1rem;
     overflow-y: auto;
-    max-height: calc(100vh - 400px);
+    max-height: calc(100vh - 350px);
 }
 
 .welcome-message, .chat-message {
@@ -457,6 +458,36 @@
     margin-left: 1rem;
 }
 
+.expanded-preview {
+    margin-left: 0.5rem;
+}
+
+.compact-chat {
+    margin-right: 0.5rem;
+}
+
+.compact-chat .chat-messages {
+    padding: 0.75rem;
+}
+
+.compact-chat .chat-input {
+    padding: 1rem;
+}
+
+.compact-chat .message-bubble {
+    max-width: 95%;
+    font-size: 0.9rem;
+}
+
+.compact-chat .quick-actions {
+    gap: 0.25rem;
+}
+
+.compact-chat .quick-action-btn {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+}
+
 .preview-header {
     padding: 1.5rem;
     border-bottom: 1px solid #e9ecef;
@@ -473,10 +504,12 @@
 
 .preview-container {
     flex: 1;
-    padding: 1.5rem;
+    padding: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    height: calc(100vh - 300px);
+    min-height: 600px;
 }
 
 .device-frame {
@@ -489,14 +522,16 @@
 
 .device-frame.desktop {
     width: 100%;
-    max-width: 600px;
-    min-height: 400px;
+    max-width: 1000px;
+    min-height: 600px;
+    height: 70vh;
     aspect-ratio: 16/10;
 }
 
 .device-frame.mobile {
-    width: 300px;
-    min-height: 500px;
+    width: 350px;
+    min-height: 600px;
+    height: 70vh;
     aspect-ratio: 9/16;
 }
 
@@ -529,10 +564,11 @@
 }
 
 .change-history {
-    padding: 1.5rem;
+    padding: 1rem;
     border-top: 1px solid #e9ecef;
-    max-height: 200px;
+    max-height: 150px;
     overflow-y: auto;
+    font-size: 0.85rem;
 }
 
 .change-history h4 {
@@ -601,15 +637,42 @@
     
     .chat-panel, .preview-panel {
         margin-bottom: 1rem;
-        height: auto;
+        height: calc(100vh - 200px);
+        min-height: 500px;
     }
     
     .preview-panel {
         margin-left: 0;
     }
     
+    .expanded-preview {
+        margin-left: 0;
+    }
+    
+    .compact-chat {
+        margin-right: 0;
+    }
+    
     .chat-messages {
-        max-height: 400px;
+        max-height: calc(100vh - 400px);
+        min-height: 300px;
+    }
+    
+    .preview-container {
+        height: calc(100vh - 350px);
+        min-height: 400px;
+    }
+    
+    .device-frame.desktop {
+        max-width: 100%;
+        height: 50vh;
+        min-height: 300px;
+    }
+    
+    .device-frame.mobile {
+        width: 250px;
+        height: 50vh;
+        min-height: 400px;
     }
 }
 </style>

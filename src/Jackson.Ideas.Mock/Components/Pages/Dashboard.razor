@@ -123,6 +123,36 @@
                 </div>
             </div>
 
+            <!-- Quick Actions Section -->
+            <div class="quick-actions-section">
+                <h2 class="section-title">Quick Actions</h2>
+                <div class="quick-actions-grid">
+                    <div class="quick-action-card" @onclick="NavigateHome">
+                        <div class="quick-action-icon">➕</div>
+                        <div class="quick-action-content">
+                            <h3 class="quick-action-title">Analyze New Idea</h3>
+                            <p class="quick-action-description">Have another brilliant idea? Get AI insights on it.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-action-card" @onclick="() => ExportAllData()">
+                        <div class="quick-action-icon">📊</div>
+                        <div class="quick-action-content">
+                            <h3 class="quick-action-title">Export Portfolio</h3>
+                            <p class="quick-action-description">Download data for all your ideas.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-action-card" @onclick="() => ViewPortfolioAnalytics()">
+                        <div class="quick-action-icon">📈</div>
+                        <div class="quick-action-content">
+                            <h3 class="quick-action-title">Portfolio Analytics</h3>
+                            <p class="quick-action-description">Deep insights across all your ideas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- All Ideas Section -->
             <div class="all-ideas-section">
                 <h2 class="section-title">All Your Ideas (@filteredScenarios.Count)</h2>
@@ -157,44 +187,6 @@
                             </div>
                         </div>
                     }
-                </div>
-            </div>
-
-            <!-- Quick Actions Section -->
-            <div class="quick-actions-section">
-                <h2 class="section-title">Quick Actions</h2>
-                <div class="quick-actions-grid">
-                    <div class="quick-action-card" @onclick="NavigateHome">
-                        <div class="quick-action-icon">➕</div>
-                        <div class="quick-action-content">
-                            <h3 class="quick-action-title">Analyze New Idea</h3>
-                            <p class="quick-action-description">Have another brilliant idea? Get AI insights on it.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="quick-action-card" @onclick="NavigateToActionPlan">
-                        <div class="quick-action-icon">📋</div>
-                        <div class="quick-action-content">
-                            <h3 class="quick-action-title">Action Plans</h3>
-                            <p class="quick-action-description">Get step-by-step guidance for your ideas.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="quick-action-card" @onclick="() => ExportAllData()">
-                        <div class="quick-action-icon">📊</div>
-                        <div class="quick-action-content">
-                            <h3 class="quick-action-title">Export Portfolio</h3>
-                            <p class="quick-action-description">Download data for all your ideas.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="quick-action-card" @onclick="() => ViewPortfolioAnalytics()">
-                        <div class="quick-action-icon">📈</div>
-                        <div class="quick-action-content">
-                            <h3 class="quick-action-title">Portfolio Analytics</h3>
-                            <p class="quick-action-description">Deep insights across all your ideas.</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -581,7 +573,6 @@
         }
     }
 
-    private void NavigateToActionPlan() => Navigation.NavigateTo("/action-plan");
     private void NavigateHome() => Navigation.NavigateTo("/");
     
     private async Task ExportAllData()

@@ -74,8 +74,7 @@
                                 @if (isEditing)
                                 {
                                     <textarea class="form-control prd-editor" 
-                                              @bind="editablePRD" 
-                                              rows="30"></textarea>
+                                              @bind="editablePRD"></textarea>
                                     <div class="editor-actions mt-3">
                                         <button class="btn btn-success me-2" @onclick="SaveChanges">
                                             <i class="fas fa-save me-2"></i>Save Changes
@@ -269,6 +268,9 @@
     border: 2px solid #e9ecef;
     border-radius: 8px;
     resize: vertical;
+    min-height: calc(100vh - 400px);
+    height: calc(100vh - 400px);
+    width: 100%;
 }
 
 .prd-preview {
