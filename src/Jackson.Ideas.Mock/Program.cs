@@ -58,6 +58,9 @@ builder.Services.AddScoped<IDataExportService, DataExportService>();
 // Register Business Plan Version Service
 builder.Services.AddScoped<IBusinessPlanVersionService, MockBusinessPlanVersionService>();
 
+// Register Product Design Service
+builder.Services.AddScoped<IProductDesignService, MockProductDesignService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline

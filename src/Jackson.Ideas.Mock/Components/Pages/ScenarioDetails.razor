@@ -386,6 +386,9 @@ else
                 <button class="btn btn-primary me-2" @onclick="CustomizePlan">
                     <i class="fas fa-edit me-2"></i>Customize This Plan
                 </button>
+                <button class="btn btn-info me-2" @onclick="DesignProduct">
+                    <i class="fas fa-paint-brush me-2"></i>Design & Create
+                </button>
                 <button class="btn btn-success" @onclick="StartWithIdea">
                     <i class="fas fa-rocket me-2"></i>Start Building This Idea
                 </button>
@@ -428,6 +431,11 @@ else
     private void CustomizePlan()
     {
         Navigation.NavigateTo($"/plan-editor/{ScenarioId}");
+    }
+
+    private void DesignProduct()
+    {
+        Navigation.NavigateTo($"/design-wizard/{ScenarioId}");
     }
 
     private void StartWithIdea()
