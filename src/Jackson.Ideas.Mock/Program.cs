@@ -55,6 +55,9 @@ builder.Services.AddScoped<IPdfGenerationService, PdfGenerationService>();
 // Register Data Export Service
 builder.Services.AddScoped<IDataExportService, DataExportService>();
 
+// Register Business Plan Version Service
+builder.Services.AddScoped<IBusinessPlanVersionService, MockBusinessPlanVersionService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -82,6 +85,29 @@ app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthC
 app.MapRazorPages();
 app.MapBlazorHub();
 app.MapControllers();
+
+// Handle scenario ID routes that might be causing JSON parsing errors
+app.MapGet("/{scenarioId:regex(^[a-z-]+-[0-9]+$)}", async (string scenarioId, HttpContext context) =>
+{
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+    
+    // Check if request expects JSON/JavaScript - return appropriate error
+    var acceptHeader = context.Request.Headers.Accept.ToString();
+    if (acceptHeader.Contains("application/json") || 
+        acceptHeader.Contains("text/javascript") || 
+        acceptHeader.Contains("application/javascript"))
+    {
+        context.Response.StatusCode = 404;
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync("{\"error\":\"Not found\"}");
+        return;
+    }
+    
+    // For browser requests, redirect to proper scenario page
+    context.Response.Redirect($"/scenario/{scenarioId}");
+});
+
+
 app.MapFallbackToPage("/_Host");
 
 app.Run();

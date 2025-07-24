@@ -333,10 +333,18 @@ validate_application() {
             ((validation_errors++))
         fi
         
-        # Check for error pages or exceptions
-        if grep -q -i "error\|exception\|500\|404" "$html_file"; then
+        # Check for error pages or exceptions (but exclude business content and Blazor error UI)
+        local error_content=$(grep -i "error\|exception" "$html_file" | grep -v "blazor-error-ui" | grep -v "An unhandled error has occurred")
+        if [ -n "$error_content" ]; then
             error "Found error content in HTML response"
-            grep -i "error\|exception\|500\|404" "$html_file" | head -5 | tee -a "$BUILD_LOG"
+            echo "$error_content" | head -5 | tee -a "$BUILD_LOG"
+            ((validation_errors++))
+        fi
+        
+        # Check for HTTP error status codes
+        if grep -q "HTTP 500\|Status: 500\|Error 404\|Not Found 404" "$html_file"; then
+            error "Found HTTP error status in HTML response"
+            grep "HTTP 500\|Status: 500\|Error 404\|Not Found 404" "$html_file" | head -5 | tee -a "$BUILD_LOG"
             ((validation_errors++))
         fi
         

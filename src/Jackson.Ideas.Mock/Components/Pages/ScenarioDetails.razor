@@ -23,34 +23,24 @@
 }
 else
 {
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding-top: 20px;">
         <!-- Header Section -->
         <div class="row mb-4">
             <div class="col-12">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item">
-                                    <button class="btn btn-link p-0 text-decoration-none" @onclick="NavigateToScenarios">
-                                        Business Scenarios
-                                    </button>
-                                </li>
-                                <li class="breadcrumb-item active" aria-current="page">@scenario.Name</li>
-                            </ol>
-                        </nav>
-                        <h1 class="h2 mb-1">@scenario.Name</h1>
-                        <div class="d-flex gap-2 mb-2">
-                            <span class="badge bg-primary fs-6">@scenario.Industry</span>
-                            <span class="badge bg-@GetViabilityColor(scenario.ViabilityScore) fs-6">
-                                @scenario.ViabilityScore% Viable
-                            </span>
-                        </div>
-                        <p class="text-muted">@scenario.Description</p>
-                    </div>
-                    <button class="btn btn-outline-primary" @onclick="NavigateToScenarios">
-                        ← Back to Scenarios
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <button class="back-button" @onclick="NavigateToScenarios">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Scenarios
                     </button>
+                </div>
+                <div>
+                    <h1 class="h2 mb-1">@scenario.Name</h1>
+                    <div class="d-flex gap-2 mb-2">
+                        <span class="badge bg-primary fs-6">@scenario.Industry</span>
+                        <span class="badge bg-@GetViabilityColor(scenario.ViabilityScore) fs-6">
+                            @scenario.ViabilityScore% Viable
+                        </span>
+                    </div>
+                    <p class="text-muted">@scenario.Description</p>
                 </div>
             </div>
         </div>
@@ -107,29 +97,29 @@ else
         <div class="row">
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-light">
-                        <ul class="nav nav-tabs card-header-tabs" id="scenarioTabs" role="tablist">
+                    <div class="card-header bg-white border-bottom-0 pb-0">
+                        <ul class="nav nav-tabs custom-tabs" id="scenarioTabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link @(activeTab == "overview" ? "active" : "")" 
-                                        @onclick="@(() => SetActiveTab("overview"))">
+                                <button class="nav-link custom-tab @(activeTab == "overview" ? "active" : "")" 
+                                        @onclick="SetOverviewTab">
                                     <i class="fas fa-eye me-2"></i>Overview
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link @(activeTab == "market" ? "active" : "")" 
-                                        @onclick="@(() => SetActiveTab("market"))">
+                                <button class="nav-link custom-tab @(activeTab == "market" ? "active" : "")" 
+                                        @onclick="SetMarketTab">
                                     <i class="fas fa-chart-bar me-2"></i>Market Research
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link @(activeTab == "financial" ? "active" : "")" 
-                                        @onclick="@(() => SetActiveTab("financial"))">
+                                <button class="nav-link custom-tab @(activeTab == "financial" ? "active" : "")" 
+                                        @onclick="SetFinancialTab">
                                     <i class="fas fa-calculator me-2"></i>Financial Projections
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link @(activeTab == "analysis" ? "active" : "")" 
-                                        @onclick="@(() => SetActiveTab("analysis"))">
+                                <button class="nav-link custom-tab @(activeTab == "analysis" ? "active" : "")" 
+                                        @onclick="SetAnalysisTab">
                                     <i class="fas fa-lightbulb me-2"></i>Strategic Analysis
                                 </button>
                             </li>
@@ -393,8 +383,8 @@ else
         <!-- Action Buttons -->
         <div class="row mt-4 mb-5">
             <div class="col-12 text-center">
-                <button class="btn btn-primary me-2" @onclick="NavigateToScenarios">
-                    <i class="fas fa-arrow-left me-2"></i>Back to All Scenarios
+                <button class="btn btn-primary me-2" @onclick="CustomizePlan">
+                    <i class="fas fa-edit me-2"></i>Customize This Plan
                 </button>
                 <button class="btn btn-success" @onclick="StartWithIdea">
                     <i class="fas fa-rocket me-2"></i>Start Building This Idea
@@ -422,11 +412,22 @@ else
     private void SetActiveTab(string tab)
     {
         activeTab = tab;
+        StateHasChanged();
     }
+
+    private void SetOverviewTab() => SetActiveTab("overview");
+    private void SetMarketTab() => SetActiveTab("market");
+    private void SetFinancialTab() => SetActiveTab("financial");
+    private void SetAnalysisTab() => SetActiveTab("analysis");
 
     private void NavigateToScenarios()
     {
         Navigation.NavigateTo("/scenarios");
+    }
+
+    private void CustomizePlan()
+    {
+        Navigation.NavigateTo($"/plan-editor/{ScenarioId}");
     }
 
     private void StartWithIdea()
@@ -444,3 +445,148 @@ else
         };
     }
 }
+
+<style>
+    .custom-tabs {
+        border-bottom: 2px solid #e9ecef;
+        display: flex;
+        flex-wrap: nowrap;
+        margin-bottom: 0;
+    }
+
+    .custom-tabs .nav-item {
+        margin-bottom: 0;
+        margin-right: 8px;
+    }
+
+    .custom-tab {
+        border: 1px solid transparent;
+        border-radius: 8px 8px 0 0;
+        cursor: pointer;
+        background: #f8f9fa;
+        color: #6c757d;
+        font-weight: 500;
+        padding: 12px 20px;
+        margin-bottom: -2px;
+        position: relative;
+        transition: all 0.2s ease;
+        border-bottom: 2px solid transparent;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+    }
+
+    .custom-tab:hover {
+        background-color: #e9ecef;
+        color: #0d6efd;
+        border-color: #dee2e6 #dee2e6 transparent;
+        transform: translateY(-2px);
+    }
+
+    .custom-tab.active {
+        color: #0d6efd;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+        border-bottom-color: #fff;
+        font-weight: 600;
+        transform: translateY(-2px);
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #fff;
+    }
+
+    .breadcrumb-item button {
+        color: #0d6efd;
+        text-decoration: none;
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: inherit;
+    }
+
+    .breadcrumb-item button:hover {
+        color: #0a58ca;
+        text-decoration: underline;
+    }
+
+    .btn-outline-primary:hover {
+        transform: none;
+    }
+
+    .card-header-tabs {
+        margin-bottom: 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .back-button {
+        color: #0d6efd !important;
+        font-size: 16px;
+        font-weight: 500;
+        background: none;
+        border: none;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        padding: 0;
+        transition: all 0.2s ease;
+    }
+
+    .back-button:hover {
+        color: #0a58ca !important;
+        text-decoration: none;
+        transform: translateX(-2px);
+    }
+
+    .back-button:focus {
+        outline: 2px solid #0d6efd;
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+
+    /* Responsive tab styling */
+    @@media (max-width: 768px) {
+        .custom-tabs {
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .custom-tabs .nav-item {
+            margin-right: 4px;
+            margin-bottom: 8px;
+        }
+
+        .custom-tab {
+            padding: 10px 16px;
+            font-size: 14px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .custom-tabs {
+            flex-direction: column;
+        }
+
+        .custom-tabs .nav-item {
+            margin-right: 0;
+            margin-bottom: 4px;
+        }
+
+        .custom-tab {
+            border-radius: 6px;
+            margin-bottom: 0;
+            transform: none !important;
+        }
+
+        .custom-tab.active {
+            transform: none !important;
+        }
+    }
+</style>

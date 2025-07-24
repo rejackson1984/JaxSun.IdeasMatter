@@ -1,0 +1,767 @@
+@page "/plan-editor/{ScenarioId}"
+@using Jackson.Ideas.Mock.Services.Interfaces
+@using Jackson.Ideas.Mock.Models
+@inject IBusinessPlanVersionService VersionService
+@inject IMockDataService MockDataService
+@inject NavigationManager Navigation
+
+<PageTitle>Plan Editor - Ideas Matter Demo</PageTitle>
+
+@if (currentVersion == null)
+{
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center mt-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Loading plan editor...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="back-button" @onclick="@(() => Navigation.NavigateTo($"/scenario/{ScenarioId}"))">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Scenario Details
+                        </button>
+                        <div>
+                            <h1 class="h2 mb-1">Customize Your Business Plan</h1>
+                            <p class="text-muted">Current Version: <strong>@currentVersion.VersionName</strong></p>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-secondary me-2" @onclick="CreateNewVersion">
+                            <i class="fas fa-copy me-2"></i>Create Version
+                        </button>
+                        <button class="btn btn-primary" @onclick="SaveAndAnalyze" disabled="@isAnalyzing">
+                            @if (isAnalyzing)
+                            {
+                                <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                            }
+                            else
+                            {
+                                <i class="fas fa-save me-2"></i>
+                            }
+                            Save & Analyze
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Templates -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <i class="fas fa-magic me-2"></i>Quick Templates
+                        </h5>
+                        <small class="text-muted">Apply common business scenarios to your plan</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach (var template in templates)
+                            {
+                                <div class="col-lg-3 col-md-6 mb-3">
+                                    <div class="template-card @(selectedTemplate?.Id == template.Id ? "selected" : "")" 
+                                         @onclick="() => SelectTemplate(template)">
+                                        <div class="template-icon">@template.Icon</div>
+                                        <h6 class="template-name">@template.Name</h6>
+                                        <p class="template-description">@template.Description</p>
+                                        @if (template.IsPopular)
+                                        {
+                                            <span class="badge bg-success">Popular</span>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        @if (selectedTemplate != null)
+                        {
+                            <div class="mt-3">
+                                <button class="btn btn-primary" @onclick="ApplyTemplate">
+                                    <i class="fas fa-check me-2"></i>Apply @selectedTemplate.Name Template
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Editor -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom-0 pb-0">
+                        <ul class="nav nav-tabs custom-tabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link custom-tab @(activeTab == "timeline" ? "active" : "")" 
+                                        @onclick="SetTimelineTab">
+                                    <i class="fas fa-clock me-2"></i>Timeline & Pace
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link custom-tab @(activeTab == "resources" ? "active" : "")" 
+                                        @onclick="SetResourcesTab">
+                                    <i class="fas fa-coins me-2"></i>Resources & Budget
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link custom-tab @(activeTab == "market" ? "active" : "")" 
+                                        @onclick="SetMarketTab">
+                                    <i class="fas fa-chart-line me-2"></i>Market Strategy
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link custom-tab @(activeTab == "operations" ? "active" : "")" 
+                                        @onclick="SetOperationsTab">
+                                    <i class="fas fa-cogs me-2"></i>Operations
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        @if (activeTab == "timeline")
+                        {
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h5>Work Schedule</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">How much time can you dedicate?</label>
+                                        <select class="form-select" @onchange="OnScheduleChanged">
+                                            <option value="@WorkSchedule.FullTime" selected="@(modifications.Timeline.Schedule == WorkSchedule.FullTime)">Full-Time (40+ hours/week)</option>
+                                            <option value="@WorkSchedule.PartTime" selected="@(modifications.Timeline.Schedule == WorkSchedule.PartTime)">Part-Time (20-30 hours/week)</option>
+                                            <option value="@WorkSchedule.SideHustle" selected="@(modifications.Timeline.Schedule == WorkSchedule.SideHustle)">Side Hustle (10-15 hours/week)</option>
+                                            <option value="@WorkSchedule.WeekendWarrior" selected="@(modifications.Timeline.Schedule == WorkSchedule.WeekendWarrior)">Weekend Warrior (weekends only)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Hours Per Week: <strong>@modifications.Timeline.HoursPerWeek</strong></label>
+                                        <input type="range" class="form-range" min="10" max="60" 
+                                               @bind="modifications.Timeline.HoursPerWeek" @bind:event="oninput" />
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-muted">10 hours</small>
+                                            <small class="text-muted">60 hours</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Launch Timeline: <strong>@modifications.Timeline.LaunchTimelineMonths months</strong></label>
+                                        <input type="range" class="form-range" min="3" max="24" 
+                                               @bind="modifications.Timeline.LaunchTimelineMonths" @bind:event="oninput" />
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-muted">3 months</small>
+                                            <small class="text-muted">24 months</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h5>Schedule Flexibility</h5>
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="weekendWork" 
+                                               @bind="modifications.Timeline.AllowWeekendWork" />
+                                        <label class="form-check-label" for="weekendWork">
+                                            I can work on weekends
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input type="checkbox" class="form-check-input" id="eveningWork" 
+                                               @bind="modifications.Timeline.AllowEveningWork" />
+                                        <label class="form-check-label" for="eveningWork">
+                                            I can work in the evenings
+                                        </label>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Risk Buffer Strategy</label>
+                                        <select class="form-select" @bind="modifications.Timeline.BufferStrategy">
+                                            <option value="@TimeBuffer.Aggressive">Aggressive (Minimal buffer)</option>
+                                            <option value="@TimeBuffer.Standard">Standard (20% buffer)</option>
+                                            <option value="@TimeBuffer.Conservative">Conservative (40% buffer)</option>
+                                            <option value="@TimeBuffer.Cautious">Cautious (60% buffer)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (activeTab == "resources")
+                        {
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h5>Funding Strategy</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">How will you fund this business?</label>
+                                        <select class="form-select" @bind="modifications.Resources.FundingStrategy">
+                                            <option value="@FundingApproach.Bootstrap">Bootstrap (Self-funded)</option>
+                                            <option value="@FundingApproach.InvestorReady">Investor Ready (Seeking investment)</option>
+                                            <option value="@FundingApproach.LoanBased">Loan Based (Traditional financing)</option>
+                                            <option value="@FundingApproach.Crowdfunding">Crowdfunding</option>
+                                            <option value="@FundingApproach.Hybrid">Hybrid (Multiple sources)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Initial Budget: <strong>$@modifications.Resources.InitialBudget.ToString("N0")</strong></label>
+                                        <input type="range" class="form-range" min="1000" max="100000" step="1000"
+                                               @bind="modifications.Resources.InitialBudget" @bind:event="oninput" />
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-muted">$1K</small>
+                                            <small class="text-muted">$100K</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h5>Team Building</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Team Strategy</label>
+                                        <select class="form-select" @bind="modifications.Resources.TeamStrategy">
+                                            <option value="@TeamBuildingStrategy.SoloFounder">Solo Founder</option>
+                                            <option value="@TeamBuildingStrategy.CoFounder">Co-Founder Model</option>
+                                            <option value="@TeamBuildingStrategy.HireEarly">Hire Employees Early</option>
+                                            <option value="@TeamBuildingStrategy.ContractorBased">Contractor Based</option>
+                                            <option value="@TeamBuildingStrategy.OutsourcingHeavy">Outsourcing Heavy</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="useContractors" 
+                                               @bind="modifications.Resources.UseContractors" />
+                                        <label class="form-check-label" for="useContractors">
+                                            Use contractors for specialized tasks
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input type="checkbox" class="form-check-input" id="useFreelancers" 
+                                               @bind="modifications.Resources.UseFreelancers" />
+                                        <label class="form-check-label" for="useFreelancers">
+                                            Use freelancers for project work
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (activeTab == "market")
+                        {
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h5>Go-to-Market Strategy</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Marketing Approach</label>
+                                        <select class="form-select" @bind="modifications.Market.MarketingStrategy">
+                                            <option value="@GoToMarketStrategy.LocalFirst">Local First</option>
+                                            <option value="@GoToMarketStrategy.DigitalFirst">Digital First</option>
+                                            <option value="@GoToMarketStrategy.NetworkBased">Network Based</option>
+                                            <option value="@GoToMarketStrategy.ContentMarketing">Content Marketing</option>
+                                            <option value="@GoToMarketStrategy.PaidAdvertising">Paid Advertising</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Target Scope</label>
+                                        <select class="form-select" @bind="modifications.Market.TargetScope">
+                                            <option value="@MarketScope.Local">Local</option>
+                                            <option value="@MarketScope.Regional">Regional</option>
+                                            <option value="@MarketScope.National">National</option>
+                                            <option value="@MarketScope.International">International</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h5>Competition & Pricing</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Competition Strategy</label>
+                                        <select class="form-select" @bind="modifications.Market.CompetitionApproach">
+                                            <option value="@CompetitionStrategy.DirectCompetition">Direct Competition</option>
+                                            <option value="@CompetitionStrategy.BlueOcean">Blue Ocean (Uncontested market)</option>
+                                            <option value="@CompetitionStrategy.MarketDisruption">Market Disruption</option>
+                                            <option value="@CompetitionStrategy.Collaborative">Collaborative</option>
+                                            <option value="@CompetitionStrategy.NicheSpecialist">Niche Specialist</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Pricing Strategy</label>
+                                        <select class="form-select" @bind="modifications.Market.PricingApproach">
+                                            <option value="@PricingStrategy.Premium">Premium</option>
+                                            <option value="@PricingStrategy.Competitive">Competitive</option>
+                                            <option value="@PricingStrategy.Penetration">Penetration</option>
+                                            <option value="@PricingStrategy.Value">Value-based</option>
+                                            <option value="@PricingStrategy.Freemium">Freemium</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (activeTab == "operations")
+                        {
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h5>Business Model</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Operating Model</label>
+                                        <select class="form-select" @bind="modifications.Operations.OperatingModel">
+                                            <option value="@BusinessModel.Traditional">Traditional</option>
+                                            <option value="@BusinessModel.Platform">Platform</option>
+                                            <option value="@BusinessModel.Marketplace">Marketplace</option>
+                                            <option value="@BusinessModel.SaaS">SaaS</option>
+                                            <option value="@BusinessModel.Subscription">Subscription</option>
+                                            <option value="@BusinessModel.OnDemand">On-Demand</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Work Location</label>
+                                        <select class="form-select" @bind="modifications.Operations.LocationStrategy">
+                                            <option value="@WorkLocation.Remote">Remote</option>
+                                            <option value="@WorkLocation.Office">Physical Office</option>
+                                            <option value="@WorkLocation.Hybrid">Hybrid</option>
+                                            <option value="@WorkLocation.Coworking">Coworking Space</option>
+                                            <option value="@WorkLocation.Home">Home-based</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h5>Quality & Service</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Quality Standard</label>
+                                        <select class="form-select" @bind="modifications.Operations.QualityLevel">
+                                            <option value="@QualityStandard.Basic">Basic</option>
+                                            <option value="@QualityStandard.Standard">Standard</option>
+                                            <option value="@QualityStandard.High">High</option>
+                                            <option value="@QualityStandard.Premium">Premium</option>
+                                            <option value="@QualityStandard.Luxury">Luxury</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Service Level</label>
+                                        <select class="form-select" @bind="modifications.Operations.ServiceLevel">
+                                            <option value="@CustomerServiceLevel.Basic">Basic Support</option>
+                                            <option value="@CustomerServiceLevel.Standard">Standard Support</option>
+                                            <option value="@CustomerServiceLevel.Premium">Premium Support</option>
+                                            <option value="@CustomerServiceLevel.Concierge">Concierge Service</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Changes -->
+        @if (hasUnsavedChanges)
+        {
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <h5><i class="fas fa-info-circle me-2"></i>Preview Changes</h5>
+                        <ul class="mb-0">
+                            @foreach (var change in GetChangesSummary())
+                            {
+                                <li>@change</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Analysis Progress -->
+        @if (analysisProgress != null)
+        {
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">
+                                <i class="fas fa-chart-line me-2"></i>Re-Analysis Progress
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="progress mb-3">
+                                <div class="progress-bar" role="progressbar" 
+                                     style="width: @(analysisProgress.PercentageComplete)%">
+                                    @analysisProgress.PercentageComplete%
+                                </div>
+                            </div>
+                            <div class="row">
+                                @foreach (var component in analysisProgress.Components)
+                                {
+                                    <div class="col-md-3 mb-2">
+                                        <div class="d-flex align-items-center">
+                                            @if (component.Status == AnalysisStatus.Complete)
+                                            {
+                                                <i class="fas fa-check-circle text-success me-2"></i>
+                                            }
+                                            else if (component.Status == AnalysisStatus.Analyzing)
+                                            {
+                                                <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-clock text-muted me-2"></i>
+                                            }
+                                            <small>@component.Name</small>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public string ScenarioId { get; set; } = "";
+    
+    private BusinessPlanVersion? currentVersion;
+    private BusinessPlanModifications modifications = new();
+    private List<ModificationTemplate> templates = new();
+    private ModificationTemplate? selectedTemplate;
+    private string activeTab = "timeline";
+    private bool hasUnsavedChanges = false;
+    private bool isAnalyzing = false;
+    private AnalysisProgress? analysisProgress;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load templates
+        templates = await VersionService.GetModificationTemplatesAsync();
+        
+        // Create or load version for this scenario
+        currentVersion = await CreateOrLoadVersion();
+        
+        if (currentVersion != null)
+        {
+            modifications = currentVersion.Modifications;
+        }
+    }
+
+    private async Task<BusinessPlanVersion?> CreateOrLoadVersion()
+    {
+        try
+        {
+            // For now, create a new version - in production, load existing if available
+            return await VersionService.CreateVersionAsync(ScenarioId, "Original Plan", "Initial version based on scenario");
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private void SetActiveTab(string tab)
+    {
+        activeTab = tab;
+        StateHasChanged();
+    }
+
+    private void SetTimelineTab() => SetActiveTab("timeline");
+    private void SetResourcesTab() => SetActiveTab("resources");
+    private void SetMarketTab() => SetActiveTab("market");
+    private void SetOperationsTab() => SetActiveTab("operations");
+
+    private void SelectTemplate(ModificationTemplate template)
+    {
+        selectedTemplate = selectedTemplate?.Id == template.Id ? null : template;
+    }
+
+    private async Task ApplyTemplate()
+    {
+        if (selectedTemplate == null || currentVersion == null) return;
+
+        var templateModifications = await VersionService.ApplyTemplateAsync(selectedTemplate.Id, currentVersion.PlanData);
+        modifications = templateModifications;
+        hasUnsavedChanges = true;
+        selectedTemplate = null;
+        StateHasChanged();
+    }
+
+    private async Task CreateNewVersion()
+    {
+        if (currentVersion == null) return;
+
+        var versionName = $"Version {DateTime.Now:MM-dd HH:mm}";
+        var newVersion = await VersionService.CloneVersionAsync(currentVersion.Id, versionName);
+        
+        Navigation.NavigateTo($"/plan-editor/{ScenarioId}");
+    }
+
+    private async Task SaveAndAnalyze()
+    {
+        if (currentVersion == null) return;
+
+        isAnalyzing = true;
+        
+        try
+        {
+            // Apply modifications
+            await VersionService.ApplyModificationsAsync(currentVersion.Id, modifications);
+            
+            // Trigger re-analysis
+            await VersionService.TriggerReAnalysisAsync(currentVersion.Id);
+            
+            // Monitor progress
+            await MonitorAnalysisProgress();
+            
+            hasUnsavedChanges = false;
+        }
+        finally
+        {
+            isAnalyzing = false;
+        }
+    }
+
+    private async Task MonitorAnalysisProgress()
+    {
+        if (currentVersion == null) return;
+
+        while (isAnalyzing)
+        {
+            analysisProgress = await VersionService.GetAnalysisProgressAsync(currentVersion.Id);
+            StateHasChanged();
+
+            if (analysisProgress.Status == AnalysisStatus.Complete)
+            {
+                break;
+            }
+
+            await Task.Delay(1000); // Update every second
+        }
+    }
+
+    private void OnScheduleChanged(ChangeEventArgs e)
+    {
+        if (Enum.TryParse<WorkSchedule>(e.Value?.ToString(), out var schedule))
+        {
+            modifications.Timeline.Schedule = schedule;
+            
+            // Adjust hours based on schedule
+            modifications.Timeline.HoursPerWeek = schedule switch
+            {
+                WorkSchedule.FullTime => 40,
+                WorkSchedule.PartTime => 25,
+                WorkSchedule.SideHustle => 15,
+                WorkSchedule.WeekendWarrior => 20,
+                _ => 40
+            };
+            
+            hasUnsavedChanges = true;
+        }
+    }
+
+    private List<string> GetChangesSummary()
+    {
+        var changes = new List<string>();
+        
+        if (modifications.Timeline.Schedule != WorkSchedule.FullTime)
+            changes.Add($"Work schedule changed to {modifications.Timeline.Schedule}");
+            
+        if (modifications.Timeline.LaunchTimelineMonths != 6)
+            changes.Add($"Launch timeline adjusted to {modifications.Timeline.LaunchTimelineMonths} months");
+            
+        if (modifications.Resources.FundingStrategy != FundingApproach.Bootstrap)
+            changes.Add($"Funding strategy set to {modifications.Resources.FundingStrategy}");
+            
+        return changes;
+    }
+}
+
+<style>
+    .template-card {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .template-card:hover {
+        border-color: #0d6efd;
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.15);
+    }
+
+    .template-card.selected {
+        border-color: #0d6efd;
+        background-color: #e7f3ff;
+    }
+
+    .template-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .template-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .template-description {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 10px;
+    }
+
+    .form-range {
+        margin: 10px 0;
+    }
+
+    .nav-link {
+        color: #666;
+        border: none;
+        border-bottom: 2px solid transparent;
+    }
+
+    .nav-link.active {
+        color: #0d6efd;
+        border-bottom-color: #0d6efd;
+        background: none;
+    }
+
+    .nav-link:hover {
+        color: #0d6efd;
+        border-bottom-color: #0d6efd;
+    }
+
+    /* Back Button Styling */
+    .back-button {
+        color: #0d6efd !important;
+        font-size: 16px;
+        font-weight: 500;
+        background: none;
+        border: none;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        padding: 0;
+        transition: all 0.2s ease;
+    }
+
+    .back-button:hover {
+        color: #0a58ca !important;
+        text-decoration: none;
+        transform: translateX(-2px);
+    }
+
+    .back-button:focus {
+        outline: 2px solid #0d6efd;
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+
+    /* Custom Tab Styling */
+    .custom-tabs {
+        border-bottom: 2px solid #e9ecef;
+        display: flex;
+        flex-wrap: nowrap;
+        margin-bottom: 0;
+    }
+
+    .custom-tabs .nav-item {
+        margin-bottom: 0;
+        margin-right: 8px;
+    }
+
+    .custom-tab {
+        border: 1px solid transparent;
+        border-radius: 8px 8px 0 0;
+        cursor: pointer;
+        background: #f8f9fa;
+        color: #6c757d;
+        font-weight: 500;
+        padding: 12px 20px;
+        margin-bottom: -2px;
+        position: relative;
+        transition: all 0.2s ease;
+        border-bottom: 2px solid transparent;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+    }
+
+    .custom-tab:hover {
+        background-color: #e9ecef;
+        color: #0d6efd;
+        border-color: #dee2e6 #dee2e6 transparent;
+        transform: translateY(-2px);
+    }
+
+    .custom-tab.active {
+        color: #0d6efd;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+        border-bottom-color: #fff;
+        font-weight: 600;
+        transform: translateY(-2px);
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #fff;
+    }
+
+    /* Responsive tab styling */
+    @@media (max-width: 768px) {
+        .custom-tabs {
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .custom-tabs .nav-item {
+            margin-right: 4px;
+            margin-bottom: 8px;
+        }
+
+        .custom-tab {
+            padding: 10px 16px;
+            font-size: 14px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .custom-tabs {
+            flex-direction: column;
+        }
+
+        .custom-tabs .nav-item {
+            margin-right: 0;
+            margin-bottom: 4px;
+        }
+
+        .custom-tab {
+            border-radius: 6px;
+            margin-bottom: 0;
+            transform: none !important;
+        }
+
+        .custom-tab.active {
+            transform: none !important;
+        }
+    }
+</style>
