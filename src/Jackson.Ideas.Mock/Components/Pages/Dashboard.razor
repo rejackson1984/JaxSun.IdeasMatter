@@ -160,8 +160,32 @@
                     @foreach (var idea in filteredScenarios)
                     {
                         <div class="idea-card" @onclick="() => SelectIdea(idea)">
-                            <div class="idea-status-badge @GetIdeaStatus(idea)">@GetIdeaStatusText(idea)</div>
-                            <div class="idea-industry-tag">@idea.Industry</div>
+                            <div class="idea-header">
+                                <div class="idea-status-badge @GetIdeaStatus(idea)">@GetIdeaStatusText(idea)</div>
+                                <div class="idea-industry-tag">@idea.Industry</div>
+                            </div>
+                            
+                            <!-- Phase Progress Indicator -->
+                            <div class="phase-progress">
+                                <div class="phase-indicator">
+                                    <span class="phase-icon">@GetPhaseIcon(idea.CurrentPhase)</span>
+                                    <div class="phase-info">
+                                        <span class="current-phase">@GetPhaseDisplayName(idea.CurrentPhase)</span>
+                                        <span class="phase-description">@GetPhaseDescription(idea.CurrentPhase)</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: @GetProgressPercentage(idea)%"></div>
+                                </div>
+                                <div class="progress-text">@GetProgressPercentage(idea)% Complete</div>
+                            </div>
+
+                            <!-- Next Action Suggestion -->
+                            <div class="next-action-suggestion">
+                                <span class="next-action-label">Next Step:</span>
+                                <span class="next-action-text">@GetNextAction(idea)</span>
+                            </div>
+                            
                             <h3 class="idea-title">@(string.IsNullOrEmpty(idea.Name) ? idea.Title : idea.Name)</h3>
                             <p class="idea-description">@TruncateDescription(idea.Description, 120)</p>
                             <div class="idea-metrics">
@@ -607,6 +631,77 @@
         {
             selectedIdea = allScenarios.OrderByDescending(s => s.ViabilityScore).First();
         }
+    }
+
+    // Phase-based status methods
+    private string GetPhaseIcon(IdeaPhase phase)
+    {
+        return phase switch
+        {
+            IdeaPhase.Concept => "💡",
+            IdeaPhase.BusinessPlan => "📋",
+            IdeaPhase.ProductDesign => "🎨",
+            IdeaPhase.Mockup => "🖼️",
+            IdeaPhase.ActionPlan => "✅",
+            IdeaPhase.Implementation => "🚀",
+            _ => "💡"
+        };
+    }
+
+    private string GetPhaseDisplayName(IdeaPhase phase)
+    {
+        return phase switch
+        {
+            IdeaPhase.Concept => "Initial Concept",
+            IdeaPhase.BusinessPlan => "Business Planning",
+            IdeaPhase.ProductDesign => "Product Design",
+            IdeaPhase.Mockup => "Visual Mockup",
+            IdeaPhase.ActionPlan => "Action Planning",
+            IdeaPhase.Implementation => "Implementation",
+            _ => "Unknown Phase"
+        };
+    }
+
+    private string GetPhaseDescription(IdeaPhase phase)
+    {
+        return phase switch
+        {
+            IdeaPhase.Concept => "Idea captured and evaluated",
+            IdeaPhase.BusinessPlan => "Business model developed",
+            IdeaPhase.ProductDesign => "Product requirements defined",
+            IdeaPhase.Mockup => "Visual design created",
+            IdeaPhase.ActionPlan => "Implementation steps planned",
+            IdeaPhase.Implementation => "Ready for execution",
+            _ => "Phase not defined"
+        };
+    }
+
+    private int GetProgressPercentage(BusinessIdeaScenario idea)
+    {
+        int baseProgress = ((int)idea.CurrentPhase - 1) * 16; // Each phase is worth ~16%
+        
+        // Add bonus progress based on completed items within the phase
+        int bonusProgress = 0;
+        if (idea.IsBusinessPlanGenerated) bonusProgress += 8;
+        if (idea.IsPRDGenerated) bonusProgress += 8; 
+        if (idea.IsMockupCreated) bonusProgress += 8;
+        if (idea.IsActionPlanGenerated) bonusProgress += 8;
+        
+        return Math.Min(100, baseProgress + bonusProgress);
+    }
+
+    private string GetNextAction(BusinessIdeaScenario idea)
+    {
+        return idea.CurrentPhase switch
+        {
+            IdeaPhase.Concept when !idea.IsBusinessPlanGenerated => "Create Business Plan",
+            IdeaPhase.BusinessPlan when !idea.IsPRDGenerated => "Generate Product Requirements",
+            IdeaPhase.ProductDesign when !idea.IsMockupCreated => "Create Visual Mockup",
+            IdeaPhase.Mockup when !idea.IsActionPlanGenerated => "Generate Action Plan",
+            IdeaPhase.ActionPlan => "Begin Implementation",
+            IdeaPhase.Implementation => "Execute Plan",
+            _ => "Continue Development"
+        };
     }
 }
 
@@ -1175,10 +1270,15 @@
     opacity: 0.8;
 }
 
+.idea-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    padding: 16px 16px 0;
+}
+
 .idea-industry-tag {
-    position: absolute;
-    top: 12px;
-    left: 12px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     padding: 4px 8px;
@@ -1187,6 +1287,92 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+/* Phase Progress Styles */
+.phase-progress {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 0 16px 16px;
+}
+
+.phase-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.phase-icon {
+    font-size: 24px;
+    line-height: 1;
+}
+
+.phase-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.current-phase {
+    font-weight: 600;
+    color: #1e40af;
+    font-size: 14px;
+}
+
+.phase-description {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.progress-bar {
+    background: #e2e8f0;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.progress-text {
+    font-size: 12px;
+    color: #475569;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Next Action Suggestion */
+.next-action-suggestion {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 0 16px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.next-action-label {
+    font-weight: 600;
+    color: #92400e;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.next-action-text {
+    color: #92400e;
+    font-size: 13px;
+    font-weight: 500;
 }
 
 .idea-actions {

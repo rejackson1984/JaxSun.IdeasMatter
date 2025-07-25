@@ -46,7 +46,14 @@ public class MockDataService : IMockDataService
                 ViabilityScore = 85,
                 MarketSize = 2147483647, // $2.4B (capped at max int)
                 KeyChallenges = new List<string> { "High competition from established players", "Logistics complexity for sustainable packaging", "Higher operational costs for eco-friendly practices" },
-                SuccessFactors = new List<string> { "Strong environmental brand identity", "Strategic local restaurant partnerships", "Robust technology platform with Green Score system" }
+                SuccessFactors = new List<string> { "Strong environmental brand identity", "Strategic local restaurant partnerships", "Robust technology platform with Green Score system" },
+                CurrentPhase = IdeaPhase.ActionPlan,
+                IsBusinessPlanGenerated = true,
+                IsPRDGenerated = true,
+                IsMockupCreated = true,
+                IsActionPlanGenerated = false,
+                LastActivityDate = DateTime.UtcNow.AddDays(-2),
+                NextSuggestedAction = "Generate Action Plan"
             },
             new BusinessIdeaScenario
             {
@@ -60,7 +67,14 @@ public class MockDataService : IMockDataService
                 ViabilityScore = 78,
                 MarketSize = 850000000,
                 KeyChallenges = new List<string> { "High AI development and maintenance costs", "Extensive content creation across subjects", "Competitive user acquisition in crowded market" },
-                SuccessFactors = new List<string> { "Adaptive learning technology that truly personalizes", "High-quality educational content", "Strong user engagement and retention metrics" }
+                SuccessFactors = new List<string> { "Adaptive learning technology that truly personalizes", "High-quality educational content", "Strong user engagement and retention metrics" },
+                CurrentPhase = IdeaPhase.BusinessPlan,
+                IsBusinessPlanGenerated = true,
+                IsPRDGenerated = false,
+                IsMockupCreated = false,
+                IsActionPlanGenerated = false,
+                LastActivityDate = DateTime.UtcNow.AddDays(-5),
+                NextSuggestedAction = "Generate Product Requirements"
             },
             new BusinessIdeaScenario
             {
@@ -74,7 +88,14 @@ public class MockDataService : IMockDataService
                 ViabilityScore = 72,
                 MarketSize = 1200000000,
                 KeyChallenges = new List<string> { "Building critical mass of both artisans and customers", "Maintaining quality standards across diverse products", "Complex shipping logistics for fragile handmade items" },
-                SuccessFactors = new List<string> { "Strong community building and engagement", "Comprehensive artisan support and training", "Effective digital marketing and SEO strategy" }
+                SuccessFactors = new List<string> { "Strong community building and engagement", "Comprehensive artisan support and training", "Effective digital marketing and SEO strategy" },
+                CurrentPhase = IdeaPhase.Concept,
+                IsBusinessPlanGenerated = false,
+                IsPRDGenerated = false,
+                IsMockupCreated = false,
+                IsActionPlanGenerated = false,
+                LastActivityDate = DateTime.UtcNow.AddDays(-1),
+                NextSuggestedAction = "Create Business Plan"
             },
             new BusinessIdeaScenario
             {
@@ -88,7 +109,14 @@ public class MockDataService : IMockDataService
                 ViabilityScore = 73,
                 MarketSize = 2147483647, // $4.5B (capped at max int)
                 KeyChallenges = new List<string> { "High VR hardware requirements for users", "Substantial content development costs", "Motion sickness and safety concerns" },
-                SuccessFactors = new List<string> { "Compelling and diverse VR fitness content", "Strategic partnerships with VR hardware manufacturers", "Strong community features and social integration" }
+                SuccessFactors = new List<string> { "Compelling and diverse VR fitness content", "Strategic partnerships with VR hardware manufacturers", "Strong community features and social integration" },
+                CurrentPhase = IdeaPhase.Mockup,
+                IsBusinessPlanGenerated = true,
+                IsPRDGenerated = true,
+                IsMockupCreated = true,
+                IsActionPlanGenerated = false,
+                LastActivityDate = DateTime.UtcNow.AddDays(-3),
+                NextSuggestedAction = "Generate Action Plan"
             },
             new BusinessIdeaScenario
             {
@@ -312,7 +340,14 @@ public class MockDataService : IMockDataService
                 ViabilityScore = 75,
                 MarketSize = 2147483647, // $3.8B (capped at max int)
                 KeyChallenges = new List<string> { "Complex regulatory approval processes", "High upfront capital requirements for solar installations", "Navigating utility company partnerships and grid integration" },
-                SuccessFactors = new List<string> { "Strong relationships with utilities and regulators", "Transparent financial modeling and bill savings", "Community engagement and education programs" }
+                SuccessFactors = new List<string> { "Strong relationships with utilities and regulators", "Transparent financial modeling and bill savings", "Community engagement and education programs" },
+                CurrentPhase = IdeaPhase.Implementation,
+                IsBusinessPlanGenerated = true,
+                IsPRDGenerated = true,
+                IsMockupCreated = true,
+                IsActionPlanGenerated = true,
+                LastActivityDate = DateTime.UtcNow.AddHours(-6),
+                NextSuggestedAction = "Execute Implementation Plan"
             }
         };
     }
