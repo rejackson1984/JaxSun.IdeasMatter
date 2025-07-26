@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuildLab - Turn Your Ideas Into Your Dream Business</title>
+    <meta name="description" content="The complete platform for turning your business ideas into reality. No experience needed. Join 25,000+ young entrepreneurs building their dream businesses.">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <span class="logo-text">BuildLab</span>
+                </div>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="how-it-works.html" class="nav-link">How It Works</a>
+                <a href="success-stories.html" class="nav-link">Success Stories</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <div class="nav-cta">
+                    <button class="btn-nav-login" onclick="showLoginModal()">Login</button>
+                    <button class="btn-nav-signup">Get Started Free</button>
+                </div>
+            </div>
+            <div class="mobile-menu-toggle" id="mobile-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            <div class="hero-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-icon">🤝</span>
+                    <span class="badge-text">Seeking 25-50 serious entrepreneurs</span>
+                </div>
+                <h1 class="hero-title">
+                    True Business <span class="highlight">Partnership</span><br>
+                    Not Another <span class="highlight">Platform</span>
+                </h1>
+                <p class="hero-subtitle">
+                    We're a startup looking for entrepreneurial partners. You bring the idea and initial investment, 
+                    we bring the technical expertise and ongoing support. Revenue share: 85% you, 15% us.
+                </p>
+                <div class="hero-cta">
+                    <button class="btn-primary btn-large" onclick="startOnboarding()">
+                        <span class="btn-text">Apply for Partnership</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </button>
+                    <button class="btn-secondary btn-large" onclick="playVideo()">
+                        <i class="fas fa-info-circle btn-icon"></i>
+                        <span class="btn-text">Learn About Our Model</span>
+                    </button>
+                </div>
+                <div class="hero-social-proof">
+                    <div class="proof-text">
+                        <div class="proof-callout">
+                            <h4>What We're Looking For:</h4>
+                            <ul class="criteria-list">
+                                <li>Serious about building a real business</li>
+                                <li>Can invest $2-5K for initial development costs</li>
+                                <li>Willing to commit to long-term partnership</li>
+                                <li>Open to technical guidance and feedback</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="dashboard-mockup">
+                    <div class="mockup-header">
+                        <div class="mockup-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <div class="mockup-title">Your Business Builder</div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="progress-section">
+                            <h3>Your Journey Progress</h3>
+                            <div class="journey-steps">
+                                <div class="step completed">
+                                    <div class="step-icon">✓</div>
+                                    <span>Idea Validation</span>
+                                </div>
+                                <div class="step active">
+                                    <div class="step-icon">2</div>
+                                    <span>Market Research</span>
+                                </div>
+                                <div class="step">
+                                    <div class="step-icon">3</div>
+                                    <span>Build & Launch</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ai-assistant">
+                            <div class="assistant-avatar">🤖</div>
+                            <div class="assistant-message">
+                                <p>"Market validation looks strong. Ready for the next development sprint? Budget estimate: $800."</p>
+                                <div class="message-actions">
+                                    <button class="action-btn">Approve budget</button>
+                                    <button class="action-btn secondary">Review details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem/Solution Section -->
+    <section class="problem-solution">
+        <div class="container">
+            <div class="section-split">
+                <div class="problem-side">
+                    <div class="content-block">
+                        <h2 class="section-title">
+                            The Challenge with<br>
+                            Most "Business Builders"
+                        </h2>
+                        <div class="problem-list">
+                            <div class="problem-item">
+                                <div class="problem-icon">🏗️</div>
+                                <div class="problem-text">
+                                    <h4>They build, then disappear</h4>
+                                    <p>Most services help you launch, then leave you to figure out operations, marketing, and growth alone.</p>
+                                </div>
+                            </div>
+                            <div class="problem-item">
+                                <div class="problem-icon">💰</div>
+                                <div class="problem-text">
+                                    <h4>Expensive upfront with no skin in the game</h4>
+                                    <p>Pay $10-50K upfront to agencies who profit whether your business succeeds or fails.</p>
+                                </div>
+                            </div>
+                            <div class="problem-item">
+                                <div class="problem-icon">🎯</div>
+                                <div class="problem-text">
+                                    <h4>Generic solutions for unique problems</h4>
+                                    <p>Cookie-cutter approaches that don't adapt to your specific market or challenges.</p>
+                                </div>
+                            </div>
+                            <div class="problem-item">
+                                <div class="problem-icon">📈</div>
+                                <div class="problem-text">
+                                    <h4>No ongoing business support</h4>
+                                    <p>Once launched, you're on your own for scaling, optimization, and growth challenges.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="solution-side">
+                    <div class="content-block">
+                        <h2 class="section-title">
+                            Our Partnership<br>
+                            <span class="highlight">Model</span>
+                        </h2>
+                        <div class="solution-list">
+                            <div class="solution-item">
+                                <div class="solution-icon">🤝</div>
+                                <div class="solution-text">
+                                    <h4>True skin in the game</h4>
+                                    <p>We only succeed when you do. 15% revenue share means we're motivated to make your business thrive.</p>
+                                </div>
+                            </div>
+                            <div class="solution-item">
+                                <div class="solution-icon">🛠️</div>
+                                <div class="solution-text">
+                                    <h4>Technical co-founder</h4>
+                                    <p>We handle all the technical complexity - development, hosting, maintenance, and scaling.</p>
+                                </div>
+                            </div>
+                            <div class="solution-item">
+                                <div class="solution-icon">📊</div>
+                                <div class="solution-text">
+                                    <h4>Ongoing business operations</h4>
+                                    <p>Analytics, optimization, customer support systems, and growth strategies included.</p>
+                                </div>
+                            </div>
+                            <div class="solution-item">
+                                <div class="solution-icon">💡</div>
+                                <div class="solution-text">
+                                    <h4>Transparent, fair partnership</h4>
+                                    <p>Low upfront investment, clear revenue split, and you maintain majority ownership.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="solution-cta">
+                            <button class="btn-primary" onclick="startOnboarding()">
+                                <span class="btn-text">Apply for Partnership</span>
+                                <i class="fas fa-arrow-right btn-icon"></i>
+                            </button>
+                            <p class="cta-note">Selective process • Investment required</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Preview -->
+    <section class="how-it-works-preview">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">
+                    Partnership Process
+                </h2>
+                <p class="section-subtitle">
+                    How we work together to build and grow your business
+                </p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <div class="step-icon-large">📋</div>
+                    <h3 class="step-title">Apply & Plan</h3>
+                    <p class="step-description">
+                        Submit your idea through our application. We'll conduct market research together 
+                        and create a detailed development plan with cost estimates.
+                    </p>
+                    <div class="step-preview">
+                        <div class="preview-badge">What You Get</div>
+                        <div class="preview-content">
+                            <span class="preview-item">✓ Market Analysis</span>
+                            <span class="preview-item">✓ Technical Spec</span>
+                            <span class="preview-item">✓ Investment Plan</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <div class="step-icon-large">🛠️</div>
+                    <h3 class="step-title">Build Together</h3>
+                    <p class="step-description">
+                        You provide the initial investment for development costs. We build your MVP, 
+                        handle all technical aspects, and set up your business infrastructure.
+                    </p>
+                    <div class="step-preview">
+                        <div class="preview-badge">Typical Investment</div>
+                        <div class="preview-content">
+                            <span class="preview-metric">$2-5K Initial</span>
+                            <span class="preview-metric">4-8 Week Timeline</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <div class="step-icon-large">📈</div>
+                    <h3 class="step-title">Grow & Share</h3>
+                    <p class="step-description">
+                        Launch together and share in the revenue. You keep 85%, we take 15%. 
+                        We continue optimizing and supporting your business long-term.
+                    </p>
+                    <div class="step-preview">
+                        <div class="preview-badge">Revenue Split</div>
+                        <div class="preview-content">
+                            <span class="preview-metric success">You: 85%</span>
+                            <span class="preview-metric">Us: 15%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="preview-cta">
+                <a href="how-it-works.html" class="btn-outline">
+                    <span class="btn-text">See the Complete Process</span>
+                    <i class="fas fa-arrow-right btn-icon"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof Section -->
+    <section class="social-proof">
+        <div class="container">
+            <div class="proof-header">
+                <h2 class="section-title text-center">
+                    Current Partners
+                </h2>
+                <p class="section-subtitle text-center">
+                    Meet some of the entrepreneurs we're building businesses with right now
+                </p>
+            </div>
+            <div class="success-stories-grid">
+                <div class="story-card featured">
+                    <div class="story-badge">🎯 Active Partner</div>
+                    <div class="story-header">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=80&h=80&fit=crop&crop=face" alt="Sarah" class="story-avatar">
+                        <div class="story-info">
+                            <h4 class="story-name">Sarah, 26</h4>
+                            <p class="story-business">Local Services App</p>
+                            <div class="story-result">$4.2K MRR</div>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <p class="story-quote">
+                            "I invested $3,500 upfront and now we're generating consistent revenue. 
+                            BuildLab handles all the tech while I focus on customer acquisition and operations."
+                        </p>
+                        <div class="story-metrics">
+                            <div class="metric">
+                                <span class="metric-value">$3.5K</span>
+                                <span class="metric-label">My Monthly Share</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">$700</span>
+                                <span class="metric-label">BuildLab Share</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">6</span>
+                                <span class="metric-label">Months</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="story-card">
+                    <div class="story-header">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face" alt="Mike" class="story-avatar">
+                        <div class="story-info">
+                            <h4 class="story-name">Mike, 29</h4>
+                            <p class="story-business">B2B SaaS Tool</p>
+                            <div class="story-result">Month 3</div>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <p class="story-quote">
+                            "We're 3 months in and just got our first paying customers. The partnership model keeps us both motivated."
+                        </p>
+                    </div>
+                </div>
+                <div class="story-card">
+                    <div class="story-header">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face" alt="Lisa" class="story-avatar">
+                        <div class="story-info">
+                            <h4 class="story-name">Lisa, 24</h4>
+                            <p class="story-business">E-commerce Platform</p>
+                            <div class="story-result">Planning Phase</div>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <p class="story-quote">
+                            "Just completed the market analysis phase. Excited to start development next month with our $4K budget."
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="proof-stats">
+                <div class="stat-item">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Active partnerships</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">$847K</div>
+                    <div class="stat-label">Partner revenue this year</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Partners still active</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Avg months to profitability</div>
+                </div>
+            </div>
+            <div class="proof-cta">
+                <a href="success-stories.html" class="btn-outline">
+                    <span class="btn-text">Read More Success Stories</span>
+                    <i class="fas fa-arrow-right btn-icon"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features/Benefits -->
+    <section class="features-benefits">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">
+                    Everything You Need to Build Your Business
+                </h2>
+                <p class="section-subtitle">
+                    From idea validation to customer acquisition - we've got you covered
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3 class="feature-title">AI Business Mentor</h3>
+                    <p class="feature-description">
+                        Get personalized guidance 24/7 from an AI trained on successful business strategies
+                    </p>
+                    <div class="feature-benefit">
+                        <span class="benefit-text">Save $10K+ on business consultants</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Market Research Engine</h3>
+                    <p class="feature-description">
+                        Validate your idea with real market data and competitor analysis in minutes
+                    </p>
+                    <div class="feature-benefit">
+                        <span class="benefit-text">Avoid building products nobody wants</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Step-by-Step Roadmap</h3>
+                    <p class="feature-description">
+                        Know exactly what to do next with personalized tasks and milestones
+                    </p>
+                    <div class="feature-benefit">
+                        <span class="benefit-text">Never feel lost or overwhelmed again</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Rapid MVP Builder</h3>
+                    <p class="feature-description">
+                        Create and test your product ideas without writing code or hiring developers
+                    </p>
+                    <div class="feature-benefit">
+                        <span class="benefit-text">Launch 10x faster than traditional methods</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">Brand & Design Studio</h3>
+                    <p class="feature-description">
+                        Generate professional branding, logos, and marketing materials instantly
+                    </p>
+                    <div class="feature-benefit">
+                        <span class="benefit-text">Look professional from day one</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3 class="feature-title">Growth Analytics</h3>
+                    <p class="feature-description">
+                        Track your progress and optimize your business with real-time insights
+                    </p>
+                    <div class="feature-benefit">
+                        <span class="benefit-text">Make data-driven decisions like a pro</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partnership Opportunity -->
+    <section class="partnership-opportunity">
+        <div class="container">
+            <div class="opportunity-content">
+                <div class="opportunity-badge">🤝 Partnership Opportunity</div>
+                <h2 class="opportunity-title">
+                    Ready to Build Something Real Together?
+                </h2>
+                <p class="opportunity-subtitle">
+                    We're looking for entrepreneurs who understand that building a sustainable business 
+                    takes investment, commitment, and the right partnership.
+                </p>
+                <div class="opportunity-requirements">
+                    <div class="requirement-item">
+                        <div class="req-icon">💰</div>
+                        <div class="req-content">
+                            <h4>Investment Ready</h4>
+                            <p>$2-5K initial development budget</p>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <div class="req-icon">🎯</div>
+                        <div class="req-content">
+                            <h4>Serious Commitment</h4>
+                            <p>Long-term partnership mindset</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="opportunity-cta">
+                    <button class="btn-primary btn-large" onclick="startOnboarding()">
+                        <span class="btn-text">Apply for Partnership</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </button>
+                    <p class="opportunity-note">Selective process • Investment required</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final Partnership CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">
+                    Ready to Build a Real Business Partnership?
+                </h2>
+                <p class="cta-subtitle">
+                    We're building something meaningful with serious entrepreneurs. 
+                    Are you one of the 25-50 we'll partner with this year?
+                </p>
+                <div class="cta-buttons">
+                    <button class="btn-primary btn-xl" onclick="startOnboarding()">
+                        <span class="btn-text">Apply for Partnership</span>
+                        <i class="fas fa-handshake btn-icon"></i>
+                    </button>
+                    <button class="btn-outline btn-xl" onclick="showLoginModal()">
+                        <span class="btn-text">Current Partner Login</span>
+                        <i class="fas fa-sign-in-alt btn-icon"></i>
+                    </button>
+                </div>
+                <div class="cta-guarantees">
+                    <div class="guarantee-item">
+                        <i class="fas fa-handshake guarantee-icon"></i>
+                        <span>True partnership - we succeed together</span>
+                    </div>
+                    <div class="guarantee-item">
+                        <i class="fas fa-chart-line guarantee-icon"></i>
+                        <span>85% revenue share - you keep majority</span>
+                    </div>
+                    <div class="guarantee-item">
+                        <i class="fas fa-tools guarantee-icon"></i>
+                        <span>Full technical co-founder support</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Welcome Back to BuildLab</h3>
+                <button class="modal-close" onclick="closeLoginModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="login-form">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="Your password" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-label">Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn-modal-primary" onclick="loginUser(event)">
+                        <span class="btn-text">Sign In to Dashboard</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </button>
+                </form>
+                <div class="modal-divider">
+                    <span>or</span>
+                </div>
+                <div class="social-login">
+                    <button class="btn-social google">
+                        <i class="fab fa-google"></i>
+                        <span>Continue with Google</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <p>Don't have an account? <a href="#" onclick="closeLoginModal(); startOnboarding();">Sign up free</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>

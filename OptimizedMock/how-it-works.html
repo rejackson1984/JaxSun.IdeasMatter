@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works - BuildLab</title>
+    <meta name="description" content="Discover how BuildLab transforms your business ideas into reality through our proven 3-step process. From validation to launch in 90 days.">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <span class="logo-text">BuildLab</span>
+                </div>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="how-it-works.html" class="nav-link active">How It Works</a>
+                <a href="success-stories.html" class="nav-link">Success Stories</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <div class="nav-cta">
+                    <button class="btn-nav-login" onclick="showLoginModal()">Login</button>
+                    <button class="btn-nav-signup">Get Started Free</button>
+                </div>
+            </div>
+            <div class="mobile-menu-toggle" id="mobile-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-how">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-icon">🔥</span>
+                    <span class="badge-text">Proven methodology</span>
+                </div>
+                <h1 class="hero-title">
+                    The <span class="highlight">Exact Process</span><br>
+                    That Built 25,000+ Businesses
+                </h1>
+                <p class="hero-subtitle">
+                    Our 3-step framework takes you from idea to profitable business in 90 days. 
+                    No guesswork, no confusion - just a clear path to success.
+                </p>
+                <div class="process-overview">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <span class="step-name">Dream</span>
+                    </div>
+                    <div class="process-arrow">→</div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <span class="step-name">Plan</span>
+                    </div>
+                    <div class="process-arrow">→</div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <span class="step-name">Build</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Step 1: Dream -->
+    <section class="step-section dream-step">
+        <div class="container">
+            <div class="step-grid">
+                <div class="step-content">
+                    <div class="step-header">
+                        <div class="step-badge">
+                            <span class="step-number">01</span>
+                            <span class="step-label">Dream Phase</span>
+                        </div>
+                        <h2 class="step-title">
+                            Turn Your Wild Ideas Into<br>
+                            <span class="highlight">Market-Validated Opportunities</span>
+                        </h2>
+                    </div>
+                    <p class="step-description">
+                        Stop wondering "will this work?" Our AI validates your idea using real market data, 
+                        competitor analysis, and customer demand signals. Know before you build.
+                    </p>
+                    
+                    <div class="step-benefits">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">🎯</div>
+                            <div class="benefit-text">
+                                <h4>Market Size Analysis</h4>
+                                <p>Discover if your market is big enough to sustain a profitable business</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">🔍</div>
+                            <div class="benefit-text">
+                                <h4>Competitor Intelligence</h4>
+                                <p>See what's working for others and find your competitive advantage</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">💡</div>
+                            <div class="benefit-text">
+                                <h4>Customer Validation</h4>
+                                <p>Prove real people want your solution before you spend time building</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-cta">
+                        <button class="btn-primary" onclick="startOnboarding()">
+                            <span class="btn-text">Validate My Idea</span>
+                            <i class="fas fa-arrow-right btn-icon"></i>
+                        </button>
+                        <p class="cta-note">Get validation results in 24 hours</p>
+                    </div>
+                </div>
+                <div class="step-visual">
+                    <div class="validation-dashboard">
+                        <div class="dashboard-header">
+                            <h4>Idea Validation Report</h4>
+                            <div class="validation-score success">
+                                <span class="score">87%</span>
+                                <span class="label">Market Fit</span>
+                            </div>
+                        </div>
+                        <div class="validation-metrics">
+                            <div class="metric">
+                                <div class="metric-label">Market Size</div>
+                                <div class="metric-value">$2.4B</div>
+                                <div class="metric-trend positive">+23% YoY</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Competition</div>
+                                <div class="metric-value">Moderate</div>
+                                <div class="metric-trend neutral">12 competitors</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Demand Score</div>
+                                <div class="metric-value">9.2/10</div>
+                                <div class="metric-trend positive">High interest</div>
+                            </div>
+                        </div>
+                        <div class="next-steps">
+                            <h5>Recommended Next Steps:</h5>
+                            <div class="next-step">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Create business plan</span>
+                            </div>
+                            <div class="next-step">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Define target customer</span>
+                            </div>
+                            <div class="next-step">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Build MVP prototype</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Step 2: Plan -->
+    <section class="step-section plan-step">
+        <div class="container">
+            <div class="step-grid reverse">
+                <div class="step-visual">
+                    <div class="business-plan-preview">
+                        <div class="plan-header">
+                            <h4>Your Business Blueprint</h4>
+                            <div class="plan-status">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Complete</span>
+                            </div>
+                        </div>
+                        <div class="plan-sections">
+                            <div class="plan-section completed">
+                                <div class="section-icon">📊</div>
+                                <div class="section-info">
+                                    <h5>Market Analysis</h5>
+                                    <p>12 pages • Industry insights & trends</p>
+                                </div>
+                                <div class="section-status">✓</div>
+                            </div>
+                            <div class="plan-section completed">
+                                <div class="section-icon">💰</div>
+                                <div class="section-info">
+                                    <h5>Financial Projections</h5>
+                                    <p>5 years • Revenue & expense forecasts</p>
+                                </div>
+                                <div class="section-status">✓</div>
+                            </div>
+                            <div class="plan-section completed">
+                                <div class="section-icon">🎯</div>
+                                <div class="section-info">
+                                    <h5>Marketing Strategy</h5>
+                                    <p>8 pages • Customer acquisition plan</p>
+                                </div>
+                                <div class="section-status">✓</div>
+                            </div>
+                            <div class="plan-section completed">
+                                <div class="section-icon">🚀</div>
+                                <div class="section-info">
+                                    <h5>Launch Roadmap</h5>
+                                    <p>90-day plan • Week-by-week tasks</p>
+                                </div>
+                                <div class="section-status">✓</div>
+                            </div>
+                        </div>
+                        <div class="plan-download">
+                            <button class="download-btn">
+                                <i class="fas fa-download"></i>
+                                <span>Download PDF</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-content">
+                    <div class="step-header">
+                        <div class="step-badge">
+                            <span class="step-number">02</span>
+                            <span class="step-label">Plan Phase</span>
+                        </div>
+                        <h2 class="step-title">
+                            Get Your Complete<br>
+                            <span class="highlight">Business Blueprint</span>
+                        </h2>
+                    </div>
+                    <p class="step-description">
+                        Skip months of confusion with a personalized business plan that actually works. 
+                        Our AI creates investor-ready documents tailored to your specific idea and market.
+                    </p>
+                    
+                    <div class="step-benefits">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">📈</div>
+                            <div class="benefit-text">
+                                <h4>Financial Modeling</h4>
+                                <p>5-year projections with realistic revenue and expense forecasts</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">🎯</div>
+                            <div class="benefit-text">
+                                <h4>Marketing Strategy</h4>
+                                <p>Customer acquisition plan with specific channels and budgets</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">🗓️</div>
+                            <div class="benefit-text">
+                                <h4>90-Day Launch Plan</h4>
+                                <p>Week-by-week tasks to get you from idea to first customer</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-results">
+                        <h4>What You Get:</h4>
+                        <div class="result-grid">
+                            <div class="result-item">
+                                <i class="fas fa-file-pdf"></i>
+                                <span>40-page business plan</span>
+                            </div>
+                            <div class="result-item">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Financial spreadsheets</span>
+                            </div>
+                            <div class="result-item">
+                                <i class="fas fa-presentation"></i>
+                                <span>Investor pitch deck</span>
+                            </div>
+                            <div class="result-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>90-day action plan</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Step 3: Build -->
+    <section class="step-section build-step">
+        <div class="container">
+            <div class="step-grid">
+                <div class="step-content">
+                    <div class="step-header">
+                        <div class="step-badge">
+                            <span class="step-number">03</span>
+                            <span class="step-label">Build Phase</span>
+                        </div>
+                        <h2 class="step-title">
+                            Launch Your Business &<br>
+                            <span class="highlight">Get Your First Customers</span>
+                        </h2>
+                    </div>
+                    <p class="step-description">
+                        From MVP to profitable business in record time. Our AI guides you through 
+                        building, launching, and scaling while avoiding the common pitfalls that kill 90% of startups.
+                    </p>
+                    
+                    <div class="step-benefits">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">⚡</div>
+                            <div class="benefit-text">
+                                <h4>Rapid MVP Development</h4>
+                                <p>Build and test your minimum viable product in weeks, not months</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">👥</div>
+                            <div class="benefit-text">
+                                <h4>Customer Acquisition</h4>
+                                <p>Proven strategies to get your first 100 paying customers fast</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">📊</div>
+                            <div class="benefit-text">
+                                <h4>Growth Optimization</h4>
+                                <p>Data-driven insights to scale from $0 to $10K+ monthly revenue</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="success-timeline">
+                        <h4>Typical 90-Day Timeline:</h4>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-dot">30</div>
+                                <div class="timeline-content">
+                                    <span class="timeline-title">MVP Launch</span>
+                                    <span class="timeline-desc">First version goes live</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot">60</div>
+                                <div class="timeline-content">
+                                    <span class="timeline-title">First Customers</span>
+                                    <span class="timeline-desc">Revenue starts flowing</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot">90</div>
+                                <div class="timeline-content">
+                                    <span class="timeline-title">Scale & Optimize</span>
+                                    <span class="timeline-desc">Growing profitably</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-visual">
+                    <div class="launch-dashboard">
+                        <div class="dashboard-header">
+                            <h4>Launch Metrics</h4>
+                            <div class="live-indicator">
+                                <div class="pulse-dot"></div>
+                                <span>Live</span>
+                            </div>
+                        </div>
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-icon">👥</div>
+                                <div class="metric-value">1,247</div>
+                                <div class="metric-label">Users</div>
+                                <div class="metric-change positive">+23% today</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon">💰</div>
+                                <div class="metric-value">$12,450</div>
+                                <div class="metric-label">Revenue</div>
+                                <div class="metric-change positive">+45% this week</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon">📈</div>
+                                <div class="metric-value">4.2%</div>
+                                <div class="metric-label">Conversion</div>
+                                <div class="metric-change positive">Above target</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon">⭐</div>
+                                <div class="metric-value">4.8</div>
+                                <div class="metric-label">Rating</div>
+                                <div class="metric-change neutral">127 reviews</div>
+                            </div>
+                        </div>
+                        <div class="recent-activity">
+                            <h5>Recent Activity</h5>
+                            <div class="activity-item">
+                                <div class="activity-dot new"></div>
+                                <span>New customer: Sarah M. - $97 plan</span>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot"></div>
+                                <span>5-star review from John D.</span>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot"></div>
+                                <span>Payment received: $297</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Coach Integration -->
+    <section class="ai-coach-section">
+        <div class="container">
+            <div class="coach-grid">
+                <div class="coach-content">
+                    <h2 class="section-title">
+                        Your AI Business Coach<br>
+                        <span class="highlight">Guides Every Step</span>
+                    </h2>
+                    <p class="section-subtitle">
+                        Meet Alex, your AI business mentor trained on strategies from 1000+ successful entrepreneurs. 
+                        Available 24/7 to answer questions, solve problems, and keep you on track.
+                    </p>
+                    
+                    <div class="coach-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">🧠</div>
+                            <div class="feature-text">
+                                <h4>Personalized Guidance</h4>
+                                <p>Tailored advice based on your specific industry, goals, and challenges</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🚨</div>
+                            <div class="feature-text">
+                                <h4>Problem Solving</h4>
+                                <p>Instant solutions for roadblocks that typically stop entrepreneurs</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">📚</div>
+                            <div class="feature-text">
+                                <h4>Expert Knowledge</h4>
+                                <p>Access to proven strategies from thousands of successful businesses</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="coach-demo">
+                    <div class="chat-interface">
+                        <div class="chat-header">
+                            <div class="coach-avatar">
+                                <div class="avatar-image">🤖</div>
+                                <div class="coach-info">
+                                    <h4>Alex</h4>
+                                    <span class="coach-status">Your AI Business Coach</span>
+                                </div>
+                            </div>
+                            <div class="online-indicator">
+                                <div class="pulse-dot small"></div>
+                                <span>Online</span>
+                            </div>
+                        </div>
+                        <div class="chat-messages">
+                            <div class="message coach-message">
+                                <div class="message-avatar">🤖</div>
+                                <div class="message-content">
+                                    <p>Great progress on your business plan! I noticed your customer acquisition cost is high. Would you like me to analyze your marketing channels and suggest optimizations?</p>
+                                    <div class="message-actions">
+                                        <button class="action-btn">Yes, analyze it</button>
+                                        <button class="action-btn secondary">Show me examples</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="message user-message">
+                                <div class="message-content">
+                                    <p>Yes, please! My cost per customer is $45 and I want to get it below $30.</p>
+                                </div>
+                            </div>
+                            <div class="message coach-message">
+                                <div class="message-avatar">🤖</div>
+                                <div class="message-content">
+                                    <p>Perfect! I found 3 optimization opportunities that could reduce your CAC by 40%. Here's what I recommend...</p>
+                                    <div class="typing-indicator">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" placeholder="Ask Alex anything...">
+                            <button class="send-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Metrics -->
+    <section class="success-metrics-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">Results That Speak for Themselves</h2>
+                <p class="section-subtitle">
+                    Our proven process consistently delivers outstanding results for entrepreneurs
+                </p>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-card large">
+                    <div class="metric-icon">🚀</div>
+                    <div class="metric-value">89%</div>
+                    <div class="metric-label">Success Rate</div>
+                    <div class="metric-description">
+                        Percentage of entrepreneurs who successfully launch their business
+                    </div>
+                </div>
+                <div class="metric-card large">
+                    <div class="metric-icon">📅</div>
+                    <div class="metric-value">90</div>
+                    <div class="metric-label">Days to Launch</div>
+                    <div class="metric-description">
+                        Average time from idea to first paying customer
+                    </div>
+                </div>
+                <div class="metric-card large">
+                    <div class="metric-icon">💰</div>
+                    <div class="metric-value">$45K</div>
+                    <div class="metric-label">First Year Revenue</div>
+                    <div class="metric-description">
+                        Average revenue generated in the first 12 months
+                    </div>
+                </div>
+                <div class="metric-card large">
+                    <div class="metric-icon">📈</div>
+                    <div class="metric-value">67%</div>
+                    <div class="metric-label">Still Growing</div>
+                    <div class="metric-description">
+                        Businesses still operating and profitable after 2 years
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">
+                    Ready to Start Your Journey?
+                </h2>
+                <p class="cta-subtitle">
+                    Join 25,000+ entrepreneurs who turned their ideas into profitable businesses with BuildLab
+                </p>
+                <div class="cta-buttons">
+                    <button class="btn-primary btn-xl" onclick="startOnboarding()">
+                        <span class="btn-text">Start Building Now</span>
+                        <i class="fas fa-rocket btn-icon"></i>
+                    </button>
+                    <a href="success-stories.html" class="btn-outline btn-xl">
+                        <span class="btn-text">See Success Stories</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </a>
+                </div>
+                <div class="cta-guarantees">
+                    <div class="guarantee-item">
+                        <i class="fas fa-shield-alt guarantee-icon"></i>
+                        <span>30-day money back guarantee</span>
+                    </div>
+                    <div class="guarantee-item">
+                        <i class="fas fa-clock guarantee-icon"></i>
+                        <span>Start seeing results in 48 hours</span>
+                    </div>
+                    <div class="guarantee-item">
+                        <i class="fas fa-heart guarantee-icon"></i>
+                        <span>Join 25,000+ happy entrepreneurs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Welcome Back to BuildLab</h3>
+                <button class="modal-close" onclick="closeLoginModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="login-form">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="Your password" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-label">Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn-modal-primary" onclick="loginUser(event)">
+                        <span class="btn-text">Sign In to Dashboard</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </button>
+                </form>
+                <div class="modal-divider">
+                    <span>or</span>
+                </div>
+                <div class="social-login">
+                    <button class="btn-social google">
+                        <i class="fab fa-google"></i>
+                        <span>Continue with Google</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <p>Don't have an account? <a href="#" onclick="closeLoginModal(); startOnboarding();">Sign up free</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IdeaCoach Pro - Transform Your Ideas Into Million Dollar Businesses</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-rocket brand-icon"></i>
+                <span class="brand-text">IdeaCoach Pro</span>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="journey.html" class="nav-link">Your Journey</a>
+                <a href="coach.html" class="nav-link">AI Coach</a>
+                <a href="success.html" class="nav-link">Success Stories</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <div class="nav-auth">
+                    <button class="btn-secondary" onclick="showLoginModal()">Sign In</button>
+                    <button class="btn-primary">Start Free Trial</button>
+                </div>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-star"></i>
+                    <span>Trusted by 50,000+ Entrepreneurs</span>
+                </div>
+                <h1 class="hero-title">
+                    Transform Your <span class="gradient-text">Wild Ideas</span> Into 
+                    <span class="gradient-text">Million Dollar Businesses</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Join thousands of first-time entrepreneurs who've built successful companies with our AI-powered coaching platform. 
+                    No business experience required - just bring your passion and we'll handle the rest.
+                </p>
+                <div class="hero-cta">
+                    <button class="btn-hero-primary">
+                        <i class="fas fa-rocket"></i>
+                        Start Your Business Journey
+                    </button>
+                    <button class="btn-hero-secondary">
+                        <i class="fas fa-play"></i>
+                        Watch 2-Min Demo
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">$2.3B+</div>
+                        <div class="stat-label">Generated Revenue</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">15,000+</div>
+                        <div class="stat-label">Launched Businesses</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">94%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="dashboard-preview">
+                    <div class="preview-header">
+                        <div class="preview-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="preview-title">Your Business Dashboard</div>
+                    </div>
+                    <div class="preview-content">
+                        <div class="coach-message">
+                            <div class="coach-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-bubble">
+                                <p>"Great news! Your market research shows 87% demand for your app idea. Ready to move to the planning phase?"</p>
+                            </div>
+                        </div>
+                        <div class="progress-tracker">
+                            <div class="phase active"><span>1</span> Research</div>
+                            <div class="phase next"><span>2</span> Planning</div>
+                            <div class="phase"><span>3</span> Design</div>
+                            <div class="phase"><span>4</span> Development</div>
+                            <div class="phase"><span>5</span> Launch</div>
+                            <div class="phase"><span>6</span> Operations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journey Section -->
+    <section id="journey" class="journey">
+        <div class="container">
+            <div class="section-header">
+                <h2>Your Entrepreneurial Journey</h2>
+                <p>From idea to IPO - we guide you through every step with personalized AI coaching</p>
+            </div>
+            
+            <div class="journey-timeline">
+                <div class="journey-phase">
+                    <div class="phase-icon research">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="phase-content">
+                        <h3>1. Research & Validation</h3>
+                        <p class="phase-subtitle">Discover if your idea has market potential</p>
+                        <ul class="phase-features">
+                            <li><i class="fas fa-check"></i> AI-powered market analysis</li>
+                            <li><i class="fas fa-check"></i> Competitor landscape mapping</li>
+                            <li><i class="fas fa-check"></i> Customer persona development</li>
+                            <li><i class="fas fa-check"></i> Revenue opportunity assessment</li>
+                        </ul>
+                        <div class="coach-insight">
+                            <div class="coach-avatar-small">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <p>"I'll analyze 50,000+ data points to validate your idea's potential"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="journey-phase">
+                    <div class="phase-icon planning">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="phase-content">
+                        <h3>2. Strategic Planning</h3>
+                        <p class="phase-subtitle">Build your roadmap to success</p>
+                        <ul class="phase-features">
+                            <li><i class="fas fa-check"></i> Business model optimization</li>
+                            <li><i class="fas fa-check"></i> Financial projections & budgeting</li>
+                            <li><i class="fas fa-check"></i> Go-to-market strategy</li>
+                            <li><i class="fas fa-check"></i> Risk assessment & mitigation</li>
+                        </ul>
+                        <div class="coach-insight">
+                            <div class="coach-avatar-small">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <p>"I'll create a custom business plan that investors love"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="journey-phase">
+                    <div class="phase-icon design">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <div class="phase-content">
+                        <h3>3. Design & Prototyping</h3>
+                        <p class="phase-subtitle">Create stunning user experiences</p>
+                        <ul class="phase-features">
+                            <li><i class="fas fa-check"></i> Brand identity development</li>
+                            <li><i class="fas fa-check"></i> UI/UX design automation</li>
+                            <li><i class="fas fa-check"></i> Interactive prototypes</li>
+                            <li><i class="fas fa-check"></i> User testing & feedback</li>
+                        </ul>
+                        <div class="coach-insight">
+                            <div class="coach-avatar-small">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <p>"I'll design like the world's best agencies, but faster and cheaper"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="journey-phase">
+                    <div class="phase-icon development">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="phase-content">
+                        <h3>4. Development & Building</h3>
+                        <p class="phase-subtitle">Turn designs into reality</p>
+                        <ul class="phase-features">
+                            <li><i class="fas fa-check"></i> Full-stack code generation</li>
+                            <li><i class="fas fa-check"></i> Database architecture</li>
+                            <li><i class="fas fa-check"></i> API development</li>
+                            <li><i class="fas fa-check"></i> Quality testing & deployment</li>
+                        </ul>
+                        <div class="coach-insight">
+                            <div class="coach-avatar-small">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <p>"I'll build enterprise-grade applications in weeks, not months"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="journey-phase">
+                    <div class="phase-icon launch">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="phase-content">
+                        <h3>5. Launch & Marketing</h3>
+                        <p class="phase-subtitle">Get your first customers</p>
+                        <ul class="phase-features">
+                            <li><i class="fas fa-check"></i> Launch strategy execution</li>
+                            <li><i class="fas fa-check"></i> Marketing automation</li>
+                            <li><i class="fas fa-check"></i> Social media campaigns</li>
+                            <li><i class="fas fa-check"></i> Customer acquisition funnels</li>
+                        </ul>
+                        <div class="coach-insight">
+                            <div class="coach-avatar-small">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <p>"I'll help you acquire 1,000 customers in your first 90 days"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="journey-phase">
+                    <div class="phase-icon operations">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="phase-content">
+                        <h3>6. Scale & Operations</h3>
+                        <p class="phase-subtitle">Grow like a champion CEO</p>
+                        <ul class="phase-features">
+                            <li><i class="fas fa-check"></i> Performance analytics</li>
+                            <li><i class="fas fa-check"></i> Growth optimization</li>
+                            <li><i class="fas fa-check"></i> Team building guidance</li>
+                            <li><i class="fas fa-check"></i> Investment preparation</li>
+                        </ul>
+                        <div class="coach-insight">
+                            <div class="coach-avatar-small">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <p>"I'll coach you to scale from startup to industry leader"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Coach Section -->
+    <section id="coach" class="coach-section">
+        <div class="container">
+            <div class="coach-hero">
+                <div class="coach-content">
+                    <h2>Meet Your AI Business Coach</h2>
+                    <p class="coach-subtitle">
+                        More than just AI - your personal mentor with the combined knowledge of 
+                        10,000+ successful entrepreneurs, VCs, and business experts.
+                    </p>
+                    
+                    <div class="coach-features">
+                        <div class="coach-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4>Learns Your Style</h4>
+                                <p>Adapts to your personality, goals, and learning preferences</p>
+                            </div>
+                        </div>
+                        
+                        <div class="coach-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4>24/7 Availability</h4>
+                                <p>Always there when you need guidance, day or night</p>
+                            </div>
+                        </div>
+                        
+                        <div class="coach-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-target"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4>Results-Driven</h4>
+                                <p>Focused on your success with proven methodologies</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="coach-demo">
+                    <div class="chat-interface">
+                        <div class="chat-header">
+                            <div class="coach-status">
+                                <div class="status-dot online"></div>
+                                <span>Coach Alex - Online</span>
+                            </div>
+                        </div>
+                        <div class="chat-messages">
+                            <div class="message coach-message">
+                                <div class="message-avatar">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="message-content">
+                                    <p>Hey Sarah! I've analyzed your fitness app idea. The market looks promising - $4.4B industry with 73% growth. Ready to dive into competitor analysis?</p>
+                                    <div class="message-actions">
+                                        <button class="action-btn">Yes, let's do it!</button>
+                                        <button class="action-btn secondary">Show me the data first</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="message user-message">
+                                <div class="message-content">
+                                    <p>Show me the data first - I want to understand the numbers</p>
+                                </div>
+                            </div>
+                            
+                            <div class="message coach-message">
+                                <div class="message-avatar">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="message-content">
+                                    <p>Great approach! Here's what I found:</p>
+                                    <div class="data-visualization">
+                                        <div class="data-item">
+                                            <span class="data-label">Market Size:</span>
+                                            <span class="data-value">$4.4B</span>
+                                        </div>
+                                        <div class="data-item">
+                                            <span class="data-label">Growth Rate:</span>
+                                            <span class="data-value">73% YoY</span>
+                                        </div>
+                                        <div class="data-item">
+                                            <span class="data-label">Competition Level:</span>
+                                            <span class="data-value">Medium</span>
+                                        </div>
+                                    </div>
+                                    <p>Your niche in "habit-building fitness" has less competition. Want me to show you the opportunity gap?</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" placeholder="Ask your coach anything...">
+                            <button><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stories -->
+    <section id="success" class="success-stories">
+        <div class="container">
+            <div class="section-header">
+                <h2>Real Success Stories</h2>
+                <p>From complete beginners to thriving entrepreneurs</p>
+            </div>
+            
+            <div class="stories-grid">
+                <div class="story-card featured">
+                    <div class="story-header">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=80&h=80&fit=crop&crop=face" alt="Jessica" class="founder-photo">
+                        <div class="founder-info">
+                            <h4>Jessica Chen</h4>
+                            <p>Fitness App Founder</p>
+                            <div class="story-stats">
+                                <span class="stat">$2.1M Revenue</span>
+                                <span class="stat">50K+ Users</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <p>"I was a yoga instructor with zero business knowledge. IdeaCoach Pro helped me build FitMind from just an idea to a $2.1M app in 18 months. The AI coach taught me everything - from market research to scaling operations."</p>
+                        <div class="story-journey">
+                            <div class="journey-item">
+                                <i class="fas fa-lightbulb"></i>
+                                <span>Started with: Yoga app idea</span>
+                            </div>
+                            <div class="journey-item">
+                                <i class="fas fa-rocket"></i>
+                                <span>Achieved: $2.1M in 18 months</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-header">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Marcus" class="founder-photo">
+                        <div class="founder-info">
+                            <h4>Marcus Johnson</h4>
+                            <p>E-commerce Founder</p>
+                            <div class="success-badge">
+                                <i class="fas fa-trophy"></i>
+                                <span>$5M Exit</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <p>"Fresh out of college with student debt. Built EcoPackaging from my dorm room and sold it for $5M after 2 years. The AI coach was like having a $500/hour consultant 24/7."</p>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-header">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face" alt="Maria" class="founder-photo">
+                        <div class="founder-info">
+                            <h4>Maria Rodriguez</h4>
+                            <p>SaaS Founder</p>
+                            <div class="success-badge">
+                                <i class="fas fa-users"></i>
+                                <span>10K Customers</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <p>"Single mom, no tech background. Built TaskFlow, a project management tool now used by 10,000+ businesses. The platform made the impossible feel achievable."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="success-metrics">
+                <div class="metric">
+                    <div class="metric-number">73%</div>
+                    <div class="metric-label">Launch within 6 months</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-number">$847K</div>
+                    <div class="metric-label">Average revenue Year 1</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-number">94%</div>
+                    <div class="metric-label">Still operating after 2 years</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-number">312%</div>
+                    <div class="metric-label">ROI on investment</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Everything You Need to Succeed</h2>
+                <p>Professional-grade tools designed for first-time entrepreneurs</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h4>Market Intelligence</h4>
+                    <p>Real-time market data, trend analysis, and competitive intelligence to validate your ideas</p>
+                    <ul>
+                        <li>50,000+ data sources</li>
+                        <li>Competitive analysis</li>
+                        <li>Market sizing</li>
+                        <li>Trend forecasting</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h4>Business Plan Generator</h4>
+                    <p>Investor-ready business plans generated in minutes, not months</p>
+                    <ul>
+                        <li>Financial projections</li>
+                        <li>Executive summaries</li>
+                        <li>Market analysis</li>
+                        <li>Pitch deck creation</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h4>Design Studio</h4>
+                    <p>Create beautiful brands, websites, and apps without design experience</p>
+                    <ul>
+                        <li>Logo & brand creation</li>
+                        <li>Website generation</li>
+                        <li>App mockups</li>
+                        <li>Marketing materials</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <h4>Code Generation</h4>
+                    <p>Turn your designs into fully functional applications</p>
+                    <ul>
+                        <li>Full-stack applications</li>
+                        <li>Mobile apps</li>
+                        <li>E-commerce sites</li>
+                        <li>SaaS platforms</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h4>Marketing Automation</h4>
+                    <p>Launch campaigns that drive real results and customer growth</p>
+                    <ul>
+                        <li>Social media campaigns</li>
+                        <li>Email marketing</li>
+                        <li>SEO optimization</li>
+                        <li>Ad campaign creation</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h4>Business Education</h4>
+                    <p>Learn as you build with personalized lessons and mentorship</p>
+                    <ul>
+                        <li>Interactive tutorials</li>
+                        <li>Expert mentorship</li>
+                        <li>Skill assessments</li>
+                        <li>Certification programs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Choose Your Success Plan</h2>
+                <p>Start free, scale as you grow</p>
+            </div>
+            
+            <div class="pricing-toggle">
+                <span class="toggle-label">Monthly</span>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="pricing-toggle">
+                    <label for="pricing-toggle"></label>
+                </div>
+                <span class="toggle-label">Annual <span class="discount-badge">Save 30%</span></span>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card starter">
+                    <div class="card-header">
+                        <h3>Starter</h3>
+                        <p>Perfect for validating your first idea</p>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount monthly">0</span>
+                            <span class="amount annual" style="display: none;">0</span>
+                            <span class="period">/month</span>
+                        </div>
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> 1 Business idea validation</li>
+                            <li><i class="fas fa-check"></i> Basic market research</li>
+                            <li><i class="fas fa-check"></i> Simple business plan template</li>
+                            <li><i class="fas fa-check"></i> Community access</li>
+                            <li><i class="fas fa-check"></i> Email support</li>
+                        </ul>
+                    </div>
+                    <button class="btn-pricing">Start Free</button>
+                </div>
+                
+                <div class="pricing-card professional popular">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="card-header">
+                        <h3>Professional</h3>
+                        <p>For serious entrepreneurs ready to launch</p>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount monthly">97</span>
+                            <span class="amount annual" style="display: none;">68</span>
+                            <span class="period">/month</span>
+                        </div>
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Unlimited business ideas</li>
+                            <li><i class="fas fa-check"></i> Advanced market intelligence</li>
+                            <li><i class="fas fa-check"></i> Complete business plan generation</li>
+                            <li><i class="fas fa-check"></i> Brand & design studio</li>
+                            <li><i class="fas fa-check"></i> Basic code generation</li>
+                            <li><i class="fas fa-check"></i> Marketing automation</li>
+                            <li><i class="fas fa-check"></i> 24/7 AI coach access</li>
+                            <li><i class="fas fa-check"></i> Priority support</li>
+                        </ul>
+                    </div>
+                    <button class="btn-pricing primary">Start 14-Day Trial</button>
+                </div>
+                
+                <div class="pricing-card enterprise">
+                    <div class="card-header">
+                        <h3>Enterprise</h3>
+                        <p>For scaling businesses and agencies</p>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount monthly">297</span>
+                            <span class="amount annual" style="display: none;">208</span>
+                            <span class="period">/month</span>
+                        </div>
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Everything in Professional</li>
+                            <li><i class="fas fa-check"></i> Advanced code generation</li>
+                            <li><i class="fas fa-check"></i> Custom integrations</li>
+                            <li><i class="fas fa-check"></i> Team collaboration tools</li>
+                            <li><i class="fas fa-check"></i> White-label solutions</li>
+                            <li><i class="fas fa-check"></i> Dedicated success manager</li>
+                            <li><i class="fas fa-check"></i> Custom training programs</li>
+                            <li><i class="fas fa-check"></i> API access</li>
+                        </ul>
+                    </div>
+                    <button class="btn-pricing">Contact Sales</button>
+                </div>
+            </div>
+            
+            <div class="pricing-guarantee">
+                <div class="guarantee-content">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <h4>30-Day Money-Back Guarantee</h4>
+                        <p>If you don't see progress on your business within 30 days, we'll refund every penny. No questions asked.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Build Your Dream Business?</h2>
+                <p>Join 50,000+ entrepreneurs who've transformed their ideas into successful companies</p>
+                <div class="cta-buttons">
+                    <button class="btn-cta-primary">
+                        <i class="fas fa-rocket"></i>
+                        Start Your Free Trial
+                    </button>
+                    <button class="btn-cta-secondary">
+                        <i class="fas fa-calendar"></i>
+                        Book a Demo Call
+                    </button>
+                </div>
+                <div class="cta-trust">
+                    <div class="trust-item">
+                        <i class="fas fa-lock"></i>
+                        <span>No credit card required</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Setup in 5 minutes</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-times"></i>
+                        <span>Cancel anytime</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <i class="fas fa-rocket"></i>
+                        <span>IdeaCoach Pro</span>
+                    </div>
+                    <p>Transforming ideas into million-dollar businesses with AI-powered coaching.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Success Stories</a></li>
+                        <li><a href="#">API Documentation</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Templates</a></li>
+                        <li><a href="#">Webinars</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">GDPR</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 IdeaCoach Pro. All rights reserved.</p>
+                <div class="footer-badges">
+                    <span class="badge">SOC 2 Certified</span>
+                    <span class="badge">GDPR Compliant</span>
+                    <span class="badge">99.9% Uptime</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Welcome Back to IdeaCoach Pro</h3>
+                <button class="modal-close" onclick="closeLoginModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="login-form">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="sarah@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Enter your password" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+                    <button type="button" class="btn-login" onclick="loginUser()">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In to Dashboard
+                    </button>
+                    <div class="demo-credentials">
+                        <p><strong>Demo Credentials:</strong></p>
+                        <p>Email: sarah@demo.com | Password: demo123</p>
+                    </div>
+                </form>
+                <div class="login-footer">
+                    <p>Don't have an account? <a href="#" class="signup-link">Start your free trial</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

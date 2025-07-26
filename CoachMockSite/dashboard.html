@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - IdeaCoach Pro</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="dashboard-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-rocket brand-icon"></i>
+                <span class="brand-text">IdeaCoach Pro</span>
+            </div>
+            <div class="nav-center">
+                <div class="breadcrumb">
+                    <span>Dashboard</span>
+                    <i class="fas fa-chevron-right"></i>
+                    <span>MyFitnessPal Clone</span>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <button class="notification-btn" data-tooltip="You have 3 new coaching insights waiting">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                <div class="user-profile">
+                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face" alt="User" class="user-avatar">
+                    <span class="user-name">Sarah</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Dashboard Layout -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3>Your Journey</h3>
+                <ul class="journey-nav">
+                    <li class="nav-item active" data-tooltip="Track your overall business development progress">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-tooltip="Validate your business idea with market research">
+                        <i class="fas fa-search"></i>
+                        <span>Research</span>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 85%"></div>
+                        </div>
+                    </li>
+                    <li class="nav-item" data-tooltip="Create a comprehensive business plan and strategy">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Planning</span>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 45%"></div>
+                        </div>
+                    </li>
+                    <li class="nav-item disabled" data-tooltip="Design will unlock after completing your business plan">
+                        <i class="fas fa-palette"></i>
+                        <span>Design</span>
+                        <i class="fas fa-lock lock-icon"></i>
+                    </li>
+                    <li class="nav-item disabled" data-tooltip="Development phase - coming soon!">
+                        <i class="fas fa-code"></i>
+                        <span>Development</span>
+                        <i class="fas fa-lock lock-icon"></i>
+                    </li>
+                    <li class="nav-item disabled" data-tooltip="Launch your business to the world">
+                        <i class="fas fa-rocket"></i>
+                        <span>Launch</span>
+                        <i class="fas fa-lock lock-icon"></i>
+                    </li>
+                    <li class="nav-item disabled" data-tooltip="Scale and optimize your operations">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Operations</span>
+                        <i class="fas fa-lock lock-icon"></i>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Tools & Resources</h3>
+                <ul class="tools-nav">
+                    <li class="nav-item" data-tooltip="Access your AI business coach anytime">
+                        <i class="fas fa-robot"></i>
+                        <span>AI Coach</span>
+                    </li>
+                    <li class="nav-item" data-tooltip="Generate professional business documents">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Documents</span>
+                    </li>
+                    <li class="nav-item" data-tooltip="Track important deadlines and milestones">
+                        <i class="fas fa-calendar"></i>
+                        <span>Calendar</span>
+                    </li>
+                    <li class="nav-item" data-tooltip="Monitor your business metrics and KPIs">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Analytics</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- AI Coach Quick Access -->
+            <div class="coach-widget">
+                <div class="coach-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="coach-content">
+                    <h4>Coach Alex</h4>
+                    <p class="coach-status">
+                        <span class="status-dot online"></span>
+                        Ready to help
+                    </p>
+                    <p class="coach-suggestion" data-tooltip="Your coach analyzes your progress and suggests next steps">
+                        "Great progress on research! Ready to start your business plan?"
+                    </p>
+                    <button class="btn-coach">Ask Coach</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header Section -->
+            <div class="dashboard-header">
+                <div class="project-info">
+                    <h1>MyFitnessPal Clone</h1>
+                    <p class="project-description">A fitness tracking app that helps users monitor their daily nutrition and exercise habits</p>
+                    <div class="project-meta">
+                        <span class="meta-item" data-tooltip="When you started this business idea">
+                            <i class="fas fa-calendar"></i>
+                            Started: March 15, 2024
+                        </span>
+                        <span class="meta-item" data-tooltip="Current development phase of your business">
+                            <i class="fas fa-flag"></i>
+                            Phase: Research & Planning
+                        </span>
+                        <span class="meta-item" data-tooltip="Time invested in developing this idea">
+                            <i class="fas fa-clock"></i>
+                            Time Invested: 24 hours
+                        </span>
+                    </div>
+                </div>
+                <div class="project-actions">
+                    <button class="btn-secondary" data-tooltip="Share your progress with mentors or investors">
+                        <i class="fas fa-share"></i>
+                        Share Progress
+                    </button>
+                    <button class="btn-primary" data-tooltip="Continue with your next recommended task">
+                        <i class="fas fa-play"></i>
+                        Continue Journey
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress Overview -->
+            <div class="progress-section">
+                <div class="section-header">
+                    <h2>Your Progress</h2>
+                    <div class="overall-progress" data-tooltip="Overall completion across all business development phases">
+                        <span class="progress-text">32% Complete</span>
+                        <div class="progress-circle">
+                            <svg width="60" height="60">
+                                <circle cx="30" cy="30" r="25" fill="none" stroke="#e2e8f0" stroke-width="5"/>
+                                <circle cx="30" cy="30" r="25" fill="none" stroke="url(#gradient)" stroke-width="5" 
+                                        stroke-dasharray="157" stroke-dashoffset="107" stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#667eea"/>
+                                        <stop offset="100%" style="stop-color:#764ba2"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <span class="progress-percentage">32%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-phases">
+                    <div class="phase-card completed" data-tooltip="Market research validates your business idea has strong potential">
+                        <div class="phase-icon">
+                            <i class="fas fa-search"></i>
+                            <div class="completion-check">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                        <div class="phase-content">
+                            <h3>Research & Validation</h3>
+                            <p>Market analysis complete</p>
+                            <div class="phase-progress">
+                                <div class="progress-bar" style="width: 100%"></div>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                        <div class="phase-insights">
+                            <span class="insight-badge positive">87% Market Demand</span>
+                        </div>
+                    </div>
+
+                    <div class="phase-card active" data-tooltip="Currently building your comprehensive business strategy and financial plan">
+                        <div class="phase-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                            <div class="active-indicator">
+                                <div class="pulse"></div>
+                            </div>
+                        </div>
+                        <div class="phase-content">
+                            <h3>Strategic Planning</h3>
+                            <p>Business plan in progress</p>
+                            <div class="phase-progress">
+                                <div class="progress-bar" style="width: 65%"></div>
+                                <span>65%</span>
+                            </div>
+                        </div>
+                        <div class="phase-insights">
+                            <span class="insight-badge warning">3 tasks remaining</span>
+                        </div>
+                    </div>
+
+                    <div class="phase-card upcoming" data-tooltip="Design phase will focus on creating your brand identity and user experience">
+                        <div class="phase-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <div class="phase-content">
+                            <h3>Design & Prototyping</h3>
+                            <p>Coming next</p>
+                            <div class="phase-progress">
+                                <div class="progress-bar" style="width: 0%"></div>
+                                <span>0%</span>
+                            </div>
+                        </div>
+                        <div class="phase-insights">
+                            <span class="insight-badge neutral">Unlocks soon</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Tasks -->
+            <div class="tasks-section">
+                <div class="section-header">
+                    <h2>Today's Tasks</h2>
+                    <div class="task-summary" data-tooltip="Your AI coach prioritizes the most important tasks for your success">
+                        <span>3 of 5 completed</span>
+                        <div class="task-progress">
+                            <div class="progress-bar" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tasks-list">
+                    <div class="task-item completed" data-tooltip="Completed: Understanding your target market is crucial for business success">
+                        <div class="task-checkbox checked">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="task-content">
+                            <h4>Complete target audience analysis</h4>
+                            <p>Identify demographics, pain points, and user behaviors</p>
+                            <div class="task-meta">
+                                <span class="priority high">High Priority</span>
+                                <span class="time-estimate">30 min</span>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn-ghost" data-tooltip="Review your completed analysis">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="task-item completed" data-tooltip="Completed: Competitive analysis helps you differentiate your product">
+                        <div class="task-checkbox checked">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="task-content">
+                            <h4>Research top 5 competitors</h4>
+                            <p>Analyze features, pricing, and market positioning</p>
+                            <div class="task-meta">
+                                <span class="priority high">High Priority</span>
+                                <span class="time-estimate">45 min</span>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn-ghost" data-tooltip="View competitor analysis report">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="task-item completed" data-tooltip="Completed: Revenue projections are essential for business planning">
+                        <div class="task-checkbox checked">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="task-content">
+                            <h4>Define revenue model</h4>
+                            <p>Choose between subscription, freemium, or one-time purchase</p>
+                            <div class="task-meta">
+                                <span class="priority medium">Medium Priority</span>
+                                <span class="time-estimate">20 min</span>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn-ghost" data-tooltip="Review your revenue model decisions">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="task-item active" data-tooltip="Current task: Financial planning is crucial before moving to design phase">
+                        <div class="task-checkbox">
+                            <div class="progress-ring">
+                                <div class="ring-fill" style="transform: rotate(126deg)"></div>
+                            </div>
+                        </div>
+                        <div class="task-content">
+                            <h4>Create financial projections</h4>
+                            <p>Estimate costs, revenue, and break-even point for first 2 years</p>
+                            <div class="task-meta">
+                                <span class="priority high">High Priority</span>
+                                <span class="time-estimate">60 min</span>
+                                <span class="progress-text">35% complete</span>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn-primary" data-tooltip="Continue working on financial projections">
+                                <i class="fas fa-play"></i>
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="task-item" data-tooltip="Next task: A strong value proposition differentiates you from competitors">
+                        <div class="task-checkbox">
+                        </div>
+                        <div class="task-content">
+                            <h4>Develop unique value proposition</h4>
+                            <p>Create compelling messaging that sets you apart from competitors</p>
+                            <div class="task-meta">
+                                <span class="priority medium">Medium Priority</span>
+                                <span class="time-estimate">40 min</span>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn-ghost" data-tooltip="This task will unlock after completing financial projections">
+                                <i class="fas fa-lock"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights & Recommendations -->
+            <div class="insights-section">
+                <div class="section-header">
+                    <h2>AI Coach Insights</h2>
+                    <button class="btn-ghost" data-tooltip="Get personalized coaching based on your progress">
+                        <i class="fas fa-robot"></i>
+                        Ask Coach
+                    </button>
+                </div>
+
+                <div class="insights-grid">
+                    <div class="insight-card priority" data-tooltip="Your coach identified this as critical for your success">
+                        <div class="insight-header">
+                            <div class="insight-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <span class="insight-type">Priority Alert</span>
+                        </div>
+                        <h4>Complete financial projections before design</h4>
+                        <p>Your revenue model needs to be solid before we start designing features. This prevents costly redesigns later.</p>
+                        <div class="insight-actions">
+                            <button class="btn-primary btn-sm">Work on it</button>
+                            <button class="btn-ghost btn-sm" data-tooltip="Learn why financial planning comes before design">
+                                Learn why
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="insight-card opportunity" data-tooltip="Market opportunity identified by your AI coach">
+                        <div class="insight-header">
+                            <div class="insight-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <span class="insight-type">Opportunity</span>
+                        </div>
+                        <h4>Consider adding habit tracking feature</h4>
+                        <p>73% of fitness apps users want habit tracking. This could be your competitive advantage.</p>
+                        <div class="insight-actions">
+                            <button class="btn-secondary btn-sm">Explore idea</button>
+                            <button class="btn-ghost btn-sm" data-tooltip="See market research data supporting this opportunity">
+                                View data
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="insight-card success" data-tooltip="Positive milestone reached in your business development">
+                        <div class="insight-header">
+                            <div class="insight-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <span class="insight-type">Achievement</span>
+                        </div>
+                        <h4>Strong market validation completed!</h4>
+                        <p>Your research shows 87% market demand. This puts you in the top 20% of validated business ideas.</p>
+                        <div class="insight-actions">
+                            <button class="btn-secondary btn-sm">Share achievement</button>
+                            <button class="btn-ghost btn-sm" data-tooltip="See detailed validation report">
+                                View report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="stats-section">
+                <div class="section-header">
+                    <h2>Key Metrics</h2>
+                    <div class="stats-period" data-tooltip="Choose time period for your business development metrics">
+                        <select>
+                            <option>Last 7 days</option>
+                            <option>Last 30 days</option>
+                            <option>All time</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card" data-tooltip="Total time invested in developing your business idea">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>24 hours</h3>
+                            <p>Time Invested</p>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i>
+                                +8 hrs this week
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card" data-tooltip="Number of business development tasks you've completed">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>18</h3>
+                            <p>Tasks Completed</p>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i>
+                                +3 this week
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card" data-tooltip="Your business idea's market validation score">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>87%</h3>
+                            <p>Validation Score</p>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i>
+                                +12% improvement
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card" data-tooltip="Potential revenue based on market analysis and business model">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>$245K</h3>
+                            <p>Revenue Potential</p>
+                            <div class="stat-change neutral">
+                                <i class="fas fa-equals"></i>
+                                Projected Year 1
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Tooltips -->
+    <div class="tooltip" id="tooltip">
+        <div class="tooltip-arrow"></div>
+        <div class="tooltip-content"></div>
+    </div>
+
+    <!-- Coach Chat Modal -->
+    <div class="coach-modal" id="coachModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="coach-info">
+                    <div class="coach-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <h3>Coach Alex</h3>
+                        <p>Your AI Business Coach</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeCoachModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message coach-message">
+                        <div class="message-content">
+                            <p>Hi Sarah! I see you're making great progress on your fitness app. What would you like to work on today?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" placeholder="Ask your coach anything..." id="chatInput">
+                    <button onclick="sendMessage()" data-tooltip="Send message to your AI coach">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

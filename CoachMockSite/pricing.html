@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - IdeaCoach Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-rocket brand-icon"></i>
+                <span class="brand-text">IdeaCoach Pro</span>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="journey.html" class="nav-link">Your Journey</a>
+                <a href="coach.html" class="nav-link">AI Coach</a>
+                <a href="success.html" class="nav-link">Success Stories</a>
+                <a href="pricing.html" class="nav-link active">Pricing</a>
+                <div class="nav-auth">
+                    <button class="btn-secondary" onclick="showLoginModal()">Sign In</button>
+                    <button class="btn-primary">Start Free Trial</button>
+                </div>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="page-hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Choose Your Success Plan</h1>
+                <p class="hero-subtitle">
+                    Start free, scale as you grow. Every plan includes your personal AI coach 
+                    and our proven 6-phase methodology. Join 15,000+ successful entrepreneurs.
+                </p>
+                <div class="hero-guarantee">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>30-day money-back guarantee on all paid plans</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Toggle -->
+    <section class="pricing-section">
+        <div class="container">
+            <div class="pricing-toggle">
+                <span class="toggle-label">Monthly</span>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="pricing-toggle">
+                    <label for="pricing-toggle"></label>
+                </div>
+                <span class="toggle-label">Annual <span class="discount-badge">Save 30%</span></span>
+            </div>
+            
+            <!-- Pricing Cards -->
+            <div class="pricing-grid">
+                <!-- Starter Plan -->
+                <div class="pricing-card starter">
+                    <div class="card-header">
+                        <div class="plan-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h3>Starter</h3>
+                        <p class="plan-description">Perfect for validating your first idea</p>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount monthly">0</span>
+                            <span class="amount annual" style="display: none;">0</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <div class="price-note">Always free</div>
+                    </div>
+                    <div class="card-features">
+                        <h4>What's included:</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> 1 Business idea validation</li>
+                            <li><i class="fas fa-check"></i> Basic market research tools</li>
+                            <li><i class="fas fa-check"></i> Simple business plan template</li>
+                            <li><i class="fas fa-check"></i> Community access & forums</li>
+                            <li><i class="fas fa-check"></i> Email support (48h response)</li>
+                            <li><i class="fas fa-check"></i> Basic AI coach interactions (10/month)</li>
+                        </ul>
+                        <div class="plan-limits">
+                            <h5>Limitations:</h5>
+                            <ul class="limitations">
+                                <li>• Limited to 1 active project</li>
+                                <li>• Basic market data only</li>
+                                <li>• Standard templates</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button class="btn-pricing" onclick="selectPlan('starter')">
+                        <i class="fas fa-rocket"></i>
+                        Start Free
+                    </button>
+                    <div class="plan-footer">
+                        <span>No credit card required</span>
+                    </div>
+                </div>
+
+                <!-- Professional Plan -->
+                <div class="pricing-card professional popular">
+                    <div class="popular-badge">
+                        <i class="fas fa-crown"></i>
+                        <span>Most Popular</span>
+                    </div>
+                    <div class="card-header">
+                        <div class="plan-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Professional</h3>
+                        <p class="plan-description">For serious entrepreneurs ready to launch</p>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount monthly">97</span>
+                            <span class="amount annual" style="display: none;">68</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <div class="price-note monthly">Billed monthly</div>
+                        <div class="price-note annual" style="display: none;">Billed annually ($816/year)</div>
+                    </div>
+                    <div class="card-features">
+                        <h4>Everything in Starter, plus:</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Unlimited business ideas & projects</li>
+                            <li><i class="fas fa-check"></i> Advanced market intelligence & trends</li>
+                            <li><i class="fas fa-check"></i> Complete business plan generation</li>
+                            <li><i class="fas fa-check"></i> Brand & design studio access</li>
+                            <li><i class="fas fa-check"></i> Basic code generation (web apps)</li>
+                            <li><i class="fas fa-check"></i> Marketing automation tools</li>
+                            <li><i class="fas fa-check"></i> Unlimited AI coach access</li>
+                            <li><i class="fas fa-check"></i> Priority support (4h response)</li>
+                            <li><i class="fas fa-check"></i> Financial modeling & projections</li>
+                            <li><i class="fas fa-check"></i> Competitor tracking & alerts</li>
+                        </ul>
+                        <div class="plan-highlights">
+                            <div class="highlight">
+                                <i class="fas fa-star"></i>
+                                <span>Most chosen by successful entrepreneurs</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-pricing primary" onclick="selectPlan('professional')">
+                        <i class="fas fa-crown"></i>
+                        Start 14-Day Free Trial
+                    </button>
+                    <div class="plan-footer">
+                        <span>Cancel anytime • No commitment</span>
+                    </div>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="pricing-card enterprise">
+                    <div class="card-header">
+                        <div class="plan-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3>Enterprise</h3>
+                        <p class="plan-description">For scaling businesses and agencies</p>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount monthly">297</span>
+                            <span class="amount annual" style="display: none;">208</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <div class="price-note monthly">Billed monthly</div>
+                        <div class="price-note annual" style="display: none;">Billed annually ($2,496/year)</div>
+                    </div>
+                    <div class="card-features">
+                        <h4>Everything in Professional, plus:</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Advanced code generation (mobile apps)</li>
+                            <li><i class="fas fa-check"></i> Custom API integrations</li>
+                            <li><i class="fas fa-check"></i> Team collaboration tools (up to 10 users)</li>
+                            <li><i class="fas fa-check"></i> White-label solutions available</li>
+                            <li><i class="fas fa-check"></i> Dedicated success manager</li>
+                            <li><i class="fas fa-check"></i> Custom training & workshops</li>
+                            <li><i class="fas fa-check"></i> Premium API access & webhooks</li>
+                            <li><i class="fas fa-check"></i> Phone & video call support</li>
+                            <li><i class="fas fa-check"></i> Advanced analytics & reporting</li>
+                            <li><i class="fas fa-check"></i> Priority feature requests</li>
+                        </ul>
+                        <div class="plan-highlights">
+                            <div class="highlight">
+                                <i class="fas fa-users"></i>
+                                <span>Perfect for teams and agencies</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-pricing" onclick="selectPlan('enterprise')">
+                        <i class="fas fa-phone"></i>
+                        Contact Sales
+                    </button>
+                    <div class="plan-footer">
+                        <span>Custom contracts available</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Comparison -->
+    <section class="feature-comparison">
+        <div class="container">
+            <div class="section-header">
+                <h2>Detailed Feature Comparison</h2>
+                <p>See exactly what's included in each plan</p>
+            </div>
+            
+            <div class="comparison-table">
+                <div class="table-header">
+                    <div class="feature-column">Features</div>
+                    <div class="plan-column">
+                        <div class="plan-name">Starter</div>
+                        <div class="plan-price">Free</div>
+                    </div>
+                    <div class="plan-column popular">
+                        <div class="plan-name">Professional</div>
+                        <div class="plan-price">$97/mo</div>
+                    </div>
+                    <div class="plan-column">
+                        <div class="plan-name">Enterprise</div>
+                        <div class="plan-price">$297/mo</div>
+                    </div>
+                </div>
+                
+                <div class="feature-category">
+                    <div class="category-header">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Idea Development</span>
+                    </div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">Business Ideas</div>
+                    <div class="feature-value">1</div>
+                    <div class="feature-value">Unlimited</div>
+                    <div class="feature-value">Unlimited</div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">Market Research</div>
+                    <div class="feature-value">Basic</div>
+                    <div class="feature-value">Advanced</div>
+                    <div class="feature-value">Premium</div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">Competitor Analysis</div>
+                    <div class="feature-value">Manual</div>
+                    <div class="feature-value">Automated</div>
+                    <div class="feature-value">Real-time Alerts</div>
+                </div>
+                
+                <div class="feature-category">
+                    <div class="category-header">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Business Planning</span>
+                    </div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">Business Plan Templates</div>
+                    <div class="feature-value">Basic</div>
+                    <div class="feature-value">Premium</div>
+                    <div class="feature-value">Custom</div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">Financial Modeling</div>
+                    <div class="feature-value"><i class="fas fa-times"></i></div>
+                    <div class="feature-value"><i class="fas fa-check"></i></div>
+                    <div class="feature-value"><i class="fas fa-check"></i></div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">Pitch Deck Generation</div>
+                    <div class="feature-value"><i class="fas fa-times"></i></div>
+                    <div class="feature-value"><i class="fas fa-check"></i></div>
+                    <div class="feature-value"><i class="fas fa-check"></i></div>
+                </div>
+                
+                <div class="feature-category">
+                    <div class="category-header">
+                        <i class="fas fa-code"></i>
+                        <span>Development Tools</span>
+                    </div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">Code Generation</div>
+                    <div class="feature-value"><i class="fas fa-times"></i></div>
+                    <div class="feature-value">Web Apps</div>
+                    <div class="feature-value">Web + Mobile</div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">Design Studio</div>
+                    <div class="feature-value"><i class="fas fa-times"></i></div>
+                    <div class="feature-value"><i class="fas fa-check"></i></div>
+                    <div class="feature-value"><i class="fas fa-check"></i></div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">API Integrations</div>
+                    <div class="feature-value"><i class="fas fa-times"></i></div>
+                    <div class="feature-value">Basic</div>
+                    <div class="feature-value">Custom</div>
+                </div>
+                
+                <div class="feature-category">
+                    <div class="category-header">
+                        <i class="fas fa-robot"></i>
+                        <span>AI Coach</span>
+                    </div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">AI Interactions</div>
+                    <div class="feature-value">10/month</div>
+                    <div class="feature-value">Unlimited</div>
+                    <div class="feature-value">Unlimited</div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">Personalization</div>
+                    <div class="feature-value">Basic</div>
+                    <div class="feature-value">Advanced</div>
+                    <div class="feature-value">Expert Level</div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">Industry Expertise</div>
+                    <div class="feature-value">General</div>
+                    <div class="feature-value">Specialized</div>
+                    <div class="feature-value">Deep Expertise</div>
+                </div>
+                
+                <div class="feature-category">
+                    <div class="category-header">
+                        <i class="fas fa-headset"></i>
+                        <span>Support & Training</span>
+                    </div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">Support Response Time</div>
+                    <div class="feature-value">48 hours</div>
+                    <div class="feature-value">4 hours</div>
+                    <div class="feature-value">1 hour</div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">Success Manager</div>
+                    <div class="feature-value"><i class="fas fa-times"></i></div>
+                    <div class="feature-value"><i class="fas fa-times"></i></div>
+                    <div class="feature-value"><i class="fas fa-check"></i></div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-name">Custom Training</div>
+                    <div class="feature-value"><i class="fas fa-times"></i></div>
+                    <div class="feature-value"><i class="fas fa-times"></i></div>
+                    <div class="feature-value"><i class="fas fa-check"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator -->
+    <section class="roi-calculator">
+        <div class="container">
+            <div class="calculator-grid">
+                <div class="calculator-content">
+                    <h2>Calculate Your ROI</h2>
+                    <p>See how IdeaCoach Pro pays for itself and more</p>
+                    
+                    <div class="calculator-inputs">
+                        <div class="input-group">
+                            <label for="timeValue">Your hourly rate</label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">$</span>
+                                <input type="number" id="timeValue" value="50" min="10" max="500">
+                                <span class="input-suffix">/hour</span>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="hoursWeek">Hours per week on business</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="hoursWeek" value="20" min="5" max="80">
+                                <span class="input-suffix">hours</span>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="planSelect">Choose your plan</label>
+                            <select id="planSelect">
+                                <option value="97">Professional - $97/mo</option>
+                                <option value="297">Enterprise - $297/mo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calculator-results">
+                    <h3>Your Estimated Savings</h3>
+                    <div class="savings-breakdown">
+                        <div class="savings-item">
+                            <div class="savings-label">Time saved per week</div>
+                            <div class="savings-value" id="timeSaved">8 hours</div>
+                        </div>
+                        <div class="savings-item">
+                            <div class="savings-label">Value of time saved</div>
+                            <div class="savings-value" id="valueSaved">$1,600/month</div>
+                        </div>
+                        <div class="savings-item">
+                            <div class="savings-label">IdeaCoach Pro cost</div>
+                            <div class="savings-value" id="planCost">$97/month</div>
+                        </div>
+                        <div class="savings-item total">
+                            <div class="savings-label">Net monthly savings</div>
+                            <div class="savings-value" id="netSavings">$1,503</div>
+                        </div>
+                        <div class="roi-metric">
+                            <div class="roi-label">Return on Investment</div>
+                            <div class="roi-value" id="roiValue">1,649%</div>
+                        </div>
+                    </div>
+                    <div class="calculator-note">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Based on average 40% time savings reported by users</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Everything you need to know about our pricing and plans</p>
+            </div>
+            
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Can I change plans anytime?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! You can upgrade or downgrade your plan at any time. When you upgrade, you'll be charged the prorated difference immediately. When you downgrade, the change takes effect at your next billing cycle.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>What happens if I cancel my subscription?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You can cancel anytime with no penalties. Your account remains active until the end of your billing period, and you'll retain access to all your data. After cancellation, you'll be moved to the free Starter plan.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Is there really a 30-day money-back guarantee?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! If you're not completely satisfied within 30 days of your first paid subscription, contact our support team for a full refund. No questions asked, no hoops to jump through.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Do you offer discounts for students or nonprofits?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! We offer 50% discounts for verified students and registered nonprofits. Contact our sales team with your verification documents to get started.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>What payment methods do you accept?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and for Enterprise customers, we can arrange wire transfers or ACH payments.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Can I use IdeaCoach Pro for multiple businesses?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Professional and Enterprise plans include unlimited business projects. You can work on multiple ideas simultaneously and switch between them seamlessly.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Is my data secure and private?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! We use enterprise-grade security with 256-bit encryption, SOC 2 compliance, and GDPR compliance. Your business ideas and data are completely private and never shared.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>What if I need features not included in any plan?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Enterprise customers can request custom features and integrations. We also have a roadmap driven by user feedback - contact us to discuss your specific needs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Start Building Your Empire?</h2>
+                <p>Join 15,000+ entrepreneurs who chose IdeaCoach Pro to transform their ideas into successful businesses</p>
+                
+                <div class="cta-plans">
+                    <div class="cta-plan">
+                        <h4>Start Free</h4>
+                        <p>Validate your idea risk-free</p>
+                        <button class="btn-cta-secondary" onclick="selectPlan('starter')">
+                            <i class="fas fa-play"></i>
+                            Try Starter Plan
+                        </button>
+                    </div>
+                    
+                    <div class="cta-plan featured">
+                        <div class="plan-recommended">Recommended</div>
+                        <h4>Go Professional</h4>
+                        <p>Build and launch your business</p>
+                        <button class="btn-cta-primary" onclick="selectPlan('professional')">
+                            <i class="fas fa-rocket"></i>
+                            Start 14-Day Trial
+                        </button>
+                    </div>
+                    
+                    <div class="cta-plan">
+                        <h4>Scale Enterprise</h4>
+                        <p>For teams and agencies</p>
+                        <button class="btn-cta-secondary" onclick="selectPlan('enterprise')">
+                            <i class="fas fa-phone"></i>
+                            Contact Sales
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="final-trust">
+                    <div class="trust-indicators">
+                        <div class="trust-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>30-day guarantee</span>
+                        </div>
+                        <div class="trust-item">
+                            <i class="fas fa-lock"></i>
+                            <span>Secure & private</span>
+                        </div>
+                        <div class="trust-item">
+                            <i class="fas fa-headset"></i>
+                            <span>24/7 support</span>
+                        </div>
+                        <div class="trust-item">
+                            <i class="fas fa-times-circle"></i>
+                            <span>Cancel anytime</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Welcome Back to IdeaCoach Pro</h3>
+                <button class="modal-close" onclick="closeLoginModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="login-form">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="sarah@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Enter your password" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+                    <button type="button" class="btn-login" onclick="loginUser()">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In to Dashboard
+                    </button>
+                    <div class="demo-credentials">
+                        <p><strong>Demo Credentials:</strong></p>
+                        <p>Email: sarah@demo.com | Password: demo123</p>
+                    </div>
+                </form>
+                <div class="login-footer">
+                    <p>Don't have an account? <a href="#" class="signup-link">Start your free trial</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="pricing.js"></script>
+</body>
+</html>

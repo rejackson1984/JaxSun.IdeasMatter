@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Stories - BuildLab</title>
+    <meta name="description" content="Real success stories from entrepreneurs who built profitable businesses with BuildLab. From $0 to $2M+ in revenue.">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <span class="logo-text">BuildLab</span>
+                </div>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="how-it-works.html" class="nav-link">How It Works</a>
+                <a href="success-stories.html" class="nav-link active">Success Stories</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <div class="nav-cta">
+                    <button class="btn-nav-login" onclick="showLoginModal()">Login</button>
+                    <button class="btn-nav-signup">Get Started Free</button>
+                </div>
+            </div>
+            <div class="mobile-menu-toggle" id="mobile-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-stories">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-icon">🏆</span>
+                    <span class="badge-text">Real entrepreneurs, real results</span>
+                </div>
+                <h1 class="hero-title">
+                    From <span class="highlight">Zero to Hero</span><br>
+                    Meet Our Success Stories
+                </h1>
+                <p class="hero-subtitle">
+                    These entrepreneurs started with just an idea and zero business experience. 
+                    Now they're running profitable companies that change lives.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">$127M+</div>
+                        <div class="stat-label">Revenue Generated</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">25,000+</div>
+                        <div class="stat-label">Businesses Launched</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">89%</div>
+                        <div class="stat-label">Still Profitable</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Story -->
+    <section class="featured-story">
+        <div class="container">
+            <div class="story-grid">
+                <div class="story-content">
+                    <div class="story-badge">
+                        <i class="fas fa-crown"></i>
+                        <span>Featured Success</span>
+                    </div>
+                    <h2 class="story-title">
+                        From Barista to<br>
+                        <span class="highlight">$2.1M App Empire</span>
+                    </h2>
+                    <p class="story-intro">
+                        Jessica was making $12/hour at a coffee shop when she joined BuildLab. 
+                        18 months later, her meditation app FitMind generates $2.1M annually 
+                        and helps 50,000+ people live healthier lives.
+                    </p>
+                    
+                    <div class="story-metrics">
+                        <div class="metric">
+                            <div class="metric-icon">💰</div>
+                            <div class="metric-value">$2.1M</div>
+                            <div class="metric-label">Annual Revenue</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-icon">👥</div>
+                            <div class="metric-value">50K+</div>
+                            <div class="metric-label">Active Users</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-icon">📅</div>
+                            <div class="metric-value">18</div>
+                            <div class="metric-label">Months</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-icon">⭐</div>
+                            <div class="metric-value">4.8</div>
+                            <div class="metric-label">App Rating</div>
+                        </div>
+                    </div>
+                    
+                    <div class="story-quote">
+                        <i class="fas fa-quote-left quote-icon"></i>
+                        <p>"I went from not knowing what a business plan was to running a million-dollar company. BuildLab didn't just teach me - it held my hand through every step."</p>
+                        <div class="quote-author">
+                            <strong>Jessica Chen</strong>
+                            <span>Founder, FitMind</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-story-detail" onclick="showStoryDetail('jessica')">
+                        <span class="btn-text">Read Full Story</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </button>
+                </div>
+                <div class="story-visual">
+                    <div class="founder-showcase">
+                        <div class="founder-image">
+                            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=300&h=300&fit=crop&crop=face" alt="Jessica Chen">
+                            <div class="success-badge">
+                                <i class="fas fa-trophy"></i>
+                                <span>Top Performer</span>
+                            </div>
+                        </div>
+                        <div class="founder-info">
+                            <h3>Jessica Chen, 24</h3>
+                            <p>From: Seattle, WA</p>
+                            <p>Background: Coffee shop barista</p>
+                            <p>Experience: Zero business knowledge</p>
+                        </div>
+                        <div class="journey-timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-dot">0</div>
+                                <span>Started with $500 savings</span>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot">6</div>
+                                <span>Launched FitMind app</span>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot">12</div>
+                                <span>Hit 10K users</span>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot">18</div>
+                                <span>$2.1M annual revenue</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- More Success Stories -->
+    <section class="success-grid-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">More Inspiring Journeys</h2>
+                <p class="section-subtitle">
+                    Every story is unique, but they all started with just an idea and determination
+                </p>
+            </div>
+            
+            <div class="stories-grid">
+                <!-- Story 1: Marcus -->
+                <div class="story-card" data-story="marcus">
+                    <div class="story-header">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Marcus Johnson" class="story-avatar">
+                        <div class="story-info">
+                            <h4>Marcus Johnson, 22</h4>
+                            <p>EcoPackaging Founder</p>
+                            <div class="story-location">📍 Austin, TX</div>
+                        </div>
+                        <div class="story-badge exit">
+                            <i class="fas fa-trophy"></i>
+                            <span>$5M Exit</span>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <h3>College Dorm to $5M Acquisition</h3>
+                        <p>"Started EcoPackaging from my dorm room with $500. BuildLab helped me understand the market, find customers, and scale operations. Sold to GreenTech Corp in just 24 months."</p>
+                        <div class="story-metrics-small">
+                            <div class="metric-small">
+                                <span class="value">$5M</span>
+                                <span class="label">Exit Value</span>
+                            </div>
+                            <div class="metric-small">
+                                <span class="value">24</span>
+                                <span class="label">Months</span>
+                            </div>
+                            <div class="metric-small">
+                                <span class="value">15</span>
+                                <span class="label">Employees</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-read-more" onclick="showStoryDetail('marcus')">
+                        <span>Read Full Story</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Story 2: Maria -->
+                <div class="story-card" data-story="maria">
+                    <div class="story-header">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face" alt="Maria Rodriguez" class="story-avatar">
+                        <div class="story-info">
+                            <h4>Maria Rodriguez, 26</h4>
+                            <p>TaskFlow CEO</p>
+                            <div class="story-location">📍 Miami, FL</div>
+                        </div>
+                        <div class="story-badge growth">
+                            <i class="fas fa-chart-line"></i>
+                            <span>$3M ARR</span>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <h3>Single Mom Builds SaaS Empire</h3>
+                        <p>"As a single mom with no tech background, building a SaaS company seemed impossible. BuildLab made it achievable step by step. TaskFlow now serves 10,000+ businesses worldwide."</p>
+                        <div class="story-metrics-small">
+                            <div class="metric-small">
+                                <span class="value">$3M</span>
+                                <span class="label">ARR</span>
+                            </div>
+                            <div class="metric-small">
+                                <span class="value">10K+</span>
+                                <span class="label">Customers</span>
+                            </div>
+                            <div class="metric-small">
+                                <span class="value">25</span>
+                                <span class="label">Team Size</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-read-more" onclick="showStoryDetail('maria')">
+                        <span>Read Full Story</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Story 3: David -->
+                <div class="story-card" data-story="david">
+                    <div class="story-header">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face" alt="David Chen" class="story-avatar">
+                        <div class="story-info">
+                            <h4>David Chen, 25</h4>
+                            <p>CryptoSimple Founder</p>
+                            <div class="story-location">📍 San Francisco, CA</div>
+                        </div>
+                        <div class="story-badge funding">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span>$8M Series A</span>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <h3>Teacher to FinTech Founder</h3>
+                        <p>"I was a high school math teacher who wanted to make crypto investing simple. BuildLab helped me navigate fintech regulations and build a product people love."</p>
+                        <div class="story-metrics-small">
+                            <div class="metric-small">
+                                <span class="value">$8M</span>
+                                <span class="label">Funding</span>
+                            </div>
+                            <div class="metric-small">
+                                <span class="value">100K+</span>
+                                <span class="label">Users</span>
+                            </div>
+                            <div class="metric-small">
+                                <span class="value">14</span>
+                                <span class="label">Months</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-read-more" onclick="showStoryDetail('david')">
+                        <span>Read Full Story</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Story 4: Sarah -->
+                <div class="story-card" data-story="sarah">
+                    <div class="story-header">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=80&h=80&fit=crop&crop=face" alt="Sarah Kim" class="story-avatar">
+                        <div class="story-info">
+                            <h4>Sarah Kim, 23</h4>
+                            <p>HealthTrack CEO</p>
+                            <div class="story-location">📍 Chicago, IL</div>
+                        </div>
+                        <div class="story-badge impact">
+                            <i class="fas fa-heart"></i>
+                            <span>1M+ Lives</span>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <h3>Nurse Creates Life-Saving App</h3>
+                        <p>"Working ER night shifts, I saw the need for better patient monitoring. HealthTrack now helps 1M+ patients manage chronic conditions more effectively."</p>
+                        <div class="story-metrics-small">
+                            <div class="metric-small">
+                                <span class="value">1M+</span>
+                                <span class="label">Patients</span>
+                            </div>
+                            <div class="metric-small">
+                                <span class="value">$12M</span>
+                                <span class="label">Revenue</span>
+                            </div>
+                            <div class="metric-small">
+                                <span class="value">500+</span>
+                                <span class="label">Hospitals</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-read-more" onclick="showStoryDetail('sarah')">
+                        <span>Read Full Story</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Story 5: Alex -->
+                <div class="story-card" data-story="alex">
+                    <div class="story-header">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Alex Thompson" class="story-avatar">
+                        <div class="story-info">
+                            <h4>Alex Thompson, 21</h4>
+                            <p>LearnFast Founder</p>
+                            <div class="story-location">📍 Boston, MA</div>
+                        </div>
+                        <div class="story-badge growth">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>50K Students</span>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <h3>College Dropout Revolutionizes Learning</h3>
+                        <p>"Dropped out to build LearnFast, an AI-powered learning platform. BuildLab helped me validate the idea, secure funding, and scale to 50,000 students."</p>
+                        <div class="story-metrics-small">
+                            <div class="metric-small">
+                                <span class="value">50K</span>
+                                <span class="label">Students</span>
+                            </div>
+                            <div class="metric-small">
+                                <span class="value">$6M</span>
+                                <span class="label">Revenue</span>
+                            </div>
+                            <div class="metric-small">
+                                <span class="value">95%</span>
+                                <span class="label">Satisfaction</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-read-more" onclick="showStoryDetail('alex')">
+                        <span>Read Full Story</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Story 6: Lisa -->
+                <div class="story-card" data-story="lisa">
+                    <div class="story-header">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face" alt="Lisa Wang" class="story-avatar">
+                        <div class="story-info">
+                            <h4>Lisa Wang, 27</h4>
+                            <p>AutoCode CEO</p>
+                            <div class="story-location">📍 Seattle, WA</div>
+                        </div>
+                        <div class="story-badge exit">
+                            <i class="fas fa-rocket"></i>
+                            <span>$15M Exit</span>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <h3>PhD to AI Coding Assistant</h3>
+                        <p>"While finishing my PhD, I built AutoCode to help developers write better code faster. Acquired by Microsoft for $15M after 20 months."</p>
+                        <div class="story-metrics-small">
+                            <div class="metric-small">
+                                <span class="value">$15M</span>
+                                <span class="label">Acquisition</span>
+                            </div>
+                            <div class="metric-small">
+                                <span class="value">200K+</span>
+                                <span class="label">Developers</span>
+                            </div>
+                            <div class="metric-small">
+                                <span class="value">20</span>
+                                <span class="label">Months</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-read-more" onclick="showStoryDetail('lisa')">
+                        <span>Read Full Story</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success by Numbers -->
+    <section class="success-by-numbers">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">Why BuildLab Entrepreneurs Win</h2>
+                <p class="section-subtitle">
+                    Our results vs. industry averages prove our system works
+                </p>
+            </div>
+            
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <div class="comparison-metric">Success Rate</div>
+                    <div class="comparison-values">
+                        <div class="value-item industry">
+                            <span class="value">25%</span>
+                            <span class="label">Industry Average</span>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="value-item buildlab">
+                            <span class="value">89%</span>
+                            <span class="label">BuildLab Users</span>
+                        </div>
+                    </div>
+                    <div class="improvement">+256% better</div>
+                </div>
+                
+                <div class="comparison-item">
+                    <div class="comparison-metric">Time to Launch</div>
+                    <div class="comparison-values">
+                        <div class="value-item industry">
+                            <span class="value">18 mo</span>
+                            <span class="label">Industry Average</span>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="value-item buildlab">
+                            <span class="value">3 mo</span>
+                            <span class="label">BuildLab Users</span>
+                        </div>
+                    </div>
+                    <div class="improvement">6x faster</div>
+                </div>
+                
+                <div class="comparison-item">
+                    <div class="comparison-metric">First Year Revenue</div>
+                    <div class="comparison-values">
+                        <div class="value-item industry">
+                            <span class="value">$15K</span>
+                            <span class="label">Industry Average</span>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="value-item buildlab">
+                            <span class="value">$45K</span>
+                            <span class="label">BuildLab Users</span>
+                        </div>
+                    </div>
+                    <div class="improvement">+200% more</div>
+                </div>
+                
+                <div class="comparison-item">
+                    <div class="comparison-metric">2-Year Survival</div>
+                    <div class="comparison-values">
+                        <div class="value-item industry">
+                            <span class="value">20%</span>
+                            <span class="label">Industry Average</span>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="value-item buildlab">
+                            <span class="value">89%</span>
+                            <span class="label">BuildLab Users</span>
+                        </div>
+                    </div>
+                    <div class="improvement">+345% better</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Testimonials -->
+    <section class="video-testimonials">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">See Their Stories in Action</h2>
+                <p class="section-subtitle">
+                    Watch real entrepreneurs share their BuildLab journey
+                </p>
+            </div>
+            
+            <div class="video-grid">
+                <div class="video-card" onclick="playVideo('jessica')">
+                    <div class="video-thumbnail">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=400&h=225&fit=crop" alt="Jessica's Story">
+                        <div class="play-overlay">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-duration">3:24</div>
+                    </div>
+                    <div class="video-info">
+                        <h4>Jessica's Complete Journey</h4>
+                        <p>From barista to $2.1M app founder</p>
+                        <div class="video-stats">
+                            <span><i class="fas fa-eye"></i> 45K views</span>
+                            <span><i class="fas fa-thumbs-up"></i> 2.1K</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-card" onclick="playVideo('marcus')">
+                    <div class="video-thumbnail">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=225&fit=crop" alt="Marcus's Story">
+                        <div class="play-overlay">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-duration">2:18</div>
+                    </div>
+                    <div class="video-info">
+                        <h4>From Dorm Room to $5M Exit</h4>
+                        <p>Marcus shares his EcoPackaging journey</p>
+                        <div class="video-stats">
+                            <span><i class="fas fa-eye"></i> 32K views</span>
+                            <span><i class="fas fa-thumbs-up"></i> 1.8K</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-card" onclick="playVideo('maria')">
+                    <div class="video-thumbnail">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=225&fit=crop" alt="Maria's Story">
+                        <div class="play-overlay">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-duration">4:12</div>
+                    </div>
+                    <div class="video-info">
+                        <h4>Single Mom Builds $3M SaaS</h4>
+                        <p>Maria's inspiring TaskFlow story</p>
+                        <div class="video-stats">
+                            <span><i class="fas fa-eye"></i> 28K views</span>
+                            <span><i class="fas fa-thumbs-up"></i> 1.5K</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">
+                    Ready to Write Your Success Story?
+                </h2>
+                <p class="cta-subtitle">
+                    Join 25,000+ entrepreneurs who turned their ideas into thriving businesses
+                </p>
+                <div class="cta-buttons">
+                    <button class="btn-primary btn-xl" onclick="startOnboarding()">
+                        <span class="btn-text">Start Your Journey</span>
+                        <i class="fas fa-rocket btn-icon"></i>
+                    </button>
+                    <button class="btn-outline btn-xl" onclick="showLoginModal()">
+                        <span class="btn-text">I Already Have an Account</span>
+                        <i class="fas fa-sign-in-alt btn-icon"></i>
+                    </button>
+                </div>
+                <div class="cta-guarantees">
+                    <div class="guarantee-item">
+                        <i class="fas fa-shield-alt guarantee-icon"></i>
+                        <span>30-day money back guarantee</span>
+                    </div>
+                    <div class="guarantee-item">
+                        <i class="fas fa-clock guarantee-icon"></i>
+                        <span>See results in 48 hours</span>
+                    </div>
+                    <div class="guarantee-item">
+                        <i class="fas fa-users guarantee-icon"></i>
+                        <span>Join 25,000+ successful entrepreneurs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Welcome Back to BuildLab</h3>
+                <button class="modal-close" onclick="closeLoginModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="login-form">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="Your password" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-label">Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn-modal-primary" onclick="loginUser(event)">
+                        <span class="btn-text">Sign In to Dashboard</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </button>
+                </form>
+                <div class="modal-divider">
+                    <span>or</span>
+                </div>
+                <div class="social-login">
+                    <button class="btn-social google">
+                        <i class="fab fa-google"></i>
+                        <span>Continue with Google</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <p>Don't have an account? <a href="#" onclick="closeLoginModal(); startOnboarding();">Sign up free</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
