@@ -173,86 +173,119 @@
                 }
                 else if (launchedBusinesses.Any())
                 {
-                    <div class="businesses-grid">
+                    <!-- Business-Level Tab Navigation -->
+                    <div class="business-level-tabs">
                         @foreach (var business in launchedBusinesses)
                         {
-                            <div class="business-performance-card">
-                                <!-- Business Header -->
-                                <div class="business-header">
-                                    <div class="business-info">
-                                        <h3 class="business-name">How @business.Name is Crushing It! 🚀</h3>
-                                        <div class="business-meta">
-                                            <span class="business-type">@business.BusinessType</span>
-                                            <span class="business-age">@GetBusinessAge(business) old</span>
-                                            <span class="business-status status-@business.Status.ToLower()">@business.Status</span>
-                                        </div>
-                                    </div>
-                                    @if (business.Education.Achievements.Any(a => a.IsNewlyAchieved))
-                                    {
-                                        <div class="new-achievement-badge">
-                                            🏆 New Achievement!
-                                        </div>
-                                    }
+                            <button class="business-tab @(GetActiveBusinessTab() == business.Id ? "active" : "")" 
+                                    @onclick="@(async () => await SetActiveBusinessTabAsync(business.Id))">
+                                <div class="business-tab-icon">🚀</div>
+                                <div class="business-tab-content">
+                                    <div class="business-tab-name">@business.Name</div>
+                                    <div class="business-tab-meta">@business.BusinessType • $@business.CurrentMetrics.Revenue.ToString("N0")</div>
                                 </div>
+                            </button>
+                        }
+                    </div>
 
-                                <!-- Key Metrics Row -->
-                                <div class="key-metrics-row">
-                                    <div class="metric-card money-coming-in" title="@GetTooltip("Revenue")">
-                                        <div class="metric-icon">💰</div>
-                                        <div class="metric-content">
-                                            <div class="metric-value">$@business.CurrentMetrics.Revenue.ToString("N0")</div>
-                                            <div class="metric-label">Money Coming In</div>
-                                            <div class="metric-trend positive">
-                                                ↗️ +@business.CurrentMetrics.MonthlyGrowthRate.ToString("F1")% this month
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="metric-card profit-margin" title="@GetTooltip("ProfitMargin")">
-                                        <div class="metric-icon">📈</div>
-                                        <div class="metric-content">
-                                            <div class="metric-value">@business.CurrentMetrics.ProfitMargin.ToString("F1")%</div>
-                                            <div class="metric-label">You Keep</div>
-                                            <div class="metric-benchmark">
-                                                @GetProfitMarginText(business.CurrentMetrics.ProfitMargin)
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="metric-card customer-love" title="@GetTooltip("CustomerSatisfactionScore")">
-                                        <div class="metric-icon">❤️</div>
-                                        <div class="metric-content">
-                                            <div class="metric-value">@business.Support.CustomerSatisfactionScore.ToString("F1")/5</div>
-                                            <div class="metric-label">Customer Love</div>
-                                            <div class="metric-benchmark">
-                                                @GetSatisfactionText(business.Support.CustomerSatisfactionScore)
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="metric-card growth-rate" title="@GetTooltip("MonthlyGrowthRate")">
-                                        <div class="metric-icon">🚀</div>
-                                        <div class="metric-content">
-                                            <div class="metric-value">@business.CurrentMetrics.MonthlyGrowthRate.ToString("F1")%</div>
-                                            <div class="metric-label">Growing</div>
-                                            <div class="metric-benchmark">
-                                                @GetGrowthText(business.CurrentMetrics.MonthlyGrowthRate)
-                                            </div>
-                                        </div>
+                    <!-- Active Business Content -->
+                    <div class="active-business-content">
+                        @{
+                            var activeBusiness = launchedBusinesses.FirstOrDefault(b => b.Id == GetActiveBusinessTab()) ?? launchedBusinesses.First();
+                        }
+                        <div class="business-at-a-glance">
+                            <!-- Business Header -->
+                            <div class="business-header">
+                                <div class="business-info">
+                                    <h3 class="business-name">How @activeBusiness.Name is Crushing It! 🚀</h3>
+                                    <div class="business-meta">
+                                        <span class="business-type">@activeBusiness.BusinessType</span>
+                                        <span class="business-age">@GetBusinessAge(activeBusiness) old</span>
+                                        <span class="business-status status-@activeBusiness.Status.ToLower()">@activeBusiness.Status</span>
                                     </div>
                                 </div>
+                                @if (activeBusiness.Education.Achievements.Any(a => a.IsNewlyAchieved))
+                                {
+                                    <div class="new-achievement-badge">
+                                        🏆 New Achievement!
+                                    </div>
+                                }
+                            </div>
 
-                                <!-- Marketing Insights -->
+                            <!-- At-a-Glance Grid Layout -->
+                            <div class="at-a-glance-grid">
+                                <!-- Key Metrics Section -->
+                                <div class="metrics-section">
+                                    <h4 class="section-subtitle">📊 Key Performance Metrics</h4>
+                                    <div class="key-metrics-row">
+                                        <div class="metric-card money-coming-in" title="@GetTooltip("Revenue")">
+                                            <div class="metric-icon">💰</div>
+                                            <div class="metric-content">
+                                                <div class="metric-value">$@activeBusiness.CurrentMetrics.Revenue.ToString("N0")</div>
+                                                <div class="metric-label">Money Coming In</div>
+                                                <div class="metric-trend positive">
+                                                    ↗️ +@activeBusiness.CurrentMetrics.MonthlyGrowthRate.ToString("F1")% this month
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="metric-card profit-margin" title="@GetTooltip("ProfitMargin")">
+                                            <div class="metric-icon">📈</div>
+                                            <div class="metric-content">
+                                                <div class="metric-value">@activeBusiness.CurrentMetrics.ProfitMargin.ToString("F1")%</div>
+                                                <div class="metric-label">You Keep</div>
+                                                <div class="metric-benchmark">
+                                                    @GetProfitMarginText(activeBusiness.CurrentMetrics.ProfitMargin)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="metric-card customer-love" title="@GetTooltip("CustomerSatisfactionScore")">
+                                            <div class="metric-icon">❤️</div>
+                                            <div class="metric-content">
+                                                <div class="metric-value">@activeBusiness.Support.CustomerSatisfactionScore.ToString("F1")/5</div>
+                                                <div class="metric-label">Customer Love</div>
+                                                <div class="metric-benchmark">
+                                                    @GetSatisfactionText(activeBusiness.Support.CustomerSatisfactionScore)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="metric-card growth-rate" title="@GetTooltip("MonthlyGrowthRate")">
+                                            <div class="metric-icon">🚀</div>
+                                            <div class="metric-content">
+                                                <div class="metric-value">@activeBusiness.CurrentMetrics.MonthlyGrowthRate.ToString("F1")%</div>
+                                                <div class="metric-label">Growing</div>
+                                                <div class="metric-benchmark">
+                                                    @GetGrowthText(activeBusiness.CurrentMetrics.MonthlyGrowthRate)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="metric-card website-status" title="Website Status and Performance">
+                                            <div class="metric-icon">🌐</div>
+                                            <div class="metric-content">
+                                                <div class="metric-value status-@activeBusiness.Website.Status.ToLower()">@activeBusiness.Website.Status</div>
+                                                <div class="metric-label">Website Status</div>
+                                                <div class="metric-benchmark">
+                                                    @activeBusiness.Website.UptimePercentage.ToString("F1")% uptime
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Marketing Section -->
                                 <div class="marketing-section">
-                                    <h4 class="section-subtitle">Where Your Customers Find You 📱</h4>
+                                    <h4 class="section-subtitle">📱 Marketing Performance</h4>
                                     <div class="channel-performance">
                                         <div class="best-channel">
                                             <span class="channel-badge">🏆 Best Channel</span>
-                                            <span class="channel-name">@business.Marketing.BestPerformingChannel</span>
+                                            <span class="channel-name">@activeBusiness.Marketing.BestPerformingChannel</span>
                                             <span class="channel-tip">Focus 80% of your time here!</span>
                                         </div>
                                         <div class="channels-grid">
-                                            @foreach (var channel in business.Marketing.Channels.Take(3))
+                                            @foreach (var channel in activeBusiness.Marketing.Channels.Take(3))
                                             {
                                                 <div class="channel-item">
                                                     <span class="channel-name">@channel.Key</span>
@@ -263,11 +296,47 @@
                                     </div>
                                 </div>
 
-                                <!-- Action Items -->
+                                <!-- Website Section -->
+                                <div class="website-section">
+                                    <h4 class="section-subtitle">🌐 Website Analytics</h4>
+                                    <div class="website-metrics">
+                                        <div class="website-status-card">
+                                            <div class="status-indicator status-@activeBusiness.Website.Status.ToLower()">
+                                                @GetWebsiteStatusIcon(activeBusiness.Website.Status)
+                                            </div>
+                                            <div class="status-details">
+                                                <div class="status-title">@activeBusiness.Website.Status</div>
+                                                <div class="status-url">@activeBusiness.Website.Url</div>
+                                                <div class="status-uptime">@activeBusiness.Website.UptimePercentage.ToString("F1")% uptime this month</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="website-stats-grid">
+                                            <div class="stat-item">
+                                                <div class="stat-value">@activeBusiness.Website.MonthlyVisitors.ToString("N0")</div>
+                                                <div class="stat-label">Monthly Visitors</div>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-value">@activeBusiness.Website.ConversionRate.ToString("F1")%</div>
+                                                <div class="stat-label">Conversion Rate</div>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-value">@activeBusiness.Website.BounceRate.ToString("F1")%</div>
+                                                <div class="stat-label">Bounce Rate</div>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-value">@activeBusiness.Website.AverageSessionDuration.ToString("F1")min</div>
+                                                <div class="stat-label">Avg. Session</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Items Section -->
                                 <div class="action-items-section">
-                                    <h4 class="section-subtitle">Stuff You Should Handle This Week ⚡</h4>
+                                    <h4 class="section-subtitle">⚡ Priority Actions</h4>
                                     <div class="action-items-list">
-                                        @foreach (var action in business.ActionItems.OrderBy(a => a.Priority == "High" ? 1 : a.Priority == "Medium" ? 2 : 3).Take(3))
+                                        @foreach (var action in activeBusiness.ActionItems.OrderBy(a => a.Priority == "High" ? 1 : a.Priority == "Medium" ? 2 : 3).Take(3))
                                         {
                                             <div class="action-item priority-@action.Priority.ToLower()">
                                                 <div class="action-priority-icon">
@@ -286,14 +355,14 @@
                                     </div>
                                 </div>
 
-                                <!-- Growth Opportunities -->
-                                @if (business.Opportunities.Any())
+                                <!-- Growth Opportunities Section -->
+                                @if (activeBusiness.Opportunities.Any())
                                 {
                                     <div class="opportunities-section">
-                                        <h4 class="section-subtitle">Ways to Grow Your Side Hustle 💡</h4>
+                                        <h4 class="section-subtitle">💡 Growth Opportunities</h4>
                                         <div class="opportunity-highlight">
                                             @{
-                                                var topOpportunity = business.Opportunities.OrderByDescending(o => o.Priority).First();
+                                                var topOpportunity = activeBusiness.Opportunities.OrderByDescending(o => o.Priority).First();
                                             }
                                             <div class="opportunity-card">
                                                 <div class="opportunity-impact">+$@topOpportunity.EstimatedImpact.ToString("N0")</div>
@@ -309,21 +378,21 @@
                                         </div>
                                     </div>
                                 }
-
-                                <!-- Quick Actions -->
-                                <div class="business-actions">
-                                    <button class="action-button primary" @onclick="() => ViewBusinessDetails(business.Id)">
-                                        📊 View Full Analytics
-                                    </button>
-                                    <button class="action-button" @onclick="() => ViewMarketingInsights(business.Id)">
-                                        📱 Marketing Tips
-                                    </button>
-                                    <button class="action-button" @onclick="() => ViewGrowthPlan(business.Id)">
-                                        🚀 Growth Plan
-                                    </button>
-                                </div>
                             </div>
-                        }
+
+                            <!-- Quick Actions -->
+                            <div class="business-actions">
+                                <button class="action-button primary" @onclick="() => ViewBusinessDetails(activeBusiness.Id)">
+                                    📊 View Full Analytics
+                                </button>
+                                <button class="action-button" @onclick="() => ViewMarketingInsights(activeBusiness.Id)">
+                                    📱 Marketing Tips
+                                </button>
+                                <button class="action-button" @onclick="() => ViewGrowthPlan(activeBusiness.Id)">
+                                    🚀 Growth Plan
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 }
                 else
@@ -361,6 +430,8 @@
     private List<BusinessIdeaScenario> allScenarios = new();
     private List<LaunchedBusiness> launchedBusinesses = new();
     private Dictionary<string, EducationalTooltip> tooltips = new();
+    private Dictionary<string, string> activeBusinessTabs = new();
+    private string activeBusinessId = "";
     private bool isLoading = true;
     private bool isLoadingBusinesses = true;
     
@@ -930,6 +1001,46 @@
             IdeaPhase.Implementation => "Execute Plan",
             _ => "Continue Development"
         };
+    }
+
+    // Tab Management Methods
+    private async Task SetActiveTabAsync(string businessId, string tabName)
+    {
+        activeBusinessTabs[businessId] = tabName;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private string GetActiveTab(string businessId)
+    {
+        return activeBusinessTabs.ContainsKey(businessId) ? activeBusinessTabs[businessId] : "overview";
+    }
+
+    private string GetWebsiteStatusIcon(string status)
+    {
+        return status switch
+        {
+            "Live" => "🟢",
+            "Under Maintenance" => "🟡",
+            "Down" => "🔴",
+            "Not Yet Launched" => "⚪",
+            _ => "❓"
+        };
+    }
+
+    // Business-Level Tab Management Methods
+    private async Task SetActiveBusinessTabAsync(string businessId)
+    {
+        activeBusinessId = businessId;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private string GetActiveBusinessTab()
+    {
+        if (string.IsNullOrEmpty(activeBusinessId) && launchedBusinesses.Any())
+        {
+            activeBusinessId = launchedBusinesses.First().Id;
+        }
+        return activeBusinessId;
     }
 }
 
@@ -1915,11 +2026,261 @@
     font-weight: 600;
 }
 
+/* Business-Level Tabs */
+.business-level-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+    padding: 0 16px;
+    overflow-x: auto;
+}
+
+.business-tab {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    flex-shrink: 0;
+}
+
+.business-tab:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+}
+
+.business-tab.active {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+}
+
+.business-tab-icon {
+    font-size: 24px;
+}
+
+.business-tab-content {
+    flex: 1;
+}
+
+.business-tab-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+.business-tab-meta {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* At-a-Glance Layout */
+.active-business-content {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.business-at-a-glance {
+    width: 100%;
+}
+
+.at-a-glance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+}
+
+.metrics-section {
+    grid-column: 1 / -1;
+}
+
+.marketing-section,
+.website-section,
+.action-items-section,
+.opportunities-section {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Business Tabs */
+.business-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.tab-button {
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #718096;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tab-button:hover {
+    color: #4a5568;
+    background: #f7fafc;
+}
+
+.tab-button.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+    background: #f7fafc;
+    font-weight: 600;
+}
+
+.tab-content {
+    min-height: 300px;
+}
+
+/* Website Status */
+.metric-card.website-status .metric-value.status-live {
+    color: #10b981;
+}
+
+.metric-card.website-status .metric-value.status-under-maintenance {
+    color: #f59e0b;
+}
+
+.metric-card.website-status .metric-value.status-down {
+    color: #ef4444;
+}
+
+.metric-card.website-status .metric-value.status-not-yet-launched {
+    color: #9ca3af;
+}
+
+/* Website Section */
+.website-section {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+}
+
+.website-status-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid #e2e8f0;
+}
+
+.status-indicator {
+    font-size: 32px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-indicator.status-live {
+    background: #d1fae5;
+}
+
+.status-indicator.status-under-maintenance {
+    background: #fef3c7;
+}
+
+.status-indicator.status-down {
+    background: #fecaca;
+}
+
+.status-indicator.status-not-yet-launched {
+    background: #f3f4f6;
+}
+
+.status-details {
+    flex: 1;
+}
+
+.status-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 4px;
+}
+
+.status-url {
+    color: #667eea;
+    font-size: 14px;
+    margin-bottom: 4px;
+    text-decoration: none;
+}
+
+.status-url:hover {
+    text-decoration: underline;
+}
+
+.status-uptime {
+    color: #718096;
+    font-size: 12px;
+}
+
+.website-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 16px;
+}
+
+.stat-item {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    color: #718096;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
 /* Business Actions */
 .business-actions {
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
 }
 
 .action-button {
@@ -2086,6 +2447,26 @@
     }
 }
 
+@@media (max-width: 768px) {
+    .at-a-glance-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    
+    .business-level-tabs {
+        padding: 0 8px;
+    }
+    
+    .business-tab {
+        min-width: 160px;
+        padding: 12px 16px;
+    }
+    
+    .active-business-content {
+        padding: 24px;
+    }
+}
+
 @@media (max-width: 480px) {
     .dashboard-content {
         padding: 20px 12px;
@@ -2115,6 +2496,28 @@
         flex-direction: column;
         text-align: center;
         gap: 12px;
+    }
+    
+    .at-a-glance-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .business-tab {
+        min-width: 140px;
+        padding: 10px 12px;
+    }
+    
+    .business-tab-name {
+        font-size: 14px;
+    }
+    
+    .business-tab-meta {
+        font-size: 11px;
+    }
+    
+    .active-business-content {
+        padding: 20px;
     }
 }
 </style>

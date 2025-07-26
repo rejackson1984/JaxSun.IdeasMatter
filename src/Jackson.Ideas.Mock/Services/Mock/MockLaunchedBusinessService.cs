@@ -169,6 +169,9 @@ public class MockLaunchedBusinessService : ILaunchedBusinessService
                     AverageSessionDuration = 2.8,
                     PageViews = 8520,
                     ConversionRate = 5.1m,
+                    Status = "Live",
+                    UptimePercentage = 99.8m,
+                    Url = "https://craftcorner.shop",
                     TrafficSources = new List<TrafficSource>
                     {
                         new TrafficSource { Source = "Instagram", Visitors = 1420, Percentage = 50.0m, ConversionRate = 8.2m },

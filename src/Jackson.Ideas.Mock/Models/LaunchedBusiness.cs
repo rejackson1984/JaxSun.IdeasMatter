@@ -130,6 +130,9 @@ public class WebsiteAnalytics
     public double AverageSessionDuration { get; set; }
     public int PageViews { get; set; }
     public decimal ConversionRate { get; set; }
+    public string Status { get; set; } = "Live"; // Live, Under Maintenance, Down, Not Yet Launched
+    public decimal UptimePercentage { get; set; } = 99.9m;
+    public string Url { get; set; } = "";
     public List<TrafficSource> TrafficSources { get; set; } = new();
     public List<PopularPage> PopularPages { get; set; } = new();
 }
