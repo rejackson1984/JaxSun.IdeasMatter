@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Layout Test</title>
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; }
+        
+        /* Simulate the sidebar layout */
+        .professional-layout { display: flex; }
+        .professional-sidebar { width: 250px; background: #1a202c; height: 100vh; position: fixed; left: 0; top: 0; }
+        .main-content { flex: 1; margin-left: 250px; background: #f8fafc; }
+        .content-wrapper { padding: 0; max-width: none; margin: 0; background: transparent; }
+        
+        /* My dashboard changes */
+        .entrepreneur-dashboard {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            padding: 0;
+            margin: 0 -250px 0 -250px;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            width: 100%;
+            margin: 0;
+        }
+
+        .header-content {
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 280px 0 32px;
+        }
+
+        .welcome-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+            line-height: 1.2;
+        }
+
+        .welcome-subtitle {
+            font-size: 20px;
+            opacity: 0.95;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .dashboard-content {
+            padding: 24px 16px;
+            margin: 0 250px 0 250px;
+        }
+        
+        .sidebar-placeholder {
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .content-placeholder {
+            padding: 20px;
+            background: white;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="professional-layout">
+        <div class="professional-sidebar">
+            <div class="sidebar-placeholder">
+                <h3>Sidebar</h3>
+                <p>Navigation items would be here</p>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="content-wrapper">
+                <div class="entrepreneur-dashboard">
+                    <div class="dashboard-header">
+                        <div class="header-content">
+                            <h1 class="welcome-title">Your Business Command Center</h1>
+                            <p class="welcome-subtitle">
+                                Track your side hustles, celebrate wins, and discover new opportunities to grow! 
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-content">
+                        <div class="content-placeholder">
+                            <h2>Dashboard Content</h2>
+                            <p>This is where the main dashboard content would appear.</p>
+                            <p>The blue header above should now stretch across the full width of the browser window.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

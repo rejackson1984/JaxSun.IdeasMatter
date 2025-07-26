@@ -42,6 +42,7 @@ builder.Services.AddScoped<IMockAuthenticationService, MockAuthenticationService
 builder.Services.AddScoped<IMarketResearchService, MockMarketResearchService>();
 builder.Services.AddScoped<IFinancialProjectionService, MockFinancialProjectionService>();
 builder.Services.AddScoped<IUserProfileService, MockUserProfileService>();
+builder.Services.AddScoped<ILaunchedBusinessService, MockLaunchedBusinessService>();
 
 // Register Business Translation Service
 builder.Services.AddScoped<BusinessTranslationService>();

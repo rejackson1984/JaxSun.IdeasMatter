@@ -130,11 +130,11 @@ public class BusinessTranslationService
     /// <summary>
     /// Creates actionable next steps from complex business strategy
     /// </summary>
-    public List<ActionItem> CreateActionableSteps(BusinessIdeaScenario scenario)
+    public List<BusinessActionItem> CreateActionableSteps(BusinessIdeaScenario scenario)
     {
-        var steps = new List<ActionItem>
+        var steps = new List<BusinessActionItem>
         {
-            new ActionItem
+            new BusinessActionItem
             {
                 Title = "Validate Your Idea with Real People",
                 Description = "Talk to 10-15 people who might use your product. Ask them about their problems and see if your solution excites them.",
@@ -144,7 +144,7 @@ public class BusinessTranslationService
                 Category = "Research"
             },
             
-            new ActionItem
+            new BusinessActionItem
             {
                 Title = "Create a Simple Version of Your Product",
                 Description = "Build the most basic version that solves the main problem. Don't worry about making it perfect - just make it work!",
@@ -154,7 +154,7 @@ public class BusinessTranslationService
                 Category = "Development"
             },
             
-            new ActionItem
+            new BusinessActionItem
             {
                 Title = "Find Your First 10 Customers",
                 Description = "Focus on getting 10 people to actually pay for and use your product. These early customers will teach you everything.",
@@ -168,7 +168,7 @@ public class BusinessTranslationService
         // Add specific steps based on scenario
         if (scenario.StartupCost > 5000)
         {
-            steps.Insert(1, new ActionItem
+            steps.Insert(1, new BusinessActionItem
             {
                 Title = "Figure Out Your Funding",
                 Description = $"You'll need about ${scenario.StartupCost:N0} to get started. Look into small business loans, investors, or saving up gradually.",
@@ -181,7 +181,7 @@ public class BusinessTranslationService
 
         if (scenario.CompetitionLevel == "High")
         {
-            steps.Insert(0, new ActionItem
+            steps.Insert(0, new BusinessActionItem
             {
                 Title = "Study Your Competition",
                 Description = "Check out what similar businesses are doing. Find what customers complain about - that's your opportunity to be better!",
@@ -252,7 +252,7 @@ public class BusinessTranslationService
 /// <summary>
 /// Represents an actionable step for business beginners
 /// </summary>
-public class ActionItem
+public class BusinessActionItem
 {
     public string Title { get; set; } = "";
     public string Description { get; set; } = "";

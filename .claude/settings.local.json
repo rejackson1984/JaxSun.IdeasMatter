@@ -185,7 +185,8 @@
       "Bash(./scripts/simple-golden-rule.sh:*)",
       "Bash(./deploy-mock-to-render.sh:*)",
       "Bash(chmod +x /mnt/c/Development/Jackson.Ideas/scripts/golden-rule.sh)",
-      "Bash(/mnt/c/Development/Jackson.Ideas/scripts/golden-rule.sh)"
+      "Bash(/mnt/c/Development/Jackson.Ideas/scripts/golden-rule.sh)",
+      "Bash(/home/owner/.dotnet/dotnet build src/Jackson.Ideas.Mock --verbosity quiet)"
     ],
     "deny": []
   }
