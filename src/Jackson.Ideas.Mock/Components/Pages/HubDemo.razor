@@ -1,0 +1,673 @@
+@page "/hub-demo"
+@layout HubLayout
+@inject IHubContextService HubContextService
+@inject IHubConfigurationService HubConfigurationService
+@inject ICoachPersonaService CoachPersonaService
+@inject NavigationManager Navigation
+
+<PageTitle>Hub System Demo - IdeaCoach Pro</PageTitle>
+
+<!-- Hub Demo Page -->
+<div class="hub-demo-page">
+    <div class="demo-header">
+        <h1 class="demo-title">Three-Hub Business Development Platform</h1>
+        <p class="demo-subtitle">Experience the complete journey from idea to successful business</p>
+        
+        @if (_currentContext != null)
+        {
+            <div class="current-hub-indicator">
+                <span class="indicator-label">Current Hub:</span>
+                <span class="indicator-value">@GetHubDisplayName(_currentContext.CurrentHub)</span>
+                <span class="indicator-progress">@GetCurrentHubProgress()% Complete</span>
+            </div>
+        }
+    </div>
+
+    <!-- Hub Overview Cards -->
+    <div class="hub-overview-grid">
+        @if (_allHubMetadata != null && _currentContext != null)
+        {
+            @foreach (var kvp in _allHubMetadata)
+            {
+                var hub = kvp.Key;
+                var metadata = kvp.Value;
+                var progress = _currentContext.Progress.GetValueOrDefault(hub);
+                var isUnlocked = progress?.IsUnlocked ?? false;
+                var isCurrent = _currentContext.CurrentHub == hub;
+                
+                <div class="hub-card @GetHubCardClass(hub, isUnlocked, isCurrent)" @onclick="() => SelectHub(hub)">
+                    <div class="hub-card-header">
+                        <div class="hub-icon-container">
+                            <i class="@metadata.Icon hub-card-icon"></i>
+                        </div>
+                        <div class="hub-card-title-section">
+                            <h3 class="hub-card-title">@metadata.Name</h3>
+                            <p class="hub-card-subtitle">@GetHubSubtitle(hub)</p>
+                        </div>
+                        @if (isCurrent)
+                        {
+                            <div class="current-badge">Current</div>
+                        }
+                        else if (!isUnlocked)
+                        {
+                            <div class="locked-badge">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        }
+                    </div>
+                    
+                    <p class="hub-card-description">@metadata.Description</p>
+                    
+                    @if (progress != null)
+                    {
+                        <div class="hub-progress-section">
+                            <div class="progress-header">
+                                <span class="progress-label">Progress</span>
+                                <span class="progress-percentage">@progress.CompletionPercentage%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: @progress.CompletionPercentage%; background: @metadata.GradientColors;"></div>
+                            </div>
+                            @if (progress.CompletedMilestones.Any())
+                            {
+                                <div class="milestones-preview">
+                                    <span class="milestones-count">@progress.CompletedMilestones.Count/@progress.AvailableMilestones.Count milestones completed</span>
+                                </div>
+                            }
+                        </div>
+                    }
+                    
+                    <div class="hub-features-list">
+                        <h4 class="features-title">Key Features:</h4>
+                        <ul class="features-grid">
+                            @foreach (var feature in metadata.Features.Take(4))
+                            {
+                                <li class="feature-item">
+                                    <i class="fas fa-check feature-check"></i>
+                                    @feature
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    
+                    @if (_coaches.ContainsKey(hub))
+                    {
+                        var coach = _coaches[hub];
+                        <div class="coach-preview">
+                            <div class="coach-avatar-mini">
+                                <i class="@coach.Avatar coach-icon-mini"></i>
+                            </div>
+                            <div class="coach-info-mini">
+                                <span class="coach-name-mini">@coach.Name</span>
+                                <span class="coach-role-mini">@coach.Description</span>
+                            </div>
+                        </div>
+                    }
+                    
+                    <div class="hub-card-actions">
+                        @if (!isUnlocked)
+                        {
+                            <button class="btn btn-locked" disabled>
+                                <i class="fas fa-lock"></i>
+                                Unlock by completing @GetPreviousHubName(hub)
+                            </button>
+                        }
+                        else if (isCurrent)
+                        {
+                            <button class="btn btn-current" @onclick="() => GoToHubDashboard(hub)">
+                                <i class="fas fa-arrow-right"></i>
+                                Continue Journey
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-switch" @onclick="() => SelectHub(hub)">
+                                <i class="fas fa-exchange-alt"></i>
+                                Switch to @metadata.Name
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    
+    <!-- System Benefits Section -->
+    <div class="benefits-section">
+        <h2 class="benefits-title">Complete Business Development Ecosystem</h2>
+        <div class="benefits-grid">
+            <div class="benefit-item">
+                <i class="fas fa-route benefit-icon"></i>
+                <h3>Guided Journey</h3>
+                <p>Step-by-step progression through proven business development phases</p>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-robot benefit-icon"></i>
+                <h3>AI-Powered Coaching</h3>
+                <p>Personalized guidance from specialized AI coaches tailored to each phase</p>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-trophy benefit-icon"></i>
+                <h3>Achievement System</h3>
+                <p>Gamified progress tracking with rewards and milestone celebrations</p>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-graduation-cap benefit-icon"></i>
+                <h3>Educational Integration</h3>
+                <p>Learn business concepts while building your venture</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private HubContext? _currentContext;
+    private Dictionary<BusinessHub, HubMetadata>? _allHubMetadata;
+    private Dictionary<BusinessHub, CoachPersona> _coaches = new();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+        StateHasChanged();
+    }
+    
+    private async Task LoadData()
+    {
+        _currentContext = await HubContextService.GetCurrentContextAsync();
+        _allHubMetadata = await HubConfigurationService.GetAllHubMetadataAsync();
+        
+        // Load coach personas
+        foreach (var hub in Enum.GetValues<BusinessHub>())
+        {
+            _coaches[hub] = await CoachPersonaService.GetCoachForHubAsync(hub);
+        }
+    }
+    
+    private async Task SelectHub(BusinessHub hub)
+    {
+        if (_currentContext != null)
+        {
+            var canSwitch = await HubContextService.SwitchToHubAsync(hub);
+            if (canSwitch)
+            {
+                await LoadData();
+                StateHasChanged();
+            }
+        }
+    }
+    
+    private void GoToHubDashboard(BusinessHub hub)
+    {
+        var route = hub switch
+        {
+            BusinessHub.IdeaDevelopment => "/idea-input",
+            BusinessHub.BusinessPlanning => "/financial-projections",
+            BusinessHub.BusinessOperations => "/dashboard",
+            _ => "/dashboard"
+        };
+        Navigation.NavigateTo(route);
+    }
+    
+    private string GetHubDisplayName(BusinessHub hub)
+    {
+        return hub switch
+        {
+            BusinessHub.IdeaDevelopment => "Idea Development",
+            BusinessHub.BusinessPlanning => "Business Planning",
+            BusinessHub.BusinessOperations => "Business Operations",
+            _ => "Unknown Hub"
+        };
+    }
+    
+    private string GetHubSubtitle(BusinessHub hub)
+    {
+        return hub switch
+        {
+            BusinessHub.IdeaDevelopment => "Where Great Ideas Come to Life",
+            BusinessHub.BusinessPlanning => "Building Your Business Foundation", 
+            BusinessHub.BusinessOperations => "Scale Your Success",
+            _ => ""
+        };
+    }
+    
+    private string GetHubCardClass(BusinessHub hub, bool isUnlocked, bool isCurrent)
+    {
+        var classes = new List<string> { "hub-card-base" };
+        
+        if (isCurrent) classes.Add("current");
+        if (!isUnlocked) classes.Add("locked");
+        
+        classes.Add(hub switch
+        {
+            BusinessHub.IdeaDevelopment => "hub-card-idea",
+            BusinessHub.BusinessPlanning => "hub-card-planning",
+            BusinessHub.BusinessOperations => "hub-card-operations",
+            _ => "hub-card-default"
+        });
+        
+        return string.Join(" ", classes);
+    }
+    
+    private int GetCurrentHubProgress()
+    {
+        return _currentContext?.Progress.GetValueOrDefault(_currentContext.CurrentHub)?.CompletionPercentage ?? 0;
+    }
+    
+    private string GetPreviousHubName(BusinessHub hub)
+    {
+        return hub switch
+        {
+            BusinessHub.BusinessPlanning => "Idea Development",
+            BusinessHub.BusinessOperations => "Business Planning",
+            _ => "Previous Hub"
+        };
+    }
+}
+
+<style>
+    .hub-demo-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .demo-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .demo-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: var(--hub-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+    }
+
+    .demo-subtitle {
+        font-size: 1.25rem;
+        color: #64748b;
+        margin-bottom: 2rem;
+    }
+
+    .current-hub-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        background: var(--hub-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+        color: white;
+        border-radius: 2rem;
+        font-weight: 600;
+    }
+
+    .indicator-label {
+        opacity: 0.9;
+    }
+
+    .indicator-value {
+        font-weight: 700;
+    }
+
+    .indicator-progress {
+        padding: 0.25rem 0.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 1rem;
+        font-size: 0.875rem;
+    }
+
+    /* Hub Overview Grid */
+    .hub-overview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
+    }
+
+    .hub-card-base {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hub-card-base::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--hub-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+    }
+
+    .hub-card-idea::before {
+        background: linear-gradient(135deg, #7b8fef 0%, #22d3ee 100%);
+    }
+
+    .hub-card-planning::before {
+        background: linear-gradient(135deg, #5a6fd8 0%, #3b82f6 100%);
+    }
+
+    .hub-card-operations::before {
+        background: linear-gradient(135deg, #4c5fd7 0%, #059669 100%);
+    }
+
+    .hub-card-base:hover:not(.locked) {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .hub-card-base.current {
+        border-color: var(--hub-primary, #667eea);
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
+    }
+
+    .hub-card-base.locked {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .hub-card-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .hub-icon-container {
+        width: 60px;
+        height: 60px;
+        border-radius: 1rem;
+        background: var(--hub-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .hub-card-icon {
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .hub-card-title-section {
+        flex: 1;
+    }
+
+    .hub-card-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin: 0 0 0.25rem 0;
+    }
+
+    .hub-card-subtitle {
+        font-size: 0.875rem;
+        color: var(--hub-primary, #667eea);
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .current-badge {
+        padding: 0.25rem 0.75rem;
+        background: #10b981;
+        color: white;
+        border-radius: 1rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .locked-badge {
+        padding: 0.5rem;
+        background: #e2e8f0;
+        color: #64748b;
+        border-radius: 0.5rem;
+    }
+
+    .hub-card-description {
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Progress Section */
+    .hub-progress-section {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 0.5rem;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-label {
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .progress-percentage {
+        font-weight: 700;
+        color: var(--hub-primary, #667eea);
+    }
+
+    .progress-bar {
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+
+    .milestones-preview {
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+
+    /* Features List */
+    .hub-features-list {
+        margin-bottom: 1.5rem;
+    }
+
+    .features-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.75rem;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .feature-check {
+        color: #10b981;
+        font-size: 0.75rem;
+    }
+
+    /* Coach Preview */
+    .coach-preview {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: var(--hub-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+        border-radius: 0.5rem;
+        margin-bottom: 1.5rem;
+        color: white;
+    }
+
+    .coach-avatar-mini {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .coach-icon-mini {
+        font-size: 0.875rem;
+        color: white;
+    }
+
+    .coach-info-mini {
+        flex: 1;
+    }
+
+    .coach-name-mini {
+        display: block;
+        font-weight: 700;
+        font-size: 0.875rem;
+    }
+
+    .coach-role-mini {
+        display: block;
+        font-size: 0.75rem;
+        opacity: 0.9;
+    }
+
+    /* Action Buttons */
+    .hub-card-actions {
+        margin-top: auto;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-current {
+        background: var(--hub-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+        color: white;
+    }
+
+    .btn-switch {
+        background: #f1f5f9;
+        color: #475569;
+        border: 2px solid #e2e8f0;
+    }
+
+    .btn-switch:hover {
+        background: var(--hub-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+        color: white;
+        border-color: transparent;
+    }
+
+    .btn-locked {
+        background: #f1f5f9;
+        color: #94a3b8;
+        cursor: not-allowed;
+    }
+
+    .btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Benefits Section */
+    .benefits-section {
+        padding: 3rem 0;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .benefits-title {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 2rem;
+    }
+
+    .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+
+    .benefit-item {
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+    .benefit-icon {
+        font-size: 2rem;
+        color: var(--hub-primary, #667eea);
+        margin-bottom: 1rem;
+    }
+
+    .benefit-item h3 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+    }
+
+    .benefit-item p {
+        color: #64748b;
+        line-height: 1.6;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .hub-overview-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .demo-title {
+            font-size: 2rem;
+        }
+
+        .current-hub-indicator {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+</style>

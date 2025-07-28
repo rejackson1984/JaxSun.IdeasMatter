@@ -77,7 +77,7 @@
                                 {
                                     <div class="col-lg-4 col-md-6 mb-4">
                                         <div class="template-card @(selectedTemplate?.Id == template.Id ? "selected" : "")"
-                                             @onclick="@(() => SelectTemplate(template))">
+                                             onclick="@(() => SelectTemplate(template))">
                                             <div class="template-preview">
                                                 <div class="preview-placeholder">
                                                     <i class="fas fa-@GetTemplateIcon(template.Category)"></i>

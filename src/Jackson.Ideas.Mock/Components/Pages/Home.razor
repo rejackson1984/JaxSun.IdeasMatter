@@ -1,198 +1,246 @@
 @page "/"
 @inject NavigationManager Navigation
 
-<PageTitle>Ideas Matter - Your Dream-Enabling Business Partner</PageTitle>
+<PageTitle>IdeaCoach Pro - Transform Your Ideas Into Million Dollar Businesses</PageTitle>
 
-<div class="user-friendly-landing">
-    <section class="hero-section">
-        <div class="container">
-            <div class="trust-badge">
-                <span class="badge">💼 You Own It, We Enable It</span>
+<div class="coach-landing">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-rocket brand-icon"></i>
+                <span class="brand-text">IdeaCoach Pro</span>
             </div>
-            <h1 class="hero-title">
-                Your <span class="highlight">Dream-Enabling</span> Business Partner
-            </h1>
-            <p class="hero-subtitle">
-                We give you the power to turn your idea into a profitable business. 
-                <strong>You stay in control</strong> - we provide the tools, expertise, and funding to make your dreams reality.
-            </p>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#journey" class="nav-link">Your Journey</a>
+                <a href="#coach" class="nav-link">AI Coach</a>
+                <a href="#success" class="nav-link">Success Stories</a>
+                <div class="nav-auth">
+                    <button class="btn btn-secondary">Sign In</button>
+                    <button class="btn btn-primary">Start Free Trial</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-star"></i>
+                    <span>Trusted by 50,000+ Entrepreneurs</span>
+                </div>
+                <h1 class="hero-title">
+                    Transform Your <span class="gradient-text">Wild Ideas</span> Into 
+                    <span class="gradient-text">Million Dollar Businesses</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Join thousands of first-time entrepreneurs who've built successful companies with our AI-powered coaching platform. 
+                    No business experience required - just bring your passion and we'll handle the rest.
+                </p>
+                <div class="hero-cta">
+                    <button class="btn-hero-primary" @onclick="StartDemo">
+                        <i class="fas fa-rocket"></i>
+                        Start Your Business Journey
+                    </button>
+                    <button class="btn-hero-secondary">
+                        <i class="fas fa-play"></i>
+                        Watch 2-Min Demo
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">$2.3B+</div>
+                        <div class="stat-label">Generated Revenue</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">15,000+</div>
+                        <div class="stat-label">Launched Businesses</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">94%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="dashboard-preview">
+                    <div class="preview-header">
+                        <div class="preview-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="preview-title">Your Business Dashboard</div>
+                    </div>
+                    <div class="preview-content">
+                        <div class="coach-message">
+                            <div class="coach-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-bubble">
+                                <p>"Great news! Your market research shows 87% demand for your app idea. Ready to move to the planning phase?"</p>
+                            </div>
+                        </div>
+                        <div class="progress-tracker">
+                            <div class="phase active"><span>1</span> Research</div>
+                            <div class="phase next"><span>2</span> Planning</div>
+                            <div class="phase"><span>3</span> Design</div>
+                            <div class="phase"><span>4</span> Development</div>
+                            <div class="phase"><span>5</span> Launch</div>
+                            <div class="phase"><span>6</span> Operations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journey Section -->
+    <section id="journey" class="journey">
+        <div class="container">
+            <div class="section-header">
+                <h2>Your Entrepreneurial Journey</h2>
+                <p>From idea to IPO - we guide you through every step with personalized AI coaching</p>
+            </div>
             
-            <div class="simple-process">
-                <div class="process-step">
-                    <div class="step-icon">💭</div>
-                    <h3>Share Your Vision</h3>
-                    <p>Tell us your dream business idea</p>
-                </div>
-                <div class="arrow">→</div>
-                <div class="process-step">
-                    <div class="step-icon">📋</div>
-                    <h3>Build Your Plan</h3>
-                    <p>Create your strategy with AI guidance</p>
-                </div>
-                <div class="arrow">→</div>
-                <div class="process-step">
-                    <div class="step-icon">🎨</div>
-                    <h3>Design & Create</h3>
-                    <p>Build your product with our platform</p>
-                </div>
-                <div class="arrow">→</div>
-                <div class="process-step">
-                    <div class="step-icon">🚀</div>
-                    <h3>Launch Together</h3>
-                    <p>You lead, we provide the power</p>
-                </div>
-                <div class="arrow">→</div>
-                <div class="process-step">
-                    <div class="step-icon">💰</div>
-                    <h3>Grow & Profit</h3>
-                    <p>Shared success, your control</p>
-                </div>
-            </div>
-
-            <div class="hero-actions">
-                <button class="btn btn-primary btn-main" @onclick="StartDemo">
-                    <span>✨</span>
-                    Enable My Dream Business
-                </button>
-            </div>
-
-            <div class="confidence-builders">
-                <span>✅ You maintain full ownership and control</span>
-                <span>✅ Enterprise tools at startup costs</span>
-                <span>✅ We succeed together</span>
-            </div>
-        </div>
-    </section>
-
-    <section class="partnership-section">
-        <div class="container">
-            <h2>Your Dreams, Our Capabilities</h2>
-            <div class="partnership-preview">
-                <h3>Why Partner With Ideas Matter?</h3>
-                <div class="value-cards">
-                    <div class="value-card">
-                        <div class="value-icon">🏢</div>
-                        <h4>Your Company, Your Control</h4>
-                        <p><strong>You make decisions,</strong> we provide enterprise-level capabilities. Full ownership, guided success.</p>
+            <div class="journey-timeline">
+                <div class="journey-phase">
+                    <div class="phase-icon research">
+                        <i class="fas fa-search"></i>
                     </div>
-                    <div class="value-card">
-                        <div class="value-icon">💡</div>
-                        <h4>Impossible Made Possible</h4>
-                        <p>What costs $500K+ traditionally, we enable for a small revenue share. Access without the risk.</p>
+                    <div class="phase-content">
+                        <h3>1. Research & Validation</h3>
+                        <p class="phase-subtitle">Discover if your idea has market potential</p>
+                        <ul class="phase-features">
+                            <li><i class="fas fa-check"></i> AI-powered market analysis</li>
+                            <li><i class="fas fa-check"></i> Competitor landscape mapping</li>
+                            <li><i class="fas fa-check"></i> Customer persona development</li>
+                            <li><i class="fas fa-check"></i> Revenue opportunity assessment</li>
+                        </ul>
+                        <div class="coach-insight">
+                            <div class="coach-avatar-small">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <p>"I'll analyze 50,000+ data points to validate your idea's potential"</p>
+                        </div>
                     </div>
-                    <div class="value-card">
-                        <div class="value-icon">🤝</div>
-                        <h4>We Only Win When You Win</h4>
-                        <p>Revenue sharing partnership means we're invested in your success. Your growth is our growth.</p>
+                </div>
+
+                <div class="journey-phase">
+                    <div class="phase-icon planning">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="phase-content">
+                        <h3>2. Strategic Planning</h3>
+                        <p class="phase-subtitle">Build your roadmap to success</p>
+                        <ul class="phase-features">
+                            <li><i class="fas fa-check"></i> Business model optimization</li>
+                            <li><i class="fas fa-check"></i> Financial projections & budgeting</li>
+                            <li><i class="fas fa-check"></i> Go-to-market strategy</li>
+                            <li><i class="fas fa-check"></i> Risk assessment & mitigation</li>
+                        </ul>
+                        <div class="coach-insight">
+                            <div class="coach-avatar-small">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <p>"I'll create a custom business plan that investors love"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="journey-phase">
+                    <div class="phase-icon design">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <div class="phase-content">
+                        <h3>3. Design & Prototyping</h3>
+                        <p class="phase-subtitle">Create stunning user experiences</p>
+                        <ul class="phase-features">
+                            <li><i class="fas fa-check"></i> Brand identity development</li>
+                            <li><i class="fas fa-check"></i> UI/UX design automation</li>
+                            <li><i class="fas fa-check"></i> Interactive prototypes</li>
+                            <li><i class="fas fa-check"></i> User testing & feedback</li>
+                        </ul>
+                        <div class="coach-insight">
+                            <div class="coach-avatar-small">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <p>"I'll design like the world's best agencies, but faster and cheaper"</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="features-section">
+    <!-- AI Coach Section -->
+    <section id="coach" class="coach-section">
         <div class="container">
-            <h2>Complete Business Enablement Services</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🔍</div>
-                    <h4>Market Intelligence</h4>
-                    <p>Enable smart market decisions with AI insights. You understand your customers, we provide the data.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📋</div>
-                    <h4>Business Strategy</h4>
-                    <p>Build winning plans with guided automation. Your vision, our strategic expertise.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🎨</div>
-                    <h4>Product Creation</h4>
-                    <p>Design professional products with our platform. You define it, we help you build it.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚒️</div>
-                    <h4>Development Power</h4>
-                    <p>Build enterprise-grade solutions without coding. Your ideas, our technical capabilities.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🚀</div>
-                    <h4>Launch Support</h4>
-                    <p>Execute go-to-market with proven automation. You lead the vision, we power the execution.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📈</div>
-                    <h4>Marketing Engine</h4>
-                    <p>Scale customer acquisition with AI-powered tools. Your brand, our marketing automation.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💰</div>
-                    <h4>Sales Acceleration</h4>
-                    <p>Convert leads with automated sales systems. You close deals, we handle the pipeline.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🤝</div>
-                    <h4>Customer Success</h4>
-                    <p>Deliver world-class support without overhead. Your customers, our support platform.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="partnership-model-section">
-        <div class="container">
-            <h2>How Our Partnership Works</h2>
-            <div class="partnership-comparison">
-                <div class="comparison-card traditional">
-                    <h3>Traditional Startup</h3>
-                    <div class="cost-breakdown">
-                        <div class="cost-item">
-                            <span class="cost-label">Development Team:</span>
-                            <span class="cost-amount">$300K+/year</span>
+            <div class="coach-hero">
+                <div class="coach-content">
+                    <h2>Meet Your AI Business Coach</h2>
+                    <p class="coach-subtitle">
+                        More than just AI - your personal mentor with the combined knowledge of 
+                        10,000+ successful entrepreneurs, VCs, and business experts.
+                    </p>
+                    
+                    <div class="coach-features">
+                        <div class="coach-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4>Learns Your Style</h4>
+                                <p>Adapts to your personality, goals, and learning preferences</p>
+                            </div>
                         </div>
-                        <div class="cost-item">
-                            <span class="cost-label">Marketing Budget:</span>
-                            <span class="cost-amount">$200K+/year</span>
+                        
+                        <div class="coach-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4>24/7 Availability</h4>
+                                <p>Always there when you need guidance, day or night</p>
+                            </div>
                         </div>
-                        <div class="cost-item">
-                            <span class="cost-label">Operations Setup:</span>
-                            <span class="cost-amount">$150K+</span>
-                        </div>
-                        <div class="cost-item">
-                            <span class="cost-label">Infrastructure:</span>
-                            <span class="cost-amount">$50K+/year</span>
-                        </div>
-                        <div class="total-cost">
-                            <strong>Total: $700K+ in Year 1</strong>
+                        
+                        <div class="coach-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-target"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4>Results-Driven</h4>
+                                <p>Focused on your success with proven methodologies</p>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="vs-divider">
-                    <span>VS</span>
-                </div>
-                
-                <div class="comparison-card partnership">
-                    <h3>Ideas Matter Partnership</h3>
-                    <div class="partnership-benefits">
-                        <div class="benefit-item">
-                            <span class="benefit-icon">✅</span>
-                            <span class="benefit-text">All capabilities included</span>
+                <div class="coach-demo">
+                    <div class="chat-interface">
+                        <div class="chat-header">
+                            <div class="coach-status">
+                                <div class="status-dot online"></div>
+                                <span>Coach Alex - Online</span>
+                            </div>
                         </div>
-                        <div class="benefit-item">
-                            <span class="benefit-icon">✅</span>
-                            <span class="benefit-text">No upfront costs</span>
+                        <div class="chat-messages">
+                            <div class="message coach-message">
+                                <div class="message-avatar">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="message-content">
+                                    <p>Hey! I've analyzed your fitness app idea. The market looks promising - $4.4B industry with 73% growth. Ready to dive into your business plan?</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="benefit-item">
-                            <span class="benefit-icon">✅</span>
-                            <span class="benefit-text">You maintain full control</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-icon">✅</span>
-                            <span class="benefit-text">Revenue sharing only</span>
-                        </div>
-                        <div class="partnership-deal">
-                            <strong>Your Investment: Small Revenue Share</strong>
-                            <p>We only profit when you profit</p>
+                        <div class="chat-input">
+                            <input type="text" placeholder="Ask your coach anything...">
+                            <button><i class="fas fa-paper-plane"></i></button>
                         </div>
                     </div>
                 </div>
@@ -200,468 +248,45 @@
         </div>
     </section>
 
+    <!-- CTA Section -->
     <section class="cta-section">
         <div class="container">
-            <h2>Ready to Make the Impossible Possible?</h2>
-            <p>Join entrepreneurs who kept control while accessing enterprise capabilities to make their dreams reality.</p>
-            <button class="btn btn-primary btn-main" @onclick="StartDemo">
-                <span>✨</span>
-                Enable My Dream Business
-            </button>
-            <div class="trust-indicators">
-                <span>✅ You maintain full ownership and control</span>
-                <span>💼 Enterprise tools at startup costs</span>
-                <span>🤝 We succeed together</span>
+            <div class="cta-content">
+                <h2>Ready to Build Your Dream Business?</h2>
+                <p>Join 50,000+ entrepreneurs who've transformed their ideas into successful companies</p>
+                <div class="cta-buttons">
+                    <button class="btn-cta-primary" @onclick="StartDemo">
+                        <i class="fas fa-rocket"></i>
+                        Start Your Free Trial
+                    </button>
+                    <button class="btn-cta-secondary">
+                        <i class="fas fa-calendar"></i>
+                        Book a Demo Call
+                    </button>
+                </div>
+                <div class="cta-trust">
+                    <div class="trust-item">
+                        <i class="fas fa-lock"></i>
+                        <span>No credit card required</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Setup in 5 minutes</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-times"></i>
+                        <span>Cancel anytime</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 </div>
 
-<style>
-    .user-friendly-landing {
-        font-family: system-ui, -apple-system, sans-serif;
-        line-height: 1.6;
-    }
-
-    .hero-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 80px 20px;
-        text-align: center;
-    }
-
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .trust-badge .badge {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 14px;
-        font-weight: 500;
-        display: inline-block;
-        margin-bottom: 20px;
-    }
-
-    .hero-title {
-        font-size: 3rem;
-        font-weight: 700;
-        margin: 20px 0;
-        line-height: 1.2;
-    }
-
-    .hero-title .highlight {
-        background: linear-gradient(45deg, #FFD700, #FFA500);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .hero-subtitle {
-        font-size: 1.2rem;
-        margin-bottom: 40px;
-        opacity: 0.95;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .simple-process {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        margin: 50px 0;
-        flex-wrap: wrap;
-    }
-
-    .process-step {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 20px 15px;
-        border-radius: 15px;
-        min-width: 160px;
-        backdrop-filter: blur(10px);
-    }
-
-    .step-icon {
-        font-size: 2.5rem;
-        margin-bottom: 10px;
-    }
-
-    .process-step h3 {
-        font-size: 1.2rem;
-        font-weight: 600;
-        margin: 8px 0;
-    }
-
-    .process-step p {
-        font-size: 0.9rem;
-        opacity: 0.9;
-        margin: 0;
-    }
-
-    .arrow {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #FFD700;
-    }
-
-    .btn {
-        padding: 15px 30px;
-        border-radius: 10px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        text-decoration: none;
-    }
-
-    .btn-primary {
-        background: #FF6B6B;
-        color: white;
-        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-    }
-
-    .btn-primary:hover {
-        background: #FF5252;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-    }
-
-    .btn-main {
-        font-size: 1.2rem;
-        padding: 18px 35px;
-    }
-
-    .confidence-builders {
-        display: flex;
-        gap: 30px;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-top: 30px;
-        font-size: 0.95rem;
-        opacity: 0.9;
-    }
-
-    .partnership-section {
-        padding: 80px 20px;
-        background: #f8f9fa;
-        text-align: center;
-    }
-
-    .partnership-section h2 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 40px;
-        color: #333;
-    }
-
-    .partnership-preview {
-        background: white;
-        border-radius: 15px;
-        padding: 40px;
-        max-width: 800px;
-        margin: 0 auto;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .partnership-preview h3 {
-        color: #333;
-        margin-bottom: 30px;
-        font-size: 1.5rem;
-    }
-
-    .value-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 25px;
-        margin-top: 20px;
-    }
-
-    .value-card {
-        background: #f8f9fa;
-        padding: 25px;
-        border-radius: 10px;
-        border-left: 4px solid #667eea;
-        text-align: left;
-    }
-
-    .value-icon {
-        font-size: 2.5rem;
-        margin-bottom: 15px;
-        display: block;
-    }
-
-    .value-card h4 {
-        margin: 10px 0;
-        color: #333;
-        font-size: 1.2rem;
-    }
-
-    .value-card p {
-        margin: 0;
-        color: #666;
-        line-height: 1.6;
-    }
-
-    .partnership-model-section {
-        padding: 80px 20px;
-        background: white;
-        text-align: center;
-    }
-
-    .partnership-model-section h2 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 50px;
-        color: #333;
-    }
-
-    .partnership-comparison {
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        gap: 30px;
-        max-width: 1000px;
-        margin: 0 auto;
-        align-items: center;
-    }
-
-    .comparison-card {
-        background: #f8f9fa;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .comparison-card.traditional {
-        border-top: 4px solid #dc3545;
-    }
-
-    .comparison-card.partnership {
-        border-top: 4px solid #28a745;
-        background: #f8fff9;
-    }
-
-    .comparison-card h3 {
-        margin-bottom: 20px;
-        color: #333;
-        font-size: 1.4rem;
-    }
-
-    .cost-breakdown {
-        text-align: left;
-    }
-
-    .cost-item {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 12px;
-        padding-bottom: 8px;
-        border-bottom: 1px solid #dee2e6;
-    }
-
-    .cost-label {
-        color: #666;
-    }
-
-    .cost-amount {
-        color: #dc3545;
-        font-weight: 600;
-    }
-
-    .total-cost {
-        margin-top: 20px;
-        padding-top: 15px;
-        border-top: 2px solid #dc3545;
-        color: #dc3545;
-        font-size: 1.1rem;
-    }
-
-    .partnership-benefits {
-        text-align: left;
-    }
-
-    .benefit-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-        gap: 12px;
-    }
-
-    .benefit-icon {
-        color: #28a745;
-        font-size: 1.2rem;
-    }
-
-    .benefit-text {
-        color: #333;
-        font-weight: 500;
-    }
-
-    .partnership-deal {
-        margin-top: 25px;
-        padding-top: 20px;
-        border-top: 2px solid #28a745;
-        color: #28a745;
-    }
-
-    .partnership-deal strong {
-        font-size: 1.1rem;
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    .partnership-deal p {
-        margin: 0;
-        font-size: 0.9rem;
-        opacity: 0.8;
-    }
-
-    .vs-divider {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 50%;
-        font-weight: bold;
-        font-size: 1.2rem;
-    }
-
-    .features-section {
-        padding: 80px 20px;
-        background: white;
-    }
-
-    .features-section h2 {
-        text-align: center;
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 50px;
-        color: #333;
-    }
-
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px;
-        margin-top: 40px;
-    }
-
-    .feature-card {
-        text-align: center;
-        padding: 30px 20px;
-        border-radius: 15px;
-        background: #f8f9fa;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .feature-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .feature-icon {
-        font-size: 3rem;
-        margin-bottom: 20px;
-    }
-
-    .feature-card h4 {
-        font-size: 1.3rem;
-        font-weight: 600;
-        margin: 15px 0;
-        color: #333;
-    }
-
-    .feature-card p {
-        color: #666;
-        line-height: 1.6;
-        margin: 0;
-    }
-
-    .cta-section {
-        padding: 80px 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        text-align: center;
-    }
-
-    .cta-section h2 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 20px;
-    }
-
-    .cta-section p {
-        font-size: 1.2rem;
-        margin-bottom: 40px;
-        opacity: 0.9;
-    }
-
-    .trust-indicators {
-        display: flex;
-        gap: 30px;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-top: 30px;
-        font-size: 0.95rem;
-        opacity: 0.9;
-    }
-
-    /* Mobile responsive */
-    @@media (max-width: 768px) {
-        .hero-title {
-            font-size: 2.2rem;
-        }
-        
-        .simple-process {
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .arrow {
-            transform: rotate(90deg);
-        }
-        
-        .features-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .value-cards {
-            grid-template-columns: 1fr;
-        }
-        
-        .partnership-comparison {
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-        
-        .vs-divider {
-            width: 40px;
-            height: 40px;
-            font-size: 1rem;
-        }
-        
-        .confidence-builders,
-        .trust-indicators {
-            flex-direction: column;
-            gap: 15px;
-        }
-    }
-</style>
 
 @code {
     private void StartDemo()
     {
-        Navigation.NavigateTo("/idea-input");
+        Navigation.NavigateTo("/hub-demo");
     }
 }

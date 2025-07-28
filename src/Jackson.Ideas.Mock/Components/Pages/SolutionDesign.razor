@@ -1,0 +1,1155 @@
+@page "/solution-design"
+@page "/solution-design/{DesignId}"
+@layout HubLayout
+@using Jackson.Ideas.Mock.Services.Interfaces
+@using Jackson.Ideas.Mock.Models
+@using SolutionDesignModel = Jackson.Ideas.Mock.Services.Interfaces.SolutionDesign
+@inject ISolutionDesignService SolutionDesignService
+@inject ICoachPersonaService CoachPersonaService
+@inject IHubContextService HubContextService
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<PageTitle>Solution Design Suite - Technical Architecture Hub</PageTitle>
+
+<div class="solution-design-container">
+    @if (_solutionDesign != null && _currentCoach != null)
+    {
+        <!-- Strategy Coach Header -->
+        <div class="coach-header-section hub-planning-theme">
+            <div class="coach-header-content">
+                <div class="coach-avatar-header">
+                    <i class="@_currentCoach.Avatar"></i>
+                </div>
+                <div class="header-text-content">
+                    <h1 class="coach-header-title">Solution Design Suite 🏗️</h1>
+                    <p class="coach-header-message">@GetCoachHeaderMessage()</p>
+                    <div class="design-progress-indicator">
+                        <div class="progress-circle-small">
+                            <span class="progress-value">@_solutionDesign.ComplexityScore%</span>
+                        </div>
+                        <span class="progress-label">Design Completeness</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solution Overview -->
+        <div class="solution-overview-section">
+            <div class="solution-overview-card">
+                <div class="solution-header">
+                    <h2 class="solution-title">@_solutionDesign.SolutionName</h2>
+                    <p class="solution-description">@_solutionDesign.Description</p>
+                    <div class="solution-meta">
+                        <span class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            Created: @_solutionDesign.CreatedAt.ToString("MMM dd, yyyy")
+                        </span>
+                        <span class="meta-item">
+                            <i class="fas fa-edit"></i>
+                            Updated: @_solutionDesign.UpdatedAt.ToString("MMM dd, yyyy")
+                        </span>
+                        <span class="meta-item status-indicator @GetDesignStatusClass()">
+                            <i class="fas fa-cogs"></i>
+                            @GetDesignStatus()
+                        </span>
+                    </div>
+                </div>
+                <div class="solution-actions">
+                    <button class="btn btn-secondary" @onclick="ExportDesign">
+                        <i class="fas fa-download"></i>
+                        Export Specs
+                    </button>
+                    @if (_solutionDesign.ReadyForDevelopment)
+                    {
+                        <button class="btn btn-success" @onclick="AdvanceToDevelopment">
+                            <i class="fas fa-code"></i>
+                            Ready for Development
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary" @onclick="ContinueDesigning">
+                            <i class="fas fa-edit"></i>
+                            Continue Design
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Design Sections Grid -->
+        <div class="design-sections-grid">
+            <!-- Technical Architecture -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-building section-icon"></i>
+                        Technical Architecture
+                    </h3>
+                    <span class="section-score @GetSectionScoreClass(25)">@GetArchitectureScore()/25</span>
+                </div>
+                <div class="section-content">
+                    <div class="content-item">
+                        <strong>Architectural Pattern:</strong>
+                        <p>@_solutionDesign.Architecture.ArchitecturalPattern</p>
+                    </div>
+                    <div class="content-item">
+                        <strong>Technology Stack:</strong>
+                        <p>@_solutionDesign.Architecture.TechnologyStack</p>
+                    </div>
+                    <div class="content-item">
+                        <strong>Cloud Platform:</strong>
+                        <p>@_solutionDesign.Architecture.CloudPlatform</p>
+                    </div>
+                    @if (_solutionDesign.Architecture.Components.Any())
+                    {
+                        <div class="content-item">
+                            <strong>Components:</strong>
+                            <ul class="components-list">
+                                @foreach (var component in _solutionDesign.Architecture.Components.Take(3))
+                                {
+                                    <li>
+                                        <span class="component-name">@component.Name</span>
+                                        <span class="component-tech">(@component.Technology)</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+                <button class="btn-section-edit" @onclick='() => EditSection("Architecture")'>
+                    <i class="fas fa-edit"></i>
+                    Edit Section
+                </button>
+            </div>
+
+            <!-- System Requirements -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-list-check section-icon"></i>
+                        System Requirements
+                    </h3>
+                    <span class="section-score @GetSectionScoreClass(20)">@GetRequirementsScore()/20</span>
+                </div>
+                <div class="section-content">
+                    <div class="content-item">
+                        <strong>Functional Requirements:</strong>
+                        <p>@_solutionDesign.Requirements.FunctionalRequirements</p>
+                    </div>
+                    <div class="content-item">
+                        <strong>Performance Requirements:</strong>
+                        <p>@_solutionDesign.Requirements.PerformanceRequirements</p>
+                    </div>
+                    @if (_solutionDesign.Requirements.UserStories.Any())
+                    {
+                        <div class="content-item">
+                            <strong>User Stories:</strong>
+                            <ul class="user-stories-list">
+                                @foreach (var story in _solutionDesign.Requirements.UserStories.Take(2))
+                                {
+                                    <li>
+                                        <strong>@story.Title:</strong> @story.Description
+                                        <span class="priority-badge priority-@story.Priority.ToLower()">@story.Priority</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+                <button class="btn-section-edit" @onclick='() => EditSection("Requirements")'>
+                    <i class="fas fa-edit"></i>
+                    Edit Section
+                </button>
+            </div>
+
+            <!-- Data Design -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-database section-icon"></i>
+                        Data Design
+                    </h3>
+                    <span class="section-score @GetSectionScoreClass(15)">@GetDataDesignScore()/15</span>
+                </div>
+                <div class="section-content">
+                    <div class="content-item">
+                        <strong>Data Model:</strong>
+                        <p>@_solutionDesign.DataDesign.DataModel</p>
+                    </div>
+                    <div class="content-item">
+                        <strong>Database Schema:</strong>
+                        <p>@_solutionDesign.DataDesign.DatabaseSchema</p>
+                    </div>
+                    @if (_solutionDesign.DataDesign.Entities.Any())
+                    {
+                        <div class="content-item">
+                            <strong>Key Entities:</strong>
+                            <ul class="entities-list">
+                                @foreach (var entity in _solutionDesign.DataDesign.Entities.Take(3))
+                                {
+                                    <li>
+                                        <strong>@entity.Name:</strong> @entity.Description
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+                <button class="btn-section-edit" @onclick='() => EditSection("DataDesign")'>
+                    <i class="fas fa-edit"></i>
+                    Edit Section
+                </button>
+            </div>
+
+            <!-- User Experience -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-users section-icon"></i>
+                        User Experience
+                    </h3>
+                    <span class="section-score @GetSectionScoreClass(15)">@GetUserExperienceScore()/15</span>
+                </div>
+                <div class="section-content">
+                    <div class="content-item">
+                        <strong>User Interface:</strong>
+                        <p>@_solutionDesign.UserExperience.UserInterface</p>
+                    </div>
+                    <div class="content-item">
+                        <strong>Design System:</strong>
+                        <p>@_solutionDesign.UserExperience.DesignSystem</p>
+                    </div>
+                    @if (_solutionDesign.UserExperience.Personas.Any())
+                    {
+                        <div class="content-item">
+                            <strong>User Personas:</strong>
+                            <ul class="personas-list">
+                                @foreach (var persona in _solutionDesign.UserExperience.Personas.Take(2))
+                                {
+                                    <li>
+                                        <strong>@persona.Name:</strong> @persona.Description
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+                <button class="btn-section-edit" @onclick='() => EditSection("UserExperience")'>
+                    <i class="fas fa-edit"></i>
+                    Edit Section
+                </button>
+            </div>
+
+            <!-- Security Design -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-shield-alt section-icon"></i>
+                        Security Design
+                    </h3>
+                    <span class="section-score @GetSectionScoreClass(10)">@GetSecurityScore()/10</span>
+                </div>
+                <div class="section-content">
+                    <div class="content-item">
+                        <strong>Authentication Strategy:</strong>
+                        <p>@_solutionDesign.Security.AuthenticationStrategy</p>
+                    </div>
+                    <div class="content-item">
+                        <strong>Data Encryption:</strong>
+                        <p>@_solutionDesign.Security.DataEncryption</p>
+                    </div>
+                    @if (_solutionDesign.Security.Controls.Any())
+                    {
+                        <div class="content-item">
+                            <strong>Security Controls:</strong>
+                            <ul class="controls-list">
+                                @foreach (var control in _solutionDesign.Security.Controls.Take(2))
+                                {
+                                    <li><strong>@control.Name:</strong> @control.Description</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+                <button class="btn-section-edit" @onclick='() => EditSection("Security")'>
+                    <i class="fas fa-edit"></i>
+                    Edit Section
+                </button>
+            </div>
+
+            <!-- Deployment Design -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-rocket section-icon"></i>
+                        Deployment Design
+                    </h3>
+                    <span class="section-score @GetSectionScoreClass(5)">@GetDeploymentScore()/5</span>
+                </div>
+                <div class="section-content">
+                    <div class="content-item">
+                        <strong>Deployment Strategy:</strong>
+                        <p>@_solutionDesign.Deployment.DeploymentStrategy</p>
+                    </div>
+                    <div class="content-item">
+                        <strong>CI/CD Pipeline:</strong>
+                        <p>@_solutionDesign.Deployment.CiCdPipeline</p>
+                    </div>
+                    @if (_solutionDesign.Deployment.Environments.Any())
+                    {
+                        <div class="content-item">
+                            <strong>Environments:</strong>
+                            <ul class="environments-list">
+                                @foreach (var env in _solutionDesign.Deployment.Environments.Take(3))
+                                {
+                                    <li><strong>@env.Name:</strong> @env.Purpose</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+                <button class="btn-section-edit" @onclick='() => EditSection("Deployment")'>
+                    <i class="fas fa-edit"></i>
+                    Edit Section
+                </button>
+            </div>
+        </div>
+
+        <!-- Architecture Recommendations -->
+        @if (_recommendations != null && _recommendations.Any())
+        {
+            <div class="recommendations-section">
+                <h2 class="recommendations-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Architecture Recommendations from @_currentCoach.Name
+                </h2>
+                <div class="recommendations-grid">
+                    @foreach (var recommendation in _recommendations)
+                    {
+                        <div class="recommendation-card">
+                            <div class="recommendation-header">
+                                <h3 class="recommendation-title">@recommendation.Title</h3>
+                                <span class="recommendation-priority priority-@recommendation.Priority">
+                                    Priority @recommendation.Priority
+                                </span>
+                            </div>
+                            <div class="recommendation-content">
+                                <p class="recommendation-description">@recommendation.Description</p>
+                                <div class="recommendation-details">
+                                    <div class="detail-item">
+                                        <strong>Impact:</strong> @recommendation.Impact
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Implementation:</strong> @recommendation.Implementation
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Reasoning:</strong> @recommendation.Reasoning
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="recommendation-actions">
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-check"></i>
+                                    Apply Recommendation
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Feature Specifications -->
+        @if (_features != null && _features.Any())
+        {
+            <div class="features-section">
+                <h2 class="features-title">
+                    <i class="fas fa-list"></i>
+                    Feature Specifications
+                </h2>
+                <div class="features-grid">
+                    @foreach (var feature in _features)
+                    {
+                        <div class="feature-card">
+                            <div class="feature-header">
+                                <h3 class="feature-name">@feature.Name</h3>
+                                <div class="feature-badges">
+                                    <span class="priority-badge priority-@feature.Priority.ToLower()">@feature.Priority</span>
+                                    <span class="complexity-badge complexity-@feature.Complexity.ToLower()">@feature.Complexity</span>
+                                </div>
+                            </div>
+                            <div class="feature-content">
+                                <p class="feature-description">@feature.Description</p>
+                                <div class="feature-details">
+                                    <div class="detail-item">
+                                        <strong>Effort:</strong> @feature.EstimatedEffort
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Acceptance Criteria:</strong> @feature.AcceptanceCriteria
+                                    </div>
+                                    @if (feature.Dependencies.Any())
+                                    {
+                                        <div class="detail-item">
+                                            <strong>Dependencies:</strong> @string.Join(", ", feature.Dependencies)
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else if (_isLoading)
+    {
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <h2>Designing Your Solution Architecture...</h2>
+            <p>Our Strategy coach is preparing comprehensive technical specifications</p>
+        </div>
+    }
+    else
+    {
+        <div class="error-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h2>Solution Design Not Found</h2>
+            <p>We couldn't find the requested solution design.</p>
+            <button class="btn btn-primary" @onclick='() => Navigation.NavigateTo("/business-plan-builder")'>
+                <i class="fas fa-arrow-left"></i>
+                Return to Business Planning
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string? DesignId { get; set; }
+    
+    private SolutionDesignModel? _solutionDesign;
+    private CoachPersona? _currentCoach;
+    private List<ArchitectureRecommendation>? _recommendations;
+    private List<FeatureSpecification>? _features;
+    private bool _isLoading = true;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSolutionDesignData();
+        _currentCoach = await CoachPersonaService.GetCoachForHubAsync(BusinessHub.BusinessPlanning);
+        _isLoading = false;
+        StateHasChanged();
+    }
+    
+    private async Task LoadSolutionDesignData()
+    {
+        var designId = DesignId ?? "demo-design";
+        _solutionDesign = await SolutionDesignService.GetSolutionDesignAsync(designId);
+        
+        if (_solutionDesign != null)
+        {
+            _recommendations = await SolutionDesignService.GetArchitectureRecommendationsAsync(_solutionDesign.Id);
+            _features = await SolutionDesignService.GetFeatureSpecificationsAsync(_solutionDesign.Id);
+        }
+    }
+    
+    private string GetCoachHeaderMessage()
+    {
+        if (_currentCoach == null || _solutionDesign == null) return "";
+        
+        return _solutionDesign.ComplexityScore >= 80 
+            ? $"Outstanding technical design! Your solution architecture is comprehensive and development-ready. {_currentCoach.Name} has validated all critical technical components."
+            : _solutionDesign.ComplexityScore >= 60
+            ? $"Solid foundation! {_currentCoach.Name} will help you refine the remaining technical specifications for optimal implementation."
+            : $"Let's architect a robust solution together. {_currentCoach.Name} will guide you through each technical component systematically.";
+    }
+    
+    private string GetDesignStatus()
+    {
+        return _solutionDesign?.ComplexityScore switch
+        {
+            >= 80 => "Ready for Development",
+            >= 60 => "Architecture in Progress",
+            >= 40 => "Design Phase",
+            _ => "Initial Planning"
+        };
+    }
+    
+    private string GetDesignStatusClass()
+    {
+        return _solutionDesign?.ComplexityScore switch
+        {
+            >= 80 => "status-ready",
+            >= 60 => "status-developing",
+            >= 40 => "status-progress",
+            _ => "status-initial"
+        };
+    }
+    
+    private string GetSectionScoreClass(int maxScore)
+    {
+        var actualScore = GetSectionActualScore(maxScore);
+        var percentage = (double)actualScore / maxScore * 100;
+        
+        return percentage switch
+        {
+            >= 80 => "score-excellent",
+            >= 60 => "score-good",
+            >= 40 => "score-fair",
+            _ => "score-poor"
+        };
+    }
+    
+    private int GetSectionActualScore(int maxScore)
+    {
+        // For demo purposes, returning a portion of the max score
+        return (int)(maxScore * 0.75);
+    }
+    
+    private int GetArchitectureScore()
+    {
+        int score = 0;
+        if (!string.IsNullOrEmpty(_solutionDesign?.Architecture.ArchitecturalPattern)) score += 5;
+        if (!string.IsNullOrEmpty(_solutionDesign?.Architecture.TechnologyStack)) score += 5;
+        if (!string.IsNullOrEmpty(_solutionDesign?.Architecture.DatabaseDesign)) score += 5;
+        if (_solutionDesign?.Architecture.Components.Any() == true) score += 5;
+        if (_solutionDesign?.Architecture.Dependencies.Any() == true) score += 5;
+        return score;
+    }
+    
+    private int GetRequirementsScore()
+    {
+        int score = 0;
+        if (!string.IsNullOrEmpty(_solutionDesign?.Requirements.FunctionalRequirements)) score += 5;
+        if (!string.IsNullOrEmpty(_solutionDesign?.Requirements.PerformanceRequirements)) score += 5;
+        if (_solutionDesign?.Requirements.UserStories.Any() == true) score += 5;
+        if (_solutionDesign?.Requirements.Constraints.Any() == true) score += 5;
+        return score;
+    }
+    
+    private int GetDataDesignScore()
+    {
+        int score = 0;
+        if (!string.IsNullOrEmpty(_solutionDesign?.DataDesign.DataModel)) score += 5;
+        if (_solutionDesign?.DataDesign.Entities.Any() == true) score += 5;
+        if (_solutionDesign?.DataDesign.Relationships.Any() == true) score += 5;
+        return score;
+    }
+    
+    private int GetUserExperienceScore()
+    {
+        int score = 0;
+        if (!string.IsNullOrEmpty(_solutionDesign?.UserExperience.UserInterface)) score += 5;
+        if (_solutionDesign?.UserExperience.Personas.Any() == true) score += 5;
+        if (_solutionDesign?.UserExperience.UserFlows.Any() == true) score += 5;
+        return score;
+    }
+    
+    private int GetSecurityScore()
+    {
+        int score = 0;
+        if (!string.IsNullOrEmpty(_solutionDesign?.Security.AuthenticationStrategy)) score += 5;
+        if (_solutionDesign?.Security.Controls.Any() == true) score += 5;
+        return score;
+    }
+    
+    private int GetDeploymentScore()
+    {
+        int score = 0;
+        if (!string.IsNullOrEmpty(_solutionDesign?.Deployment.DeploymentStrategy)) score += 5;
+        return score;
+    }
+    
+    private void EditSection(string sectionName)
+    {
+        // TODO: Navigate to section editor or open modal
+        // For demo purposes, just show a message
+    }
+    
+    private async Task ExportDesign()
+    {
+        if (_solutionDesign != null)
+        {
+            var export = await SolutionDesignService.ExportSolutionDesignAsync(_solutionDesign.Id, ExportFormat.PDF);
+            // TODO: Download the exported file
+        }
+    }
+    
+    private async Task AdvanceToDevelopment()
+    {
+        // TODO: Navigate to development/project management tools
+        Navigation.NavigateTo("/dashboard");
+    }
+    
+    private void ContinueDesigning()
+    {
+        // TODO: Navigate to design editor
+    }
+    
+    public void Dispose()
+    {
+        // No subscriptions to dispose in this component
+    }
+}
+
+<style>
+    .solution-design-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: var(--hub-background, #f8fafc);
+    }
+
+    /* Coach Header */
+    .coach-header-section {
+        margin-bottom: 3rem;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    .hub-planning-theme {
+        background: linear-gradient(135deg, var(--hub-primary, #5a6fd8) 0%, var(--hub-secondary, #3b82f6) 100%);
+        color: white;
+    }
+
+    .coach-header-content {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 2rem;
+    }
+
+    .coach-avatar-header {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        flex-shrink: 0;
+    }
+
+    .header-text-content {
+        flex: 1;
+    }
+
+    .coach-header-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .coach-header-message {
+        font-size: 1.125rem;
+        margin-bottom: 1rem;
+        opacity: 0.95;
+        line-height: 1.6;
+    }
+
+    .design-progress-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .progress-circle-small {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+    }
+
+    .progress-value {
+        font-size: 0.875rem;
+    }
+
+    .progress-label {
+        font-size: 0.875rem;
+        opacity: 0.9;
+    }
+
+    /* Solution Overview */
+    .solution-overview-section {
+        margin-bottom: 3rem;
+    }
+
+    .solution-overview-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 2rem;
+    }
+
+    .solution-header {
+        flex: 1;
+    }
+
+    .solution-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #1a202c;
+    }
+
+    .solution-description {
+        color: #64748b;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .solution-meta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .status-indicator {
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: 600;
+    }
+
+    .status-ready { background: #dcfce7; color: #166534; }
+    .status-developing { background: #dbeafe; color: #1e40af; }
+    .status-progress { background: #fef3c7; color: #92400e; }
+    .status-initial { background: #fecaca; color: #991b1b; }
+
+    .solution-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    /* Design Sections Grid */
+    .design-sections-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .section-card {
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #374151;
+        margin: 0;
+    }
+
+    .section-icon {
+        color: var(--hub-primary, #5a6fd8);
+    }
+
+    .section-score {
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .score-excellent { background: #dcfce7; color: #166534; }
+    .score-good { background: #dbeafe; color: #1e40af; }
+    .score-fair { background: #fef3c7; color: #92400e; }
+    .score-poor { background: #fecaca; color: #991b1b; }
+
+    .section-content {
+        padding: 1.5rem;
+    }
+
+    .content-item {
+        margin-bottom: 1.5rem;
+    }
+
+    .content-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .content-item strong {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #374151;
+        font-weight: 600;
+    }
+
+    .content-item p {
+        color: #64748b;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .components-list,
+    .user-stories-list,
+    .entities-list,
+    .personas-list,
+    .controls-list,
+    .environments-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .components-list li,
+    .user-stories-list li,
+    .entities-list li,
+    .personas-list li,
+    .controls-list li,
+    .environments-list li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f3f4f6;
+        color: #64748b;
+    }
+
+    .components-list li:last-child,
+    .user-stories-list li:last-child,
+    .entities-list li:last-child,
+    .personas-list li:last-child,
+    .controls-list li:last-child,
+    .environments-list li:last-child {
+        border-bottom: none;
+    }
+
+    .component-name {
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .component-tech {
+        color: #64748b;
+        font-size: 0.875rem;
+    }
+
+    .priority-badge {
+        padding: 0.125rem 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+
+    .priority-high { background: #fecaca; color: #991b1b; }
+    .priority-medium { background: #fef3c7; color: #92400e; }
+    .priority-low { background: #dcfce7; color: #166534; }
+
+    .btn-section-edit {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        background: var(--hub-primary, #5a6fd8);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .section-card:hover .btn-section-edit {
+        opacity: 1;
+    }
+
+    /* Recommendations Section */
+    .recommendations-section {
+        margin-bottom: 3rem;
+    }
+
+    .recommendations-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .recommendations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .recommendation-card {
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .recommendation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .recommendation-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #374151;
+        margin: 0;
+        flex: 1;
+        margin-right: 1rem;
+    }
+
+    .recommendation-priority {
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .priority-1 { background: #fecaca; color: #991b1b; }
+    .priority-2 { background: #fef3c7; color: #92400e; }
+    .priority-3 { background: #dbeafe; color: #1e40af; }
+    .priority-4 { background: #dcfce7; color: #166534; }
+
+    .recommendation-content {
+        padding: 1.5rem;
+    }
+
+    .recommendation-description {
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .recommendation-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .detail-item {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .detail-item strong {
+        color: #374151;
+    }
+
+    .recommendation-actions {
+        padding: 1rem 1.5rem;
+        background: #f8fafc;
+        text-align: right;
+    }
+
+    /* Features Section */
+    .features-section {
+        margin-bottom: 3rem;
+    }
+
+    .features-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .feature-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .feature-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #374151;
+        margin: 0;
+        flex: 1;
+        margin-right: 1rem;
+    }
+
+    .feature-badges {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .complexity-badge {
+        padding: 0.125rem 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .complexity-high { background: #fecaca; color: #991b1b; }
+    .complexity-medium { background: #fef3c7; color: #92400e; }
+    .complexity-low { background: #dcfce7; color: #166534; }
+
+    .feature-content {
+        padding: 1.5rem;
+    }
+
+    .feature-description {
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .feature-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .btn-primary {
+        background: var(--hub-gradient, linear-gradient(135deg, #5a6fd8 0%, #3b82f6 100%));
+        color: white;
+    }
+
+    .btn-secondary {
+        background: #f1f5f9;
+        color: #374151;
+        border: 2px solid #e2e8f0;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+
+    .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .btn-outline-primary {
+        background: transparent;
+        color: var(--hub-primary, #5a6fd8);
+        border: 2px solid var(--hub-primary, #5a6fd8);
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Loading and Error States */
+    .loading-state,
+    .error-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #e5e7eb;
+        border-top: 4px solid var(--hub-primary, #5a6fd8);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 2rem auto;
+    }
+
+    @@keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .coach-header-content {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .solution-overview-card {
+            flex-direction: column;
+        }
+
+        .design-sections-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .recommendations-grid,
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .solution-meta {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>

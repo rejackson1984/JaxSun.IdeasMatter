@@ -748,7 +748,7 @@ public class PdfGenerationService : IPdfGenerationService
                                         row.ConstantItem(15).Text("▶").FontSize(10).FontColor(Colors.Blue.Medium);
                                         row.RelativeItem().Column(col =>
                                         {
-                                            col.Item().Text($"{milestone.Title} ({milestone.Timeline})")
+                                            col.Item().Text($"{milestone.Name} ({milestone.Timeline})")
                                                 .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
                                             col.Item().Text(milestone.Description)
                                                 .FontSize(9).FontColor(Colors.Grey.Darken1);

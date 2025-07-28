@@ -62,6 +62,23 @@ builder.Services.AddScoped<IBusinessPlanVersionService, MockBusinessPlanVersionS
 // Register Product Design Service
 builder.Services.AddScoped<IProductDesignService, MockProductDesignService>();
 
+// Register Hub Management Services
+builder.Services.AddScoped<IHubConfigurationService, MockHubConfigurationService>();
+builder.Services.AddScoped<IHubContextService, MockHubContextService>();
+builder.Services.AddScoped<ICoachPersonaService, MockCoachPersonaService>();
+
+// Register Idea Validation Service
+builder.Services.AddScoped<IIdeaValidationService, MockIdeaValidationService>();
+
+// Register Business Plan Builder Service
+builder.Services.AddScoped<IBusinessPlanBuilderService, MockBusinessPlanBuilderService>();
+
+// Register Solution Design Service
+builder.Services.AddScoped<ISolutionDesignService, MockSolutionDesignService>();
+
+// Register Business Model Canvas Service
+builder.Services.AddScoped<IBusinessModelCanvasService, MockBusinessModelCanvasService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline

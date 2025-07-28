@@ -1,0 +1,949 @@
+@using Jackson.Ideas.Mock.Models
+@using Jackson.Ideas.Mock.Services.Interfaces
+@inject IHubContextService HubContextService
+@inject ICoachPersonaService CoachPersonaService
+@inject IMockDataService MockDataService
+@inject IIdeaValidationService IdeaValidationService
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<!-- Hub 1: Idea Development & Validation Dashboard -->
+<div class="idea-development-dashboard">
+    
+    <!-- Spark Coach Welcome Section -->
+    <div class="coach-welcome-section hub-idea-theme">
+        <div class="coach-welcome-content">
+            <div class="coach-avatar-large hub-idea-avatar">
+                <i class="@(_currentCoach?.Avatar ?? "fas fa-lightbulb")"></i>
+            </div>
+            <div class="welcome-text-content">
+                <h1 class="coach-welcome-title">Idea Development Hub ✨</h1>
+                <p class="coach-message-text">@GetCoachWelcomeMessage()</p>
+                <div class="coach-guidance">
+                    <div class="guidance-item">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Transform concepts into validated opportunities</span>
+                    </div>
+                    <div class="guidance-item">
+                        <i class="fas fa-search"></i>
+                        <span>Research markets and analyze competition</span>
+                    </div>
+                    <div class="guidance-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Validate ideas with real market data</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        
+        <!-- Ideas Pipeline Overview -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="section-header">
+                    <h2>💡 Your Ideas Pipeline</h2>
+                    <p>Track and develop your business ideas from concept to validation</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stat-card ideas">
+                    <div class="stat-icon">💡</div>
+                    <div class="stat-value">@_totalIdeas</div>
+                    <div class="stat-label">Total Ideas</div>
+                    <div class="stat-trend positive">+2 this week</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card validation">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value">@_validatedIdeas</div>
+                    <div class="stat-label">Validated Ideas</div>
+                    <div class="stat-trend positive">+1 this week</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card research">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value">@_researchReports</div>
+                    <div class="stat-label">Research Reports</div>
+                    <div class="stat-trend neutral">Ongoing</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card score">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value">@_averageScore.ToString("F1")</div>
+                    <div class="stat-label">Avg. Validation Score</div>
+                    <div class="stat-trend positive">+0.3 points</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Idea Focus & Validation Progress -->
+        <div class="row mb-4">
+            <div class="col-lg-8">
+                <div class="current-idea-card">
+                    <div class="card-header">
+                        <h3>🎯 Current Focus: MyFitnessPal Clone</h3>
+                        <div class="idea-status">
+                            <span class="status-badge validating">Validating</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="idea-description">
+                            A fitness tracking app that helps users monitor their daily nutrition and exercise habits with personalized recommendations.
+                        </p>
+                        <div class="validation-progress">
+                            <h4>Validation Progress</h4>
+                            <div class="validation-steps">
+                                <div class="validation-step completed">
+                                    <i class="fas fa-check"></i>
+                                    <span>Market Research</span>
+                                    <div class="step-score">87%</div>
+                                </div>
+                                <div class="validation-step completed">
+                                    <i class="fas fa-check"></i>
+                                    <span>Competitive Analysis</span>
+                                    <div class="step-score">92%</div>
+                                </div>
+                                <div class="validation-step active">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Customer Interviews</span>
+                                    <div class="step-score">65%</div>
+                                </div>
+                                <div class="validation-step pending">
+                                    <i class="fas fa-clock"></i>
+                                    <span>MVP Definition</span>
+                                    <div class="step-score">0%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="idea-actions">
+                            <button class="btn btn-primary" @onclick="ContinueValidation">
+                                <i class="fas fa-play"></i>
+                                Continue Validation
+                            </button>
+                            <button class="btn btn-outline-primary" @onclick="ViewResearch">
+                                <i class="fas fa-chart-bar"></i>
+                                View Research
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="validation-insights-card">
+                    <div class="card-header">
+                        <h3>🧠 AI Insights</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="insight-item">
+                            <div class="insight-icon positive">📈</div>
+                            <div class="insight-content">
+                                <h4>Strong Market Demand</h4>
+                                <p>87% validation score indicates excellent market potential</p>
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-icon warning">⚠️</div>
+                            <div class="insight-content">
+                                <h4>Competitive Landscape</h4>
+                                <p>High competition - focus on unique value proposition</p>
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-icon positive">💡</div>
+                            <div class="insight-content">
+                                <h4>Recommendation</h4>
+                                <p>Ready to advance to Business Planning Hub</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ideas in Pipeline -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="ideas-pipeline-card">
+                    <div class="card-header">
+                        <h3>🔄 Ideas Pipeline</h3>
+                        <button class="btn btn-primary" @onclick="AddNewIdea">
+                            <i class="fas fa-plus"></i>
+                            Add New Idea
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="pipeline-stages">
+                            <div class="pipeline-stage">
+                                <h4 class="stage-title">💭 Concept</h4>
+                                <div class="stage-count">3</div>
+                                <div class="stage-ideas">
+                                    <div class="pipeline-idea">
+                                        <span class="idea-name">AI-Powered Study Buddy</span>
+                                        <span class="idea-score">Not scored</span>
+                                    </div>
+                                    <div class="pipeline-idea">
+                                        <span class="idea-name">Smart Plant Monitor</span>
+                                        <span class="idea-score">Not scored</span>
+                                    </div>
+                                    <div class="pipeline-idea">
+                                        <span class="idea-name">Local Food Delivery</span>
+                                        <span class="idea-score">Not scored</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pipeline-stage">
+                                <h4 class="stage-title">🔍 Research</h4>
+                                <div class="stage-count">2</div>
+                                <div class="stage-ideas">
+                                    <div class="pipeline-idea">
+                                        <span class="idea-name">Virtual Interior Design</span>
+                                        <span class="idea-score">74%</span>
+                                    </div>
+                                    <div class="pipeline-idea">
+                                        <span class="idea-name">Remote Team Gaming</span>
+                                        <span class="idea-score">68%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pipeline-stage">
+                                <h4 class="stage-title">✅ Validated</h4>
+                                <div class="stage-count">1</div>
+                                <div class="stage-ideas">
+                                    <div class="pipeline-idea validated">
+                                        <span class="idea-name">MyFitnessPal Clone</span>
+                                        <span class="idea-score">89%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pipeline-stage">
+                                <h4 class="stage-title">🚀 Ready</h4>
+                                <div class="stage-count">0</div>
+                                <div class="stage-empty">
+                                    Complete validation to advance ideas here
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Research & Validation Tools -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="tools-card">
+                    <div class="card-header">
+                        <h3>🛠️ Validation Tools</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="tool-list">
+                            <button class="tool-item" @onclick="OpenMarketResearch">
+                                <i class="fas fa-chart-bar"></i>
+                                <div class="tool-content">
+                                    <span class="tool-name">Market Research</span>
+                                    <span class="tool-description">Analyze market size and trends</span>
+                                </div>
+                            </button>
+                            <button class="tool-item" @onclick="OpenIdeaValidation">
+                                <i class="fas fa-search"></i>
+                                <div class="tool-content">
+                                    <span class="tool-name">Idea Validation</span>
+                                    <span class="tool-description">Validate with target customers</span>
+                                </div>
+                            </button>
+                            <button class="tool-item" @onclick="OpenCompetitorAnalysis">
+                                <i class="fas fa-chess"></i>
+                                <div class="tool-content">
+                                    <span class="tool-name">Competitor Analysis</span>
+                                    <span class="tool-description">Study competitive landscape</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="achievements-card">
+                    <div class="card-header">
+                        <h3>🏆 Achievements</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="achievement-grid">
+                            <div class="achievement-badge earned">
+                                <i class="fas fa-lightbulb"></i>
+                                <span>Idea Generator</span>
+                            </div>
+                            <div class="achievement-badge earned">
+                                <i class="fas fa-search"></i>
+                                <span>Market Researcher</span>
+                            </div>
+                            <div class="achievement-badge earned">
+                                <i class="fas fa-trophy"></i>
+                                <span>Validation Master</span>
+                            </div>
+                            <div class="achievement-badge locked">
+                                <i class="fas fa-star"></i>
+                                <span>Innovation Expert</span>
+                            </div>
+                        </div>
+                        <div class="progress-to-next">
+                            <p>2 more validations to unlock Innovation Expert</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    private HubContext? _currentContext;
+    private CoachPersona? _currentCoach;
+    private string _currentCoachMessage = "";
+    
+    // Dashboard stats
+    private int _totalIdeas = 7;
+    private int _validatedIdeas = 1;
+    private int _researchReports = 3;
+    private double _averageScore = 74.6;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDashboardData();
+        
+        // Subscribe to hub context changes
+        HubContextService.ContextChanged += OnHubContextChanged;
+    }
+
+    private async Task LoadDashboardData()
+    {
+        _currentContext = await HubContextService.GetCurrentContextAsync();
+        
+        if (_currentContext != null)
+        {
+            _currentCoach = await CoachPersonaService.GetCoachForHubAsync(_currentContext.CurrentHub);
+            
+            // Get coaching message for idea development context
+            var coachingContext = new CoachingContext
+            {
+                CurrentHub = _currentContext.CurrentHub,
+                UserProgress = _currentContext.Progress.GetValueOrDefault(_currentContext.CurrentHub)?.CompletionPercentage ?? 0,
+                CompletedMilestones = _currentContext.Progress.GetValueOrDefault(_currentContext.CurrentHub)?.CompletedMilestones ?? new List<string>(),
+                IsFirstTimeInHub = false
+            };
+            
+            _currentCoachMessage = await CoachPersonaService.GetCoachMessageAsync(_currentContext.CurrentHub, coachingContext);
+        }
+    }
+
+    private void OnHubContextChanged(object? sender, HubContextChangedEventArgs e)
+    {
+        InvokeAsync(async () =>
+        {
+            await LoadDashboardData();
+            StateHasChanged();
+        });
+    }
+
+    private string GetCoachWelcomeMessage()
+    {
+        if (_currentCoach != null)
+        {
+            return _currentCoach.ContextualMessages.GetValueOrDefault("idea_dashboard", _currentCoachMessage);
+        }
+        return "Welcome to your Idea Development Hub! Let's turn your concepts into validated business opportunities.";
+    }
+
+    private void AddNewIdea()
+    {
+        Navigation.NavigateTo("/idea-input");
+    }
+
+    private void ContinueValidation()
+    {
+        Navigation.NavigateTo("/idea-validation");
+    }
+
+    private void ViewResearch()
+    {
+        Navigation.NavigateTo("/market-research");
+    }
+
+    private void OpenMarketResearch()
+    {
+        Navigation.NavigateTo("/market-research");
+    }
+
+    private void OpenIdeaValidation()
+    {
+        Navigation.NavigateTo("/idea-validation");
+    }
+
+    private void OpenCompetitorAnalysis()
+    {
+        Navigation.NavigateTo("/competitive-analysis");
+    }
+
+    public void Dispose()
+    {
+        if (HubContextService != null)
+        {
+            HubContextService.ContextChanged -= OnHubContextChanged;
+        }
+    }
+}
+
+<style>
+    /* Hub 1: Idea Development Dashboard Styles */
+    .idea-development-dashboard {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f8fbff 0%, #f0f8ff 100%);
+    }
+
+    /* Spark Coach Welcome Section */
+    .hub-idea-theme {
+        background: linear-gradient(135deg, #7b8fef15, #22d3ee15);
+        border-bottom: 3px solid #7b8fef25;
+    }
+
+    .hub-idea-avatar {
+        background: linear-gradient(135deg, #7b8fef, #22d3ee);
+    }
+
+    .coach-welcome-section {
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .coach-welcome-content {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .coach-avatar-large {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+        box-shadow: 0 8px 32px rgba(123, 143, 239, 0.3);
+    }
+
+    .welcome-text-content {
+        flex: 1;
+    }
+
+    .coach-welcome-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 1rem;
+    }
+
+    .coach-message-text {
+        font-size: 1.125rem;
+        color: #4a5568;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .coach-guidance {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .guidance-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #2d3748;
+        font-weight: 500;
+    }
+
+    .guidance-item i {
+        color: #7b8fef;
+        font-size: 1.1rem;
+    }
+
+    /* Section Headers */
+    .section-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+    }
+
+    .section-header p {
+        color: #64748b;
+        font-size: 1rem;
+    }
+
+    /* Stat Cards */
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-card.ideas { border-left-color: #7b8fef; }
+    .stat-card.validation { border-left-color: #22d3ee; }
+    .stat-card.research { border-left-color: #10b981; }
+    .stat-card.score { border-left-color: #f59e0b; }
+
+    .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        color: #64748b;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-trend {
+        font-size: 0.875rem;
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+    }
+
+    .stat-trend.positive {
+        color: #059669;
+        background: #d1fae5;
+    }
+
+    .stat-trend.neutral {
+        color: #0891b2;
+        background: #cffafe;
+    }
+
+    /* Current Idea Card */
+    .current-idea-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .current-idea-card .card-header {
+        background: linear-gradient(135deg, #7b8fef, #22d3ee);
+        color: white;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .current-idea-card .card-header h3 {
+        margin: 0;
+        font-size: 1.375rem;
+        font-weight: 600;
+    }
+
+    .status-badge {
+        padding: 0.375rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+
+    .idea-description {
+        font-size: 1rem;
+        color: #4a5568;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .validation-progress h4 {
+        color: #1a202c;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .validation-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .validation-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 2px solid #e2e8f0;
+        background: #f8fafc;
+        transition: all 0.3s ease;
+    }
+
+    .validation-step.completed {
+        border-color: #10b981;
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+    .validation-step.active {
+        border-color: #7b8fef;
+        background: #ede9fe;
+        color: #6d28d9;
+    }
+
+    .validation-step i {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .step-score {
+        font-weight: 600;
+        margin-top: 0.25rem;
+    }
+
+    .idea-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    /* Validation Insights Card */
+    .validation-insights-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .validation-insights-card .card-header {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 1.5rem;
+    }
+
+    .validation-insights-card .card-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .insight-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .insight-item:last-child {
+        border-bottom: none;
+    }
+
+    .insight-icon {
+        font-size: 1.5rem;
+        width: 2.5rem;
+        text-align: center;
+    }
+
+    .insight-content h4 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1a202c;
+    }
+
+    .insight-content p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+
+    /* Ideas Pipeline Card */
+    .ideas-pipeline-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .ideas-pipeline-card .card-header {
+        background: linear-gradient(135deg, #1f2937, #111827);
+        color: white;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .ideas-pipeline-card .card-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .pipeline-stages {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .pipeline-stage {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    .stage-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .stage-count {
+        background: #7b8fef;
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .stage-ideas {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .pipeline-idea {
+        background: white;
+        padding: 0.75rem;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .pipeline-idea.validated {
+        border-color: #10b981;
+        background: #ecfdf5;
+    }
+
+    .idea-name {
+        font-weight: 500;
+        color: #1a202c;
+    }
+
+    .idea-score {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #7b8fef;
+    }
+
+    .stage-empty {
+        text-align: center;
+        color: #9ca3af;
+        font-style: italic;
+        padding: 1rem;
+    }
+
+    /* Tools and Achievements Cards */
+    .tools-card, .achievements-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .tools-card .card-header, .achievements-card .card-header {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        color: white;
+        padding: 1.5rem;
+    }
+
+    .tools-card .card-header h3, .achievements-card .card-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .tool-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1.5rem;
+    }
+
+    .tool-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .tool-item:hover {
+        background: #ede9fe;
+        border-color: #8b5cf6;
+        transform: translateX(4px);
+    }
+
+    .tool-item i {
+        font-size: 1.5rem;
+        color: #8b5cf6;
+    }
+
+    .tool-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tool-name {
+        font-weight: 600;
+        color: #1a202c;
+    }
+
+    .tool-description {
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+
+    .achievement-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding: 1.5rem;
+    }
+
+    .achievement-badge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+        border-radius: 12px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .achievement-badge.earned {
+        background: #fef3c7;
+        border: 2px solid #f59e0b;
+        color: #92400e;
+    }
+
+    .achievement-badge.locked {
+        background: #f3f4f6;
+        border: 2px solid #d1d5db;
+        color: #9ca3af;
+    }
+
+    .achievement-badge i {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-to-next {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e5e7eb;
+        text-align: center;
+    }
+
+    .progress-bar {
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 0.5rem;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #7b8fef, #22d3ee);
+        transition: width 0.3s ease;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .coach-welcome-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 1.5rem;
+        }
+
+        .coach-welcome-title {
+            font-size: 2rem;
+        }
+
+        .validation-steps {
+            grid-template-columns: 1fr;
+        }
+
+        .pipeline-stages {
+            grid-template-columns: 1fr;
+        }
+
+        .achievement-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

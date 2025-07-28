@@ -6,24 +6,240 @@ namespace Jackson.Ideas.Mock.Services.Mock;
 public class MockLaunchedBusinessService : ILaunchedBusinessService
 {
     private readonly List<LaunchedBusiness> _launchedBusinesses;
+    private readonly List<BusinessMetric> _businessMetrics;
+    private readonly List<BusinessUpdate> _businessUpdates;
     private readonly Dictionary<string, EducationalTooltip> _tooltips;
 
     public MockLaunchedBusinessService()
     {
-        _launchedBusinesses = GenerateMockLaunchedBusinesses();
+        _launchedBusinesses = GenerateMockBusinesses();
+        _businessMetrics = GenerateMockMetrics();
+        _businessUpdates = GenerateMockUpdates();
         _tooltips = GenerateEducationalTooltips();
     }
 
+    // Core business management
+    public Task<List<LaunchedBusiness>> GetUserBusinessesAsync(string userId)
+    {
+        // For demo purposes, return all businesses since LaunchedBusiness doesn't have UserId
+        // In a real implementation, you would filter by user
+        var userBusinesses = _launchedBusinesses.ToList();
+        return Task.FromResult(userBusinesses);
+    }
+
+    public Task<LaunchedBusiness?> GetBusinessByIdAsync(string businessId)
+    {
+        var business = _launchedBusinesses.FirstOrDefault(b => b.Id == businessId);
+        return Task.FromResult(business);
+    }
+
+    public Task<LaunchedBusiness> CreateBusinessAsync(LaunchBusinessRequest request)
+    {
+        var business = new LaunchedBusiness
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = request.BusinessName,
+            Industry = request.Industry,
+            Description = request.Description,
+            Status = "Planning",
+            LaunchDate = DateTime.UtcNow,
+            CurrentMetrics = new BusinessMetrics
+            {
+                Revenue = 0,
+                CustomerCount = 0,
+                MonthlyGrowthRate = 0
+            }
+        };
+
+        _launchedBusinesses.Add(business);
+        return Task.FromResult(business);
+    }
+
+    public Task<bool> UpdateBusinessAsync(string businessId, UpdateBusinessRequest request)
+    {
+        var business = _launchedBusinesses.FirstOrDefault(b => b.Id == businessId);
+        if (business == null) return Task.FromResult(false);
+
+        if (!string.IsNullOrEmpty(request.Name))
+            business.Name = request.Name;
+        
+        if (!string.IsNullOrEmpty(request.Description))
+            business.Description = request.Description;
+        
+        if (!string.IsNullOrEmpty(request.Status))
+            business.Status = request.Status;
+        
+        if (request.MonthlyRevenue.HasValue)
+            business.CurrentMetrics.Revenue = request.MonthlyRevenue.Value;
+        
+        if (request.GrowthRate.HasValue)
+            business.CurrentMetrics.MonthlyGrowthRate = (decimal)request.GrowthRate.Value;
+        
+        if (request.CustomerCount.HasValue)
+            business.CurrentMetrics.CustomerCount = request.CustomerCount.Value;
+
+        // LaunchedBusiness doesn't have LastUpdated property
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> DeleteBusinessAsync(string businessId)
+    {
+        var business = _launchedBusinesses.FirstOrDefault(b => b.Id == businessId);
+        if (business == null) return Task.FromResult(false);
+
+        _launchedBusinesses.Remove(business);
+        return Task.FromResult(true);
+    }
+
+    // Metrics and analytics
+    public Task<List<BusinessMetric>> GetBusinessMetricsAsync(string businessId, DateTime startDate, DateTime endDate)
+    {
+        var metrics = _businessMetrics
+            .Where(m => m.BusinessId == businessId && m.Date >= startDate && m.Date <= endDate)
+            .OrderBy(m => m.Date)
+            .ToList();
+        
+        return Task.FromResult(metrics);
+    }
+
+    public Task<BusinessMetric> AddBusinessMetricAsync(string businessId, BusinessMetric metric)
+    {
+        metric.Id = Guid.NewGuid().ToString();
+        metric.BusinessId = businessId;
+        _businessMetrics.Add(metric);
+        return Task.FromResult(metric);
+    }
+
+    public Task<PortfolioSummary> GetPortfolioSummaryAsync(string userId)
+    {
+        // For demo purposes, return all businesses since LaunchedBusiness doesn't have UserId
+        var userBusinesses = _launchedBusinesses.ToList();
+        var activeBusinesses = userBusinesses.Where(b => b.Status.Equals("Active", StringComparison.OrdinalIgnoreCase)).ToList();
+        
+        var summary = new PortfolioSummary
+        {
+            UserId = userId,
+            TotalBusinesses = userBusinesses.Count,
+            ActiveBusinesses = activeBusinesses.Count,
+            TotalMonthlyRevenue = userBusinesses.Sum(b => b.CurrentMetrics.Revenue),
+            AverageGrowthRate = (double)(userBusinesses.Count != 0 ? userBusinesses.Average(b => b.CurrentMetrics.MonthlyGrowthRate) : 0),
+            TotalCustomers = userBusinesses.Sum(b => b.CurrentMetrics.CustomerCount),
+            PortfolioValue = userBusinesses.Sum(b => b.CurrentMetrics.Revenue * 12), // Simple valuation
+            TopPerformer = userBusinesses.OrderByDescending(b => b.CurrentMetrics.Revenue).FirstOrDefault(),
+            RecentUpdates = _businessUpdates
+                .Where(u => userBusinesses.Any(b => b.Id == u.BusinessId))
+                .OrderByDescending(u => u.Date)
+                .Take(5)
+                .ToList()
+        };
+
+        return Task.FromResult(summary);
+    }
+
+    public Task<List<BusinessAnalytics>> GetPortfolioAnalyticsAsync(string userId, int months = 12)
+    {
+        // For demo purposes, return all businesses since LaunchedBusiness doesn't have UserId
+        var userBusinesses = _launchedBusinesses.ToList();
+        var analytics = new List<BusinessAnalytics>();
+
+        foreach (var business in userBusinesses)
+        {
+            var businessAnalytics = new BusinessAnalytics
+            {
+                BusinessId = business.Id,
+                BusinessName = business.Name,
+                Industry = business.Industry,
+                MonthlyData = GenerateMonthlyData(business.Id, months),
+                KeyMetrics = new Dictionary<string, object>
+                {
+                    { "Revenue", business.CurrentMetrics.Revenue },
+                    { "Customers", business.CurrentMetrics.CustomerCount },
+                    { "GrowthRate", business.CurrentMetrics.MonthlyGrowthRate },
+                    { "ConversionRate", Random.Shared.NextDouble() * 5 + 2 }, // 2-7%
+                    { "CustomerSatisfaction", Random.Shared.NextDouble() * 2 + 3 } // 3-5
+                },
+                PerformanceScore = CalculatePerformanceScore(business),
+                TrendAnalysis = GenerateTrendAnalysis(business)
+            };
+
+            analytics.Add(businessAnalytics);
+        }
+
+        return Task.FromResult(analytics);
+    }
+
+    // Business updates and communication
+    public Task<List<BusinessUpdate>> GetBusinessUpdatesAsync(string businessId)
+    {
+        var updates = _businessUpdates
+            .Where(u => u.BusinessId == businessId)
+            .OrderByDescending(u => u.Date)
+            .ToList();
+        
+        return Task.FromResult(updates);
+    }
+
+    public Task<BusinessUpdate> AddBusinessUpdateAsync(string businessId, BusinessUpdate update)
+    {
+        update.Id = Guid.NewGuid().ToString();
+        update.BusinessId = businessId;
+        update.Date = DateTime.UtcNow;
+        _businessUpdates.Add(update);
+        return Task.FromResult(update);
+    }
+
+    // Comparison and benchmarking
+    public Task<BusinessComparison> CompareBusinesesAsync(List<string> businessIds)
+    {
+        var businesses = _launchedBusinesses.Where(b => businessIds.Contains(b.Id)).ToList();
+        var comparison = new BusinessComparison
+        {
+            BusinessIds = businessIds,
+            ComparisonMetrics = new Dictionary<string, Dictionary<string, object>>(),
+            BenchmarkData = GenerateBenchmarkData(),
+            Recommendations = GenerateComparisonRecommendations(businesses)
+        };
+
+        foreach (var business in businesses)
+        {
+            comparison.ComparisonMetrics[business.Id] = new Dictionary<string, object>
+            {
+                { "Name", business.Name },
+                { "Revenue", business.CurrentMetrics.Revenue },
+                { "Customers", business.CurrentMetrics.CustomerCount },
+                { "GrowthRate", business.CurrentMetrics.MonthlyGrowthRate },
+                { "Industry", business.Industry },
+                { "Status", business.Status }
+            };
+        }
+
+        return Task.FromResult(comparison);
+    }
+
+    public Task<List<LaunchedBusiness>> GetSimilarBusinessesAsync(string businessId)
+    {
+        var targetBusiness = _launchedBusinesses.FirstOrDefault(b => b.Id == businessId);
+        if (targetBusiness == null) return Task.FromResult(new List<LaunchedBusiness>());
+
+        var similarBusinesses = _launchedBusinesses
+            .Where(b => b.Id != businessId && b.Industry == targetBusiness.Industry)
+            .Take(5)
+            .ToList();
+
+        return Task.FromResult(similarBusinesses);
+    }
+
+    // Legacy methods for backward compatibility
     public async Task<List<LaunchedBusiness>> GetAllLaunchedBusinessesAsync()
     {
         await Task.Delay(100);
-        return _launchedBusinesses;
+        return _launchedBusinesses.ToList();
     }
 
     public async Task<LaunchedBusiness?> GetLaunchedBusinessByIdAsync(string id)
     {
         await Task.Delay(50);
-        return _launchedBusinesses.FirstOrDefault(b => b.Id == id);
+        return GetBusinessByIdAsync(id).Result;
     }
 
     public async Task<Dictionary<string, EducationalTooltip>> GetEducationalTooltipsAsync()
@@ -36,490 +252,263 @@ public class MockLaunchedBusinessService : ILaunchedBusinessService
     {
         await Task.Delay(50);
         var business = _launchedBusinesses.FirstOrDefault(b => b.Id == businessId);
-        return business?.Education.Tips ?? new List<BusinessTip>();
+        var tips = new List<BusinessTip>();
+
+        if (business?.CurrentMetrics.MonthlyGrowthRate < 5)
+        {
+            tips.Add(new BusinessTip
+            {
+                Title = "Boost Growth Rate",
+                Content = "Consider implementing customer referral programs to accelerate growth",
+                Category = "Growth",
+                EstimatedImpact = "High"
+            });
+        }
+
+        if (business?.CurrentMetrics.CustomerCount < 100)
+        {
+            tips.Add(new BusinessTip
+            {
+                Title = "Customer Acquisition",
+                Content = "Focus on digital marketing channels to reach more potential customers",
+                Category = "Marketing",
+                EstimatedImpact = "Medium"
+            });
+        }
+
+        return tips;
     }
 
     public async Task<Dictionary<string, BenchmarkData>> GetBenchmarkDataAsync(string businessId)
     {
         await Task.Delay(50);
         var business = _launchedBusinesses.FirstOrDefault(b => b.Id == businessId);
-        return business?.Education.Benchmarks ?? new Dictionary<string, BenchmarkData>();
+        var benchmarks = new Dictionary<string, BenchmarkData>();
+
+        if (business != null)
+        {
+            benchmarks["industry_revenue"] = new BenchmarkData
+            {
+                Metric = "Industry Average Revenue",
+                IndustryAverage = 35000,
+                YourValue = business.CurrentMetrics.Revenue,
+                Interpretation = business.CurrentMetrics.Revenue > 35000 ? "Above average performance" : "Below average performance"
+            };
+
+            benchmarks["industry_growth"] = new BenchmarkData
+            {
+                Metric = "Industry Growth Rate",
+                IndustryAverage = 8.5m,
+                YourValue = business.CurrentMetrics.MonthlyGrowthRate,
+                Interpretation = business.CurrentMetrics.MonthlyGrowthRate > 8.5m ? "Above average performance" : "Below average performance"
+            };
+        }
+
+        return benchmarks;
     }
 
     public async Task<List<Achievement>> GetRecentAchievementsAsync(string businessId)
     {
         await Task.Delay(50);
-        var business = _launchedBusinesses.FirstOrDefault(b => b.Id == businessId);
-        return business?.Education.Achievements.Where(a => a.AchievedDate >= DateTime.UtcNow.AddDays(-30)).ToList() ?? new List<Achievement>();
+        var achievements = new List<Achievement>
+        {
+            new Achievement
+            {
+                Title = "Revenue Milestone",
+                Description = "Reached $50K monthly revenue",
+                AchievedDate = DateTime.UtcNow.AddDays(-5),
+                Icon = "💰",
+                Category = "Revenue"
+            },
+            new Achievement
+            {
+                Title = "Customer Growth",
+                Description = "Acquired 100+ new customers this month",
+                AchievedDate = DateTime.UtcNow.AddDays(-12),
+                Icon = "👥",
+                Category = "Growth"
+            }
+        };
+
+        return achievements;
     }
 
-    private static List<LaunchedBusiness> GenerateMockLaunchedBusinesses()
+    // Private helper methods
+    private List<LaunchedBusiness> GenerateMockBusinesses()
     {
         return new List<LaunchedBusiness>
         {
             new LaunchedBusiness
             {
-                Id = "craft-corner-store",
-                Name = "Craft Corner",
-                Description = "Handmade jewelry and accessories sold through Instagram and local markets",
-                Industry = "E-commerce",
-                LaunchDate = DateTime.UtcNow.AddMonths(-8),
+                Id = "bus-001",
+                Name = "TechFlow Solutions",
+                Industry = "Software Development",
+                Description = "Custom software solutions for small businesses",
                 Status = "Active",
-                BusinessType = "E-commerce",
-                LogoUrl = "/images/craft-corner-logo.png",
+                LaunchDate = DateTime.UtcNow.AddMonths(-8),
                 CurrentMetrics = new BusinessMetrics
                 {
-                    Revenue = 3200,
-                    Profit = 1920,
-                    CustomerCount = 145,
-                    CustomerAcquisitionCost = 12,
-                    CustomerLifetimeValue = 85,
-                    MonthlyGrowthRate = 15.3m,
-                    ChurnRate = 8.2m,
-                    OrderCount = 67
-                },
-                Marketing = new MarketingPerformance
-                {
-                    TotalMarketingSpend = 480,
-                    MarketingROI = 566.7m,
-                    TotalLeads = 89,
-                    ConversionRate = 16.2m,
-                    BestPerformingChannel = "Instagram",
-                    Channels = new Dictionary<string, ChannelMetrics>
-                    {
-                        ["Instagram"] = new ChannelMetrics
-                        {
-                            ChannelName = "Instagram",
-                            Spend = 280,
-                            Clicks = 1240,
-                            Conversions = 45,
-                            CostPerAcquisition = 6.22m,
-                            Revenue = 2150
-                        },
-                        ["TikTok"] = new ChannelMetrics
-                        {
-                            ChannelName = "TikTok",
-                            Spend = 120,
-                            Clicks = 890,
-                            Conversions = 18,
-                            CostPerAcquisition = 6.67m,
-                            Revenue = 720
-                        },
-                        ["Local Markets"] = new ChannelMetrics
-                        {
-                            ChannelName = "Local Markets",
-                            Spend = 80,
-                            Clicks = 0,
-                            Conversions = 12,
-                            CostPerAcquisition = 6.67m,
-                            Revenue = 330
-                        }
-                    },
-                    RecentCampaigns = new List<CampaignResult>
-                    {
-                        new CampaignResult
-                        {
-                            Name = "Valentine's Day Collection",
-                            Type = "Instagram Ads",
-                            StartDate = DateTime.UtcNow.AddDays(-14),
-                            EndDate = DateTime.UtcNow.AddDays(-1),
-                            Spend = 150,
-                            Reach = 2400,
-                            Conversions = 28,
-                            ROI = 320,
-                            Status = "Completed"
-                        }
-                    }
-                },
-                Sales = new SalesPerformance
-                {
-                    ConversionRate = 16.2m,
-                    RepeatCustomerRate = 34.5m,
-                    AverageOrdersPerCustomer = 2,
-                    RevenueByProduct = new Dictionary<string, decimal>
-                    {
-                        ["Earrings"] = 1280,
-                        ["Necklaces"] = 960,
-                        ["Bracelets"] = 640,
-                        ["Rings"] = 320
-                    },
-                    MonthlyTrends = GenerateMonthlySalesTrends(3200, 8)
-                },
-                Support = new CustomerSupportMetrics
-                {
-                    TotalTickets = 12,
-                    OpenTickets = 2,
-                    AverageResponseTimeHours = 3.2,
-                    AverageResolutionTimeHours = 8.5,
-                    CustomerSatisfactionScore = 4.7m,
-                    TicketsThisWeek = 3,
-                    TicketsLastWeek = 5,
-                    CommonIssues = new List<SupportIssue>
-                    {
-                        new SupportIssue { Category = "Shipping Delays", Count = 5, Description = "Orders arriving later than expected", ImpactScore = 6.5m },
-                        new SupportIssue { Category = "Size Questions", Count = 4, Description = "Customers asking about jewelry sizing", ImpactScore = 3.2m },
-                        new SupportIssue { Category = "Custom Orders", Count = 3, Description = "Requests for personalized pieces", ImpactScore = 8.9m }
-                    }
-                },
-                Website = new WebsiteAnalytics
-                {
-                    MonthlyVisitors = 2840,
-                    DailyVisitors = 95,
-                    BounceRate = 42.3m,
-                    AverageSessionDuration = 2.8,
-                    PageViews = 8520,
-                    ConversionRate = 5.1m,
-                    Status = "Live",
-                    UptimePercentage = 99.8m,
-                    Url = "https://craftcorner.shop",
-                    TrafficSources = new List<TrafficSource>
-                    {
-                        new TrafficSource { Source = "Instagram", Visitors = 1420, Percentage = 50.0m, ConversionRate = 8.2m },
-                        new TrafficSource { Source = "Direct", Visitors = 710, Percentage = 25.0m, ConversionRate = 12.5m },
-                        new TrafficSource { Source = "TikTok", Visitors = 426, Percentage = 15.0m, ConversionRate = 4.1m },
-                        new TrafficSource { Source = "Google", Visitors = 284, Percentage = 10.0m, ConversionRate = 6.8m }
-                    }
-                },
-                Opportunities = new List<GrowthOpportunity>
-                {
-                    new GrowthOpportunity
-                    {
-                        Title = "Launch Email Newsletter",
-                        Description = "Start collecting emails and sending weekly updates. Similar businesses see 25% revenue increase!",
-                        Category = "Marketing",
-                        EstimatedImpact = 800,
-                        RiskLevel = "Low",
-                        Effort = "Easy",
-                        Priority = 5
-                    },
-                    new GrowthOpportunity
-                    {
-                        Title = "Add Subscription Box",
-                        Description = "Monthly jewelry subscription could create recurring revenue. Industry average: $45/month.",
-                        Category = "Product",
-                        EstimatedImpact = 1350,
-                        RiskLevel = "Medium",
-                        Effort = "Medium",
-                        Priority = 4
-                    }
-                },
-                ActionItems = new List<ActionItem>
-                {
-                    new ActionItem
-                    {
-                        Title = "Reply to Customer Reviews",
-                        Description = "3 new reviews need responses - great for SEO and customer relationships!",
-                        Priority = "High",
-                        DueDate = DateTime.UtcNow.AddDays(1),
-                        Category = "Customer Service",
-                        EstimatedTime = "30 minutes"
-                    },
-                    new ActionItem
-                    {
-                        Title = "Post This Week's Instagram Content",
-                        Description = "You have 5 photos ready to post. Consistent posting = more engagement!",
-                        Priority = "Medium",
-                        DueDate = DateTime.UtcNow.AddDays(2),
-                        Category = "Marketing",
-                        EstimatedTime = "1 hour"
-                    }
-                },
-                Education = new BusinessEducation
-                {
-                    Benchmarks = new Dictionary<string, BenchmarkData>
-                    {
-                        ["ConversionRate"] = new BenchmarkData
-                        {
-                            Metric = "Conversion Rate",
-                            YourValue = 16.2m,
-                            IndustryAverage = 12.8m,
-                            TopPerformers = 22.1m,
-                            Interpretation = "You're doing better than average! Keep focusing on Instagram."
-                        },
-                        ["CustomerAcquisitionCost"] = new BenchmarkData
-                        {
-                            Metric = "Customer Acquisition Cost",
-                            YourValue = 12,
-                            IndustryAverage = 18,
-                            TopPerformers = 8,
-                            Interpretation = "Great job keeping costs low! Your Instagram strategy is working."
-                        }
-                    },
-                    Tips = new List<BusinessTip>
-                    {
-                        new BusinessTip
-                        {
-                            Title = "Post at Peak Times",
-                            Content = "Your Instagram posts get 3x more engagement when posted at 7-9 PM. Try scheduling your content for these hours!",
-                            Category = "Marketing",
-                            Difficulty = "Beginner",
-                            EstimatedImpact = "Medium",
-                            IsPersonalized = true
-                        }
-                    },
-                    Achievements = new List<Achievement>
-                    {
-                        new Achievement
-                        {
-                            Title = "First $1K Month! 🎉",
-                            Description = "You hit your first $1,000 revenue month! This is a huge milestone for any side hustle.",
-                            Icon = "💰",
-                            AchievedDate = DateTime.UtcNow.AddMonths(-3),
-                            Category = "Revenue"
-                        },
-                        new Achievement
-                        {
-                            Title = "100 Happy Customers",
-                            Description = "You now have over 100 customers who love your products! Word of mouth is your best marketing.",
-                            Icon = "👥",
-                            AchievedDate = DateTime.UtcNow.AddDays(-15),
-                            Category = "Customers",
-                            IsNewlyAchieved = true
-                        }
-                    }
+                    Revenue = 47250,
+                    MonthlyGrowthRate = 12.5m,
+                    CustomerCount = 1247
                 }
             },
             new LaunchedBusiness
             {
-                Id = "fresh-fitness-app",
-                Name = "FreshFit",
-                Description = "Personalized workout app with nutrition tracking for busy professionals",
-                Industry = "Health & Fitness",
-                LaunchDate = DateTime.UtcNow.AddMonths(-4),
-                Status = "Scaling",
-                BusinessType = "SaaS",
-                LogoUrl = "/images/freshfit-logo.png",
+                Id = "bus-002",
+                Name = "EcoClean Pro",
+                Industry = "Environmental Services", 
+                Description = "Eco-friendly cleaning services for commercial properties",
+                Status = "Active",
+                LaunchDate = DateTime.UtcNow.AddMonths(-3),
                 CurrentMetrics = new BusinessMetrics
                 {
-                    Revenue = 1850,
-                    Profit = 1295,
-                    CustomerCount = 78,
-                    CustomerAcquisitionCost = 18,
-                    CustomerLifetimeValue = 120,
-                    MonthlyGrowthRate = 28.7m,
-                    ChurnRate = 12.5m,
-                    OrderCount = 78 // Subscription count
-                },
-                Marketing = new MarketingPerformance
-                {
-                    TotalMarketingSpend = 320,
-                    MarketingROI = 478.1m,
-                    TotalLeads = 156,
-                    ConversionRate = 22.4m,
-                    BestPerformingChannel = "TikTok",
-                    Channels = new Dictionary<string, ChannelMetrics>
-                    {
-                        ["TikTok"] = new ChannelMetrics
-                        {
-                            ChannelName = "TikTok",
-                            Spend = 180,
-                            Clicks = 2100,
-                            Conversions = 42,
-                            CostPerAcquisition = 4.29m,
-                            Revenue = 1260
-                        },
-                        ["Google Ads"] = new ChannelMetrics
-                        {
-                            ChannelName = "Google Ads",
-                            Spend = 140,
-                            Clicks = 680,
-                            Conversions = 21,
-                            CostPerAcquisition = 6.67m,
-                            Revenue = 630
-                        }
-                    }
-                },
-                Sales = new SalesPerformance
-                {
-                    ConversionRate = 22.4m,
-                    RepeatCustomerRate = 87.5m, // High for subscription
-                    AverageOrdersPerCustomer = 1, // Subscription model
-                    MonthlyTrends = GenerateMonthlySalesTrends(1850, 4)
-                },
-                Support = new CustomerSupportMetrics
-                {
-                    TotalTickets = 18,
-                    OpenTickets = 1,
-                    AverageResponseTimeHours = 2.1,
-                    AverageResolutionTimeHours = 6.3,
-                    CustomerSatisfactionScore = 4.6m,
-                    TicketsThisWeek = 4,
-                    TicketsLastWeek = 6,
-                    CommonIssues = new List<SupportIssue>
-                    {
-                        new SupportIssue { Category = "Login Issues", Count = 8, Description = "Users having trouble logging in", ImpactScore = 7.8m },
-                        new SupportIssue { Category = "Feature Requests", Count = 6, Description = "Users asking for new workout types", ImpactScore = 5.4m },
-                        new SupportIssue { Category = "Billing Questions", Count = 4, Description = "Questions about subscription pricing", ImpactScore = 6.1m }
-                    }
-                },
-                Website = new WebsiteAnalytics
-                {
-                    MonthlyVisitors = 4200,
-                    DailyVisitors = 140,
-                    BounceRate = 35.8m,
-                    AverageSessionDuration = 4.2,
-                    PageViews = 12600,
-                    ConversionRate = 8.3m
-                },
-                Opportunities = new List<GrowthOpportunity>
-                {
-                    new GrowthOpportunity
-                    {
-                        Title = "Partner with Influencers",
-                        Description = "Fitness influencers in your niche have 50K+ engaged followers. Average cost: $200/post.",
-                        Category = "Marketing",
-                        EstimatedImpact = 1200,
-                        RiskLevel = "Low",
-                        Effort = "Easy",
-                        Priority = 5
-                    },
-                    new GrowthOpportunity
-                    {
-                        Title = "Add Premium Tier",
-                        Description = "35% of users would pay extra for 1-on-1 coaching. Potential: $49/month premium tier.",
-                        Category = "Product",
-                        EstimatedImpact = 2450,
-                        RiskLevel = "Medium",
-                        Effort = "Hard",
-                        Priority = 4
-                    }
-                },
-                ActionItems = new List<ActionItem>
-                {
-                    new ActionItem
-                    {
-                        Title = "Fix Login Bug",
-                        Description = "8 users reported login issues. This is affecting user experience and retention!",
-                        Priority = "High",
-                        DueDate = DateTime.UtcNow,
-                        Category = "Technical",
-                        EstimatedTime = "2 hours"
-                    },
-                    new ActionItem
-                    {
-                        Title = "Create TikTok Content Calendar",
-                        Description = "Plan next month's TikTok posts. Consistency = more followers and customers!",
-                        Priority = "Medium",
-                        DueDate = DateTime.UtcNow.AddDays(3),
-                        Category = "Marketing",
-                        EstimatedTime = "3 hours"
-                    }
-                },
-                Education = new BusinessEducation
-                {
-                    Benchmarks = new Dictionary<string, BenchmarkData>
-                    {
-                        ["ChurnRate"] = new BenchmarkData
-                        {
-                            Metric = "Monthly Churn Rate",
-                            YourValue = 12.5m,
-                            IndustryAverage = 15.2m,
-                            TopPerformers = 8.1m,
-                            Interpretation = "Better than average! Keep focusing on user engagement to reduce churn further."
-                        },
-                        ["ConversionRate"] = new BenchmarkData
-                        {
-                            Metric = "Conversion Rate",
-                            YourValue = 22.4m,
-                            IndustryAverage = 18.3m,
-                            TopPerformers = 28.9m,
-                            Interpretation = "Excellent conversion rate! Your TikTok strategy is really working."
-                        }
-                    },
-                    Achievements = new List<Achievement>
-                    {
-                        new Achievement
-                        {
-                            Title = "50 Subscribers! 🚀",
-                            Description = "You've reached 50 paying subscribers! Your app is solving real problems for people.",
-                            Icon = "📱",
-                            AchievedDate = DateTime.UtcNow.AddDays(-10),
-                            Category = "Subscribers",
-                            IsNewlyAchieved = true
-                        }
-                    }
+                    Revenue = 12800,
+                    MonthlyGrowthRate = 25.3m,
+                    CustomerCount = 342
                 }
             }
         };
     }
 
-    private static List<SalesTrend> GenerateMonthlySalesTrends(decimal currentRevenue, int monthsBack)
+    private List<BusinessMetric> GenerateMockMetrics()
     {
-        var trends = new List<SalesTrend>();
-        var random = new Random(42); // Fixed seed for consistent data
-        
-        for (int i = monthsBack; i >= 0; i--)
+        var metrics = new List<BusinessMetric>();
+        var startDate = DateTime.UtcNow.AddMonths(-6);
+
+        for (int i = 0; i < 180; i++) // 6 months of daily data
         {
-            var date = DateTime.UtcNow.AddMonths(-i);
-            var growthFactor = (decimal)Math.Pow(1.15, monthsBack - i); // 15% monthly growth
-            var baseRevenue = currentRevenue / growthFactor;
-            var variationFactor = 1 + (decimal)(random.NextDouble() - 0.5) * 0.2m; // ±10% variation
-            
-            trends.Add(new SalesTrend
+            var date = startDate.AddDays(i);
+            metrics.Add(new BusinessMetric
             {
+                Id = Guid.NewGuid().ToString(),
+                BusinessId = "bus-001",
                 Date = date,
-                Revenue = Math.Round(baseRevenue * variationFactor, 2),
-                Orders = (int)(baseRevenue * variationFactor / 30), // Assuming $30 average order
-                NewCustomers = (int)(baseRevenue * variationFactor / 45), // Assuming some repeat customers
-                ConversionRate = 15 + (decimal)(random.NextDouble() * 10) // 15-25% range
+                Revenue = 1500 + Random.Shared.Next(-200, 400),
+                Customers = 40 + Random.Shared.Next(-5, 15),
+                ConversionRate = 3.2 + Random.Shared.NextDouble() * 2,
+                CustomerSatisfaction = 4.5 + Random.Shared.NextDouble() * 0.5,
+                MarketingSpend = 500 + Random.Shared.Next(-100, 200),
+                OperatingCosts = 800 + Random.Shared.Next(-100, 150)
             });
         }
-        
-        return trends;
+
+        return metrics;
     }
 
-    private static Dictionary<string, EducationalTooltip> GenerateEducationalTooltips()
+    private List<BusinessUpdate> GenerateMockUpdates()
+    {
+        return new List<BusinessUpdate>
+        {
+            new BusinessUpdate
+            {
+                Id = "upd-001",
+                BusinessId = "bus-001",
+                Type = "Revenue",
+                Title = "Monthly Revenue Target Exceeded",
+                Description = "Achieved 105% of monthly revenue target with strong Q4 performance",
+                Date = DateTime.UtcNow.AddDays(-3),
+                Priority = "High",
+                Author = "System",
+                IsPublic = true
+            },
+            new BusinessUpdate
+            {
+                Id = "upd-002",
+                BusinessId = "bus-001",
+                Type = "Customer",
+                Title = "Customer Satisfaction Survey Results",
+                Description = "Latest customer satisfaction survey shows 4.8/5 average rating",
+                Date = DateTime.UtcNow.AddDays(-7),
+                Priority = "Medium",
+                Author = "Marketing Team",
+                IsPublic = true
+            }
+        };
+    }
+
+    private List<MonthlyData> GenerateMonthlyData(string businessId, int months)
+    {
+        var data = new List<MonthlyData>();
+        var startDate = DateTime.UtcNow.AddMonths(-months);
+
+        for (int i = 0; i < months; i++)
+        {
+            var month = startDate.AddMonths(i);
+            data.Add(new MonthlyData
+            {
+                Month = month,
+                Revenue = 30000 + Random.Shared.Next(-5000, 15000),
+                Customers = 800 + Random.Shared.Next(-100, 300),
+                ConversionRate = 3.0 + Random.Shared.NextDouble() * 2,
+                CustomerSatisfaction = 4.0 + Random.Shared.NextDouble()
+            });
+        }
+
+        return data;
+    }
+
+    private int CalculatePerformanceScore(LaunchedBusiness business)
+    {
+        var revenueScore = Math.Min(business.CurrentMetrics.Revenue / 1000, 50); // Max 50 points for revenue
+        var growthScore = Math.Min(business.CurrentMetrics.MonthlyGrowthRate * 2, 30); // Max 30 points for growth
+        var customerScore = Math.Min(business.CurrentMetrics.CustomerCount / 50, 20); // Max 20 points for customers
+
+        return (int)(revenueScore + growthScore + customerScore);
+    }
+
+    private string GenerateTrendAnalysis(LaunchedBusiness business)
+    {
+        if (business.CurrentMetrics.MonthlyGrowthRate > 15)
+            return "Strong upward trend with accelerating growth momentum";
+        else if (business.CurrentMetrics.MonthlyGrowthRate > 5)
+            return "Steady growth trajectory with positive market indicators";
+        else if (business.CurrentMetrics.MonthlyGrowthRate > 0)
+            return "Modest growth with opportunities for optimization";
+        else
+            return "Declining performance requiring strategic intervention";
+    }
+
+    private Dictionary<string, object> GenerateBenchmarkData()
+    {
+        return new Dictionary<string, object>
+        {
+            { "industry_avg_revenue", 35000 },
+            { "industry_avg_growth", 8.5 },
+            { "industry_avg_customers", 1000 },
+            { "top_quartile_revenue", 75000 },
+            { "top_quartile_growth", 20.0 }
+        };
+    }
+
+    private List<string> GenerateComparisonRecommendations(List<LaunchedBusiness> businesses)
+    {
+        var recommendations = new List<string>();
+
+        if (businesses.Any(b => b.CurrentMetrics.MonthlyGrowthRate > 15))
+        {
+            recommendations.Add("Consider scaling successful growth strategies across underperforming businesses");
+        }
+
+        if (businesses.Any(b => b.CurrentMetrics.Revenue > 50000))
+        {
+            recommendations.Add("Leverage high-revenue business models for portfolio expansion");
+        }
+
+        recommendations.Add("Focus on customer acquisition for businesses with less than 500 customers");
+        recommendations.Add("Implement cross-portfolio synergies to reduce operational costs");
+
+        return recommendations;
+    }
+
+    private Dictionary<string, EducationalTooltip> GenerateEducationalTooltips()
     {
         return new Dictionary<string, EducationalTooltip>
         {
-            ["Revenue"] = new EducationalTooltip
-            {
-                Term = "Revenue",
-                Definition = "All the money coming into your business from sales",
-                Example = "If you sold 50 items at $20 each, your revenue is $1,000",
-                WhyItMatters = "Revenue shows how much your customers value your product and how well your marketing is working",
-                TipsToImprove = new List<string> { "Increase your prices", "Sell more products", "Find new customers", "Create bundles or packages" }
-            },
-            ["ProfitMargin"] = new EducationalTooltip
-            {
-                Term = "Profit Margin",
-                Definition = "The percentage of revenue you keep as profit after paying all costs",
-                Example = "If you earn $1,000 and spend $600, your profit margin is 40%",
-                WhyItMatters = "Higher profit margins mean your business is more efficient and sustainable",
-                TipsToImprove = new List<string> { "Negotiate better prices with suppliers", "Reduce unnecessary expenses", "Increase prices if possible", "Focus on higher-margin products" }
-            },
-            ["CustomerAcquisitionCost"] = new EducationalTooltip
-            {
-                Term = "Customer Acquisition Cost (CAC)",
-                Definition = "How much you spend to get each new customer",
-                Example = "If you spend $200 on ads and get 10 new customers, your CAC is $20",
-                WhyItMatters = "Lower CAC means you can grow more efficiently and profitably",
-                TipsToImprove = new List<string> { "Improve your ad targeting", "Use referral programs", "Focus on organic social media", "Optimize your conversion rate" }
-            },
-            ["ConversionRate"] = new EducationalTooltip
-            {
-                Term = "Conversion Rate",
-                Definition = "The percentage of visitors who become customers",
-                Example = "If 100 people visit your store and 5 buy something, your conversion rate is 5%",
-                WhyItMatters = "Higher conversion rates mean you're better at turning interest into sales",
-                TipsToImprove = new List<string> { "Improve product photos", "Write better descriptions", "Add customer reviews", "Make checkout easier", "Offer guarantees" }
-            },
-            ["ChurnRate"] = new EducationalTooltip
-            {
-                Term = "Churn Rate",
-                Definition = "The percentage of customers who stop buying from you each month",
-                Example = "If you have 100 customers and 10 stop buying, your churn rate is 10%",
-                WhyItMatters = "Lower churn means customers are happier and your business is more stable",
-                TipsToImprove = new List<string> { "Follow up with customers", "Ask for feedback", "Improve product quality", "Create loyalty programs", "Send helpful content" }
-            },
-            ["CustomerLifetimeValue"] = new EducationalTooltip
-            {
-                Term = "Customer Lifetime Value (LTV)",
-                Definition = "The total amount a customer will spend with your business over time",
-                Example = "If customers spend $30 per order and order 4 times, their LTV is $120",
-                WhyItMatters = "Higher LTV means you can spend more to acquire customers and still be profitable",
-                TipsToImprove = new List<string> { "Create repeat purchase incentives", "Upsell and cross-sell", "Improve customer service", "Build strong relationships", "Launch subscription products" }
-            }
+            ["revenue"] = new EducationalTooltip { Term = "Monthly Revenue", Definition = "Total income generated by your business each month" },
+            ["growth"] = new EducationalTooltip { Term = "Growth Rate", Definition = "Percentage increase in key metrics month-over-month" },
+            ["customers"] = new EducationalTooltip { Term = "Customer Count", Definition = "Total number of active customers using your product or service" },
+            ["conversion"] = new EducationalTooltip { Term = "Conversion Rate", Definition = "Percentage of visitors who become paying customers" }
         };
     }
 }

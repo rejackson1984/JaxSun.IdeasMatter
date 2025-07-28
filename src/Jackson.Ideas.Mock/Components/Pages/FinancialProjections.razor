@@ -1,26 +1,37 @@
 @page "/financial-projections"
+@layout HubLayout
 @using Jackson.Ideas.Mock.Services.Interfaces
 @using Jackson.Ideas.Mock.Models
 @inject IFinancialProjectionService FinancialProjectionService
 @inject IMockDataService MockDataService
+@inject IHubContextService HubContextService
+@inject ICoachPersonaService CoachPersonaService
 @inject NavigationManager Navigation
+@implements IDisposable
 
-<PageTitle>Financial Projections - Ideas Matter Demo</PageTitle>
+<PageTitle>Business Planning Hub - Financial Projections</PageTitle>
 
-<div class="container-fluid">
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h1 class="h3 mb-1">Financial Projections 💰</h1>
-                    <p class="text-muted">Comprehensive financial analysis and business metrics</p>
+<div class="financial-projections-container">
+    <!-- Strategy Coach Welcome Section -->
+    <div class="coach-welcome-section hub-planning-theme">
+        <div class="coach-welcome-content">
+            <div class="coach-avatar-large hub-planning-avatar">
+                <i class="@(_currentCoach?.Avatar ?? "fas fa-chess")"></i>
+            </div>
+            <div class="welcome-text-content">
+                <h1 class="coach-welcome-title">Strategic Financial Planning 📊</h1>
+                <p class="coach-message-text">@GetCoachWelcomeMessage()</p>
+                <div class="coach-guidance">
+                    <div class="guidance-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Let's build comprehensive financial projections for your business</span>
+                    </div>
                 </div>
-                <button class="btn btn-primary" @onclick="NavigateToDashboard">
-                    ← Back to Dashboard
-                </button>
             </div>
         </div>
     </div>
+
+    <div class="container-fluid">
 
     <!-- Scenario Selector -->
     <div class="row mb-4">
@@ -367,21 +378,52 @@
             </div>
         </div>
     }
+    </div> <!-- Close container-fluid -->
 </div>
 
 @code {
     private List<BusinessIdeaScenario> scenarios = new();
     private Models.FinancialProjections? financialData;
     private string selectedScenarioId = "";
+    private CoachPersona? _currentCoach;
+    private HubContext? _hubContext;
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadHubData();
         scenarios = await MockDataService.GetAllScenariosAsync();
         if (scenarios.Any())
         {
             selectedScenarioId = scenarios.First().Id;
             await SelectScenario(selectedScenarioId);
         }
+        
+        // Subscribe to hub context changes
+        HubContextService.ContextChanged += OnHubContextChanged;
+        StateHasChanged();
+    }
+    
+    private async Task LoadHubData()
+    {
+        _hubContext = await HubContextService.GetCurrentContextAsync();
+        _currentCoach = await CoachPersonaService.GetCoachForHubAsync(BusinessHub.BusinessPlanning);
+    }
+    
+    private void OnHubContextChanged(object? sender, HubContextChangedEventArgs e)
+    {
+        InvokeAsync(async () =>
+        {
+            await LoadHubData();
+            StateHasChanged();
+        });
+    }
+    
+    private string GetCoachWelcomeMessage()
+    {
+        if (_currentCoach == null) return "Let's analyze your business financials systematically.";
+        
+        return $"I'm {_currentCoach.Name}, your Business Architect. Let's systematically build robust financial projections " +
+               "that will demonstrate your business viability to investors and guide your strategic decisions.";
     }
 
     private async Task SelectScenario(string scenarioId)
@@ -395,4 +437,160 @@
     {
         Navigation.NavigateTo("/dashboard");
     }
+    
+    public void Dispose()
+    {
+        if (HubContextService != null)
+        {
+            HubContextService.ContextChanged -= OnHubContextChanged;
+        }
+    }
 }
+
+<style>
+    /* Hub 2 - Business Planning Theme */
+    .financial-projections-container {
+        background: var(--hub-background, #f8fafc);
+        min-height: 100vh;
+    }
+
+    .coach-welcome-section {
+        margin-bottom: 2rem;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    .hub-planning-theme {
+        background: linear-gradient(135deg, var(--hub-primary, #5a6fd8) 0%, var(--hub-secondary, #3b82f6) 100%);
+        color: white;
+    }
+
+    .coach-welcome-content {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 2rem;
+    }
+
+    .coach-avatar-large {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        flex-shrink: 0;
+    }
+
+    .hub-planning-avatar {
+        background: rgba(255, 255, 255, 0.2);
+        border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .welcome-text-content {
+        flex: 1;
+    }
+
+    .coach-welcome-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .coach-message-text {
+        font-size: 1.125rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.95;
+        line-height: 1.6;
+    }
+
+    .coach-guidance {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .guidance-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+
+    .guidance-item i {
+        width: 1.25rem;
+        text-align: center;
+    }
+
+    /* Enhanced Card Styling for Hub 2 */
+    .container-fluid .card {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        border: none;
+        border-radius: 0.75rem;
+    }
+
+    .container-fluid .card-header {
+        border-radius: 0.75rem 0.75rem 0 0 !important;
+        font-weight: 600;
+    }
+
+    .container-fluid .card-header.bg-success {
+        background: linear-gradient(135deg, var(--hub-primary, #5a6fd8), var(--hub-secondary, #3b82f6)) !important;
+    }
+
+    .container-fluid .card-header.bg-warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+        color: white !important;
+    }
+
+    .container-fluid .card-header.bg-dark {
+        background: linear-gradient(135deg, #374151, #1f2937) !important;
+    }
+
+    /* Strategy-focused enhancements */
+    .container-fluid .text-success {
+        color: var(--hub-primary, #5a6fd8) !important;
+    }
+
+    .container-fluid .badge.bg-success {
+        background: var(--hub-primary, #5a6fd8) !important;
+    }
+
+    .container-fluid .badge.bg-primary {
+        background: var(--hub-secondary, #3b82f6) !important;
+    }
+
+    .container-fluid .btn-primary {
+        background: var(--hub-gradient, linear-gradient(135deg, #5a6fd8 0%, #3b82f6 100%));
+        border: none;
+    }
+
+    .container-fluid .btn-outline-primary {
+        border-color: var(--hub-primary, #5a6fd8);
+        color: var(--hub-primary, #5a6fd8);
+    }
+
+    .container-fluid .btn-outline-primary:hover {
+        background: var(--hub-primary, #5a6fd8);
+        border-color: var(--hub-primary, #5a6fd8);
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .coach-welcome-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 1.5rem;
+        }
+
+        .coach-welcome-title {
+            font-size: 1.5rem;
+        }
+
+        .coach-message-text {
+            font-size: 1rem;
+        }
+    }
+</style>

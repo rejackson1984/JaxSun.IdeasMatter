@@ -1,80 +1,140 @@
 @page "/idea-input"
+@layout HubLayout
 @using Jackson.Ideas.Mock.Services.Interfaces
 @using Jackson.Ideas.Mock.Models
 @inject NavigationManager Navigation
+@inject IHubContextService HubContextService
+@inject ICoachPersonaService CoachPersonaService
+@inject IIdeaValidationService ValidationService
+@implements IDisposable
 
-<PageTitle>Share Your Idea - Ideas Matter</PageTitle>
+<PageTitle>Idea Development Hub - IdeaCoach Pro</PageTitle>
 
-<div class="idea-input-container">
-    <!-- Friendly Welcome Section -->
-    <div class="welcome-section">
-        <div class="welcome-content">
-            <div class="welcome-icon">💡</div>
-            <h1 class="welcome-title">Tell Us About Your Idea!</h1>
-            <p class="welcome-subtitle">
-                Just like you're talking to a friend - no pressure, no judgment. 
-                We're here to help you explore what's possible.
-            </p>
+<div class="coach-idea-input-container">
+    <!-- Coach Welcome Section -->
+    <div class="coach-welcome-section hub-idea-theme">
+        <div class="coach-welcome-content">
+            <div class="coach-avatar-large hub-idea-avatar">
+                <i class="@(_currentCoach?.Avatar ?? "fas fa-lightbulb")"></i>
+            </div>
+            <h1 class="coach-welcome-title">@GetWelcomeTitle()</h1>
+            <div class="coach-welcome-message">
+                <p class="coach-message-text">@GetWelcomeMessage()</p>
+                <div class="coach-credibility">
+                    <div class="credibility-item">
+                        <i class="fas fa-trophy"></i>
+                        <span>15,000+ Businesses Launched</span>
+                    </div>
+                    <div class="credibility-item">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span>$2.3B+ Revenue Generated</span>
+                    </div>
+                    <div class="credibility-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>94% Success Rate</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Conversational Form -->
-    <div class="conversation-form">
-        <div class="form-container">
-            <EditForm Model="@ideaInput" OnSubmit="@SubmitIdea">
-                <!-- Main Idea Input -->
-                <div class="input-group">
-                    <label class="friendly-label">
-                        <span class="label-icon">💭</span>
-                        <span class="label-text">What's your idea? Tell us like you're telling a friend!</span>
-                    </label>
-                    <div class="input-wrapper">
+    <!-- Coach-Guided Form -->
+    <div class="coach-conversation-form">
+        <div class="coach-form-container">
+            <div class="coach-form-header">
+                <h2 class="form-title">Let's Build Your Business Together 🚀</h2>
+                <p class="form-subtitle">Tell me about your idea - I'll guide you through everything step by step</p>
+            </div>
+            
+            <EditForm Model="@ideaInput" OnValidSubmit="@SubmitIdea">
+                <!-- Main Idea Input with Coach Guidance -->
+                <div class="coach-input-group">
+                    <div class="coach-question">
+                        <div class="coach-avatar-small">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="coach-question-content">
+                            <h3 class="question-title">What's your business idea?</h3>
+                            <p class="question-subtitle">
+                                Don't overthink it - just tell me what problem you want to solve or what you're passionate about. 
+                                I've seen million-dollar businesses start with "I wish there was an app for..."
+                            </p>
+                        </div>
+                    </div>
+                    <div class="coach-input-wrapper">
                         <textarea @bind="ideaInput.Description" 
-                                  class="friendly-textarea" 
-                                  placeholder="For example: I want to create an app that helps busy parents find healthy meal ideas their kids will actually eat. I'm tired of the dinner struggle every night!"
+                                  class="coach-textarea" 
+                                  placeholder="Example: I want to create an app that helps busy parents find healthy meal ideas their kids will actually eat. The dinner struggle is real and I know I'm not alone!"
                                   rows="4"></textarea>
-                        <div class="input-help">
-                            <span class="help-icon">✨</span>
-                            <span class="help-text">Don't worry about making it perfect - we'll help you refine it!</span>
+                        <div class="coach-input-help">
+                            <div class="help-avatar">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <span class="help-text">Pro tip: The best ideas solve problems you've personally experienced!</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Smart Prompts Section -->
-                <div class="smart-prompts">
-                    <h3 class="prompts-title">
-                        <span class="title-icon">🤔</span>
-                        Help us understand better:
-                    </h3>
+                <!-- Coach Discovery Questions -->
+                <div class="coach-discovery-section">
+                    <div class="discovery-header">
+                        <div class="coach-avatar-small">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div>
+                            <h3 class="discovery-title">Let's dig deeper together</h3>
+                            <p class="discovery-subtitle">These questions help me understand your vision better. Don't worry if you're not sure - we'll figure it out!</p>
+                        </div>
+                    </div>
                     
-                    <div class="prompt-group">
-                        <label class="prompt-label">
-                            <span class="prompt-icon">❓</span>
-                            What problem does this solve?
-                        </label>
-                        <input @bind="ideaInput.ProblemSolved" 
-                               class="prompt-input" 
-                               placeholder="e.g., Parents waste time and stress about meal planning" />
-                    </div>
+                    <div class="coach-questions-grid">
+                        <div class="coach-question-card">
+                            <div class="question-header">
+                                <div class="question-icon problem">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <h4 class="question-title">What problem are you solving?</h4>
+                            </div>
+                            <input @bind="ideaInput.ProblemSolved" 
+                                   class="coach-input" 
+                                   placeholder="e.g., Parents waste hours stressing about healthy meals their kids will eat" />
+                            <div class="coach-hint">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Great businesses solve painful problems people face daily</span>
+                            </div>
+                        </div>
 
-                    <div class="prompt-group">
-                        <label class="prompt-label">
-                            <span class="prompt-icon">👥</span>
-                            Who would buy this or use it?
-                        </label>
-                        <input @bind="ideaInput.TargetAudience" 
-                               class="prompt-input" 
-                               placeholder="e.g., Working parents with kids ages 3-12" />
-                    </div>
+                        <div class="coach-question-card">
+                            <div class="question-header">
+                                <div class="question-icon audience">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h4 class="question-title">Who's your ideal customer?</h4>
+                            </div>
+                            <input @bind="ideaInput.TargetAudience" 
+                                   class="coach-input" 
+                                   placeholder="e.g., Working parents with kids ages 3-12 who value healthy eating" />
+                            <div class="coach-hint">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Be specific! "Everyone" is no one's target market</span>
+                            </div>
+                        </div>
 
-                    <div class="prompt-group">
-                        <label class="prompt-label">
-                            <span class="prompt-icon">💰</span>
-                            How might this make money? (It's okay if you're not sure!)
-                        </label>
-                        <input @bind="ideaInput.RevenueModel" 
-                               class="prompt-input" 
-                               placeholder="e.g., Monthly subscription for meal plans or I'm not sure yet!" />
+                        <div class="coach-question-card">
+                            <div class="question-header">
+                                <div class="question-icon revenue">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <h4 class="question-title">How could this make money?</h4>
+                            </div>
+                            <input @bind="ideaInput.RevenueModel" 
+                                   class="coach-input" 
+                                   placeholder="e.g., $9.99/month subscription for meal plans, or honestly... I'm not sure yet!" />
+                            <div class="coach-hint">
+                                <i class="fas fa-info-circle"></i>
+                                <span>No pressure! We'll explore revenue models together</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -191,10 +251,55 @@
     private IdeaInputModel ideaInput = new();
     private string selectedStrategy = "";
     private bool showExamples = false;
+    private CoachPersona? _currentCoach;
+    private HubContext? _hubContext;
     
     private const string quickStrategy = "quick";
     private const string deepStrategy = "deep"; 
     private const string launchStrategy = "launch";
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadHubData();
+        
+        // Subscribe to hub context changes
+        HubContextService.ContextChanged += OnHubContextChanged;
+        
+        StateHasChanged();
+    }
+    
+    private async Task LoadHubData()
+    {
+        _hubContext = await HubContextService.GetCurrentContextAsync();
+        _currentCoach = await CoachPersonaService.GetCoachForHubAsync(BusinessHub.IdeaDevelopment);
+    }
+    
+    private void OnHubContextChanged(object? sender, HubContextChangedEventArgs e)
+    {
+        InvokeAsync(async () =>
+        {
+            await LoadHubData();
+            StateHasChanged();
+        });
+    }
+    
+    private string GetWelcomeTitle()
+    {
+        return _currentCoach?.Style switch
+        {
+            CoachingStyle.Enthusiastic => "Hey there, future entrepreneur! ⚡",
+            _ => "Welcome to Idea Development! 💡"
+        };
+    }
+    
+    private string GetWelcomeMessage()
+    {
+        if (_currentCoach == null) return "Let's turn your idea into something amazing!";
+        
+        return $"I'm <strong>{_currentCoach.Name}</strong>, {_currentCoach.Description}. " +
+               "I've helped thousands of entrepreneurs turn their wildest ideas into successful businesses. " +
+               "Ready to spark some innovation together?";
+    }
 
     private List<ExampleIdea> ideaExamples = new()
     {
@@ -257,12 +362,30 @@
         return !string.IsNullOrWhiteSpace(ideaInput.Description) && !string.IsNullOrEmpty(selectedStrategy);
     }
 
-    private void SubmitIdea()
+    private async Task SubmitIdea()
     {
         if (IsFormValid())
         {
-            // Navigate to progress page
-            Navigation.NavigateTo($"/progress?strategy={selectedStrategy}");
+            // Create validation request
+            var validationRequest = new IdeaValidationRequest
+            {
+                Description = ideaInput.Description,
+                ProblemSolved = ideaInput.ProblemSolved,
+                TargetAudience = ideaInput.TargetAudience,
+                RevenueModel = ideaInput.RevenueModel,
+                Strategy = selectedStrategy
+            };
+            
+            // Navigate to validation results - this will trigger the validation analysis
+            Navigation.NavigateTo("/idea-validation");
+        }
+    }
+    
+    public void Dispose()
+    {
+        if (HubContextService != null)
+        {
+            HubContextService.ContextChanged -= OnHubContextChanged;
         }
     }
 
@@ -283,12 +406,22 @@
 }
 
 <style>
-/* Idea Input Styling */
-.idea-input-container {
+/* Hub-Aware Idea Input Styling */
+.coach-idea-input-container {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-    background: #f8fafc;
+    background: var(--hub-background, #f8fafc);
     min-height: 100vh;
     padding: 0;
+}
+
+/* Hub Theme Overrides for Idea Development */
+.hub-idea-theme {
+    background: linear-gradient(135deg, var(--hub-primary, #7b8fef) 0%, var(--hub-secondary, #22d3ee) 100%);
+}
+
+.hub-idea-avatar {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 3px solid rgba(255, 255, 255, 0.3) !important;
 }
 
 /* Welcome Section */

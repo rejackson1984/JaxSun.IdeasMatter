@@ -1,0 +1,50 @@
+@using Jackson.Ideas.Mock.Models
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Routing
+@using System.Reflection
+@inherits ComponentBase
+
+@if (RouteData != null)
+{
+    <CascadingValue Value="CurrentHub" Name="CurrentHub">
+        <LayoutView Layout="@GetPageLayoutType()">
+            <DynamicComponent Type="@RouteData.PageType" Parameters="@GetRouteParameters()" />
+        </LayoutView>
+    </CascadingValue>
+}
+
+@code {
+    [Parameter] public RouteData? RouteData { get; set; }
+    [Parameter] public BusinessHub CurrentHub { get; set; }
+    [Parameter] public Type? DefaultLayout { get; set; }
+
+    private Type? GetPageLayoutType()
+    {
+        return RouteData?.PageType?.GetCustomAttribute<LayoutAttribute>()?.LayoutType ?? DefaultLayout;
+    }
+    
+    private Dictionary<string, object> GetRouteParameters()
+    {
+        if (RouteData?.RouteValues == null) return new Dictionary<string, object>();
+        
+        var parameters = new Dictionary<string, object>();
+        
+        // Copy route values safely
+        foreach (var kvp in RouteData.RouteValues)
+        {
+            if (kvp.Value != null)
+            {
+                parameters[kvp.Key] = kvp.Value;
+            }
+        }
+        
+        // Add hub context as a parameter if the page supports it
+        var hubContextProperty = RouteData.PageType?.GetProperty("HubContext");
+        if (hubContextProperty != null)
+        {
+            parameters["HubContext"] = new { CurrentHub = CurrentHub };
+        }
+        
+        return parameters;
+    }
+}

@@ -1,102 +1,168 @@
 @inject NavigationManager Navigation
 
-<!-- Professional Sidebar Header -->
-<div class="sidebar-header">
-    <div class="sidebar-brand">
-        <span class="brand-icon">💡</span>
+<!-- CoachMockSite Inspired Header -->
+<div class="coach-sidebar-header">
+    <div class="coach-brand">
+        <i class="fas fa-rocket brand-icon"></i>
         <div class="brand-text">
-            <span class="brand-name">Ideas</span>
-            <span class="brand-subtitle">Matter</span>
+            <span class="brand-name">IdeaCoach</span>
+            <span class="brand-subtitle">Pro</span>
         </div>
         <span class="demo-badge">DEMO</span>
     </div>
 </div>
 
-<!-- Navigation Menu -->
-<nav class="sidebar-nav">
-    <!-- Main Navigation -->
+<!-- Hub Selector -->
+<HubSelector />
+
+<!-- Journey-Based Navigation -->
+<nav class="coach-sidebar-nav">
+    <!-- Quick Access -->
     <div class="nav-section">
         <div class="nav-section-header">
-            <span class="section-title">MAIN</span>
+            <span class="section-title">QUICK ACCESS</span>
         </div>
         
         <NavLink class="nav-item" href="/" Match="NavLinkMatch.All">
-            <div class="nav-icon">🏠</div>
+            <i class="fas fa-home nav-icon"></i>
             <span class="nav-text">Home</span>
         </NavLink>
         
         <NavLink class="nav-item" href="/dashboard">
-            <div class="nav-icon">📊</div>
+            <i class="fas fa-tachometer-alt nav-icon"></i>
             <span class="nav-text">Dashboard</span>
         </NavLink>
         
         <NavLink class="nav-item" href="/idea-input">
-            <div class="nav-icon">💭</div>
-            <span class="nav-text">Share Your Idea</span>
-        </NavLink>
-        
-        <NavLink class="nav-item" href="/scenarios">
-            <div class="nav-icon">💡</div>
-            <span class="nav-text">Business Ideas</span>
-        </NavLink>
-        
-        <NavLink class="nav-item" href="/login">
-            <div class="nav-icon">🔑</div>
-            <span class="nav-text">Login</span>
+            <i class="fas fa-lightbulb nav-icon"></i>
+            <span class="nav-text">New Idea</span>
+            <span class="nav-badge coaching">Start Here!</span>
         </NavLink>
     </div>
 
-    <!-- Mock Features -->
+    <!-- Business Journey -->
     <div class="nav-section">
         <div class="nav-section-header">
-            <span class="section-title">FEATURES</span>
+            <span class="section-title">YOUR JOURNEY</span>
+            <div class="journey-progress">
+                <div class="progress-indicator">
+                    <div class="progress-bar" style="width: 32%"></div>
+                </div>
+                <span class="progress-text">32% Complete</span>
+            </div>
         </div>
         
-        <NavLink class="nav-item" href="/market-research">
-            <div class="nav-icon">📈</div>
-            <span class="nav-text">Market Research</span>
+        <NavLink class="nav-item journey-phase completed" href="/market-research">
+            <i class="fas fa-search nav-icon"></i>
+            <span class="nav-text">Research & Validation</span>
+            <div class="phase-status">
+                <i class="fas fa-check-circle status-icon"></i>
+                <span class="status-text">100%</span>
+            </div>
         </NavLink>
         
-        <NavLink class="nav-item" href="/financial-projections">
-            <div class="nav-icon">💰</div>
-            <span class="nav-text">Financial Projections</span>
+        <NavLink class="nav-item journey-phase active" href="/financial-projections">
+            <i class="fas fa-clipboard-list nav-icon"></i>
+            <span class="nav-text">Strategic Planning</span>
+            <div class="phase-status">
+                <div class="progress-ring">
+                    <div class="ring-fill" style="transform: rotate(234deg)"></div>
+                </div>
+                <span class="status-text">65%</span>
+            </div>
+        </NavLink>
+        
+        <NavLink class="nav-item journey-phase upcoming" href="/design">
+            <i class="fas fa-palette nav-icon"></i>
+            <span class="nav-text">Design & Prototyping</span>
+            <div class="phase-status">
+                <i class="fas fa-lock status-icon"></i>
+                <span class="status-text">Locked</span>
+            </div>
+        </NavLink>
+        
+        <NavLink class="nav-item journey-phase upcoming" href="/development">
+            <i class="fas fa-code nav-icon"></i>
+            <span class="nav-text">Development</span>
+            <div class="phase-status">
+                <i class="fas fa-lock status-icon"></i>
+                <span class="status-text">Locked</span>
+            </div>
+        </NavLink>
+        
+        <NavLink class="nav-item journey-phase upcoming" href="/launch">
+            <i class="fas fa-rocket nav-icon"></i>
+            <span class="nav-text">Launch & Marketing</span>
+            <div class="phase-status">
+                <i class="fas fa-lock status-icon"></i>
+                <span class="status-text">Locked</span>
+            </div>
+        </NavLink>
+        
+        <NavLink class="nav-item journey-phase upcoming" href="/operations">
+            <i class="fas fa-chart-line nav-icon"></i>
+            <span class="nav-text">Scale & Operations</span>
+            <div class="phase-status">
+                <i class="fas fa-lock status-icon"></i>
+                <span class="status-text">Locked</span>
+            </div>
+        </NavLink>
+    </div>
+
+    <!-- Tools & Resources -->
+    <div class="nav-section">
+        <div class="nav-section-header">
+            <span class="section-title">TOOLS & RESOURCES</span>
+        </div>
+        
+        <NavLink class="nav-item" href="/scenarios">
+            <i class="fas fa-folder-open nav-icon"></i>
+            <span class="nav-text">All Business Ideas</span>
         </NavLink>
         
         <NavLink class="nav-item" href="/user-profile">
-            <div class="nav-icon">👤</div>
-            <span class="nav-text">User Profile</span>
+            <i class="fas fa-user nav-icon"></i>
+            <span class="nav-text">Profile & Settings</span>
+        </NavLink>
+        
+        <NavLink class="nav-item" href="/login">
+            <i class="fas fa-sign-in-alt nav-icon"></i>
+            <span class="nav-text">Sign In</span>
         </NavLink>
     </div>
 </nav>
 
+<!-- AI Coach Quick Access -->
+<div class="coach-quick-access">
+    <div class="coach-widget-mini">
+        <div class="coach-avatar-mini">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="coach-content-mini">
+            <h4>Coach Alex</h4>
+            <p class="coach-status-mini">
+                <span class="status-dot online"></span>
+                Ready to help
+            </p>
+            <p class="coach-tip">"Ready to work on your financial projections?"</p>
+        </div>
+    </div>
+    <button class="btn-coach-mini">
+        <i class="fas fa-comments"></i>
+        Ask Coach
+    </button>
+</div>
+
 <!-- Demo Environment Notice -->
-<div class="sidebar-footer">
-    <div class="demo-notice">
-        <div class="notice-icon">ℹ️</div>
+<div class="coach-sidebar-footer">
+    <div class="demo-notice-coach">
+        <div class="notice-icon">
+            <i class="fas fa-flask"></i>
+        </div>
         <div class="notice-content">
-            <div class="notice-title">Demo Environment</div>
-            <div class="notice-text">All data is simulated for testing purposes.</div>
+            <div class="notice-title">Demo Mode</div>
+            <div class="notice-text">Experience the full IdeaCoach Pro platform</div>
         </div>
     </div>
 </div>
 
-<style>
-/* Force horizontal layout for nav items */
-.nav-item {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-}
-
-.nav-item .nav-icon {
-    order: 1;
-    margin-right: 12px;
-    display: block;
-}
-
-.nav-item .nav-text {
-    order: 2;
-    display: block;
-}
-</style>

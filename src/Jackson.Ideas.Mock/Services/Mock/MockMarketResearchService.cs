@@ -1,5 +1,5 @@
 using Jackson.Ideas.Mock.Models;
-using Jackson.Ideas.Mock.Services.Interfaces;
+using IMarketResearchService = Jackson.Ideas.Mock.Services.Interfaces.IMarketResearchService;
 
 namespace Jackson.Ideas.Mock.Services.Mock;
 
@@ -30,11 +30,11 @@ public class MockMarketResearchService : IMarketResearchService
         return _marketResearchData.FirstOrDefault(m => m.Industry.Equals(industry, StringComparison.OrdinalIgnoreCase));
     }
 
-    public async Task<List<Competitor>> GetCompetitorsAsync(string industry)
+    public async Task<List<Models.Competitor>> GetCompetitorsAsync(string industry)
     {
         await Task.Delay(100);
         var marketData = _marketResearchData.FirstOrDefault(m => m.Industry.Equals(industry, StringComparison.OrdinalIgnoreCase));
-        return marketData?.Competition.DirectCompetitors ?? new List<Competitor>();
+        return marketData?.Competition.DirectCompetitors ?? new List<Models.Competitor>();
     }
 
     public async Task<MarketTrends> GetMarketTrendsAsync(string industry)

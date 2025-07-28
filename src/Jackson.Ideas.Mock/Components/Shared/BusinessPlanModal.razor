@@ -178,7 +178,7 @@
                                         </div>
                                         <div class="timeline-content">
                                             <div class="timeline-header">
-                                                <h4 class="timeline-title">@milestone.Title</h4>
+                                                <h4 class="timeline-title">@milestone.Name</h4>
                                                 <span class="timeline-date">@milestone.Timeline</span>
                                             </div>
                                             <p class="timeline-description">@milestone.Description</p>
@@ -260,7 +260,7 @@
     [Parameter] public BusinessIdeaScenario? SelectedIdea { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
 
-    private BusinessPlan? BusinessPlan { get; set; }
+    private Services.BusinessPlan? BusinessPlan { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {

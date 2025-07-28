@@ -99,7 +99,7 @@
                                             @foreach (var option in currentQuestion.Options)
                                             {
                                                 <button class="btn @(currentAnswer == option ? "btn-primary" : "btn-outline-primary") boolean-btn"
-                                                        @onclick="@(() => currentAnswer = option)">
+                                                        onclick="@(() => currentAnswer = option)">
                                                     @option
                                                 </button>
                                             }

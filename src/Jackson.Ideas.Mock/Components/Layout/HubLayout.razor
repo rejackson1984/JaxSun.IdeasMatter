@@ -1,0 +1,250 @@
+@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components
+@inject IHubContextService HubContextService
+@inject IHubConfigurationService HubConfigurationService
+@inject ICoachPersonaService CoachPersonaService
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<!-- Hub-Aware Layout with Dynamic Theming -->
+<div class="hub-layout @GetHubThemeClass()">
+    <!-- Top Navigation Bar -->
+    <TopNavBar />
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="mobile-sidebar-overlay" id="mobile-overlay" @onclick="CloseMobileSidebar"></div>
+
+    <!-- Hub Sidebar Navigation -->
+    <aside class="hub-sidebar" id="hub-sidebar">
+        <HubNavMenu />
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="hub-main-content">
+        <div class="hub-content-wrapper">
+            @ChildContent
+        </div>
+    </main>
+</div>
+
+<script>
+    window.toggleMobileSidebar = function() {
+        const sidebar = document.getElementById('hub-sidebar');
+        const overlay = document.getElementById('mobile-overlay');
+        
+        if (sidebar && overlay) {
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('show');
+        }
+    };
+
+    window.closeMobileSidebar = function() {
+        const sidebar = document.getElementById('hub-sidebar');
+        const overlay = document.getElementById('mobile-overlay');
+        
+        if (sidebar && overlay) {
+            sidebar.classList.remove('mobile-open');
+            overlay.classList.remove('show');
+        }
+    };
+</script>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; } = default!;
+    
+    private HubContext? _currentContext;
+    private HubMetadata? _currentHubMetadata;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _currentContext = await HubContextService.GetCurrentContextAsync();
+        _currentHubMetadata = await HubConfigurationService.GetHubMetadataAsync(_currentContext.CurrentHub);
+        
+        // Subscribe to hub context changes
+        HubContextService.ContextChanged += OnHubContextChanged;
+        
+        StateHasChanged();
+    }
+    
+    private void OnHubContextChanged(object? sender, HubContextChangedEventArgs e)
+    {
+        InvokeAsync(async () =>
+        {
+            _currentContext = e.Context;
+            _currentHubMetadata = await HubConfigurationService.GetHubMetadataAsync(e.CurrentHub);
+            StateHasChanged();
+        });
+    }
+    
+    private string GetHubThemeClass()
+    {
+        if (_currentContext == null) return "hub-theme-default";
+        
+        return _currentContext.CurrentHub switch
+        {
+            BusinessHub.IdeaDevelopment => "hub-theme-idea-development",
+            BusinessHub.BusinessPlanning => "hub-theme-business-planning", 
+            BusinessHub.BusinessOperations => "hub-theme-business-operations",
+            _ => "hub-theme-default"
+        };
+    }
+
+    private async Task CloseMobileSidebar()
+    {
+        // Close mobile sidebar when overlay is clicked
+        await JSRuntime.InvokeVoidAsync("closeMobileSidebar");
+    }
+    
+    public void Dispose()
+    {
+        if (HubContextService != null)
+        {
+            HubContextService.ContextChanged -= OnHubContextChanged;
+        }
+    }
+}
+
+<style>
+    /* Hub Layout Base Styles */
+    .hub-layout {
+        display: flex;
+        min-height: 100vh;
+        background: #f8fafc;
+        transition: all 0.3s ease;
+    }
+
+    /* Hub Sidebar */
+    .hub-sidebar {
+        width: 280px;
+        background: white;
+        border-right: 1px solid #e2e8f0;
+        position: fixed;
+        left: 0;
+        top: 70px; /* Start below top navigation */
+        bottom: 0;
+        overflow-y: auto;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+    }
+
+    /* Main Content */
+    .hub-main-content {
+        flex: 1;
+        margin-left: 280px;
+        margin-top: 70px; /* Account for top navigation height */
+        background: transparent;
+        min-height: calc(100vh - 70px);
+        transition: all 0.3s ease;
+    }
+
+    .hub-content-wrapper {
+        padding: 2rem;
+        max-width: none;
+        margin: 0;
+        background: transparent;
+    }
+
+    /* Hub Theme: Idea Development (Bright & Encouraging) */
+    .hub-theme-idea-development {
+        --hub-primary: #7b8fef;
+        --hub-secondary: #22d3ee;
+        --hub-gradient: linear-gradient(135deg, #7b8fef 0%, #22d3ee 100%);
+        --hub-accent: #10b981;
+        --hub-text: #1a202c;
+        --hub-background: #f7fafc;
+    }
+
+    .hub-theme-idea-development .hub-sidebar {
+        border-right-color: #e2e8f0;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .hub-theme-idea-development .hub-layout {
+        background: linear-gradient(135deg, #f8fbff 0%, #f0f8ff 100%);
+    }
+
+    /* Hub Theme: Business Planning (Professional & Structured) */
+    .hub-theme-business-planning {
+        --hub-primary: #5a6fd8;
+        --hub-secondary: #3b82f6;
+        --hub-gradient: linear-gradient(135deg, #5a6fd8 0%, #3b82f6 100%);
+        --hub-accent: #f59e0b;
+        --hub-text: #1e293b;
+        --hub-background: #f8fafc;
+    }
+
+    .hub-theme-business-planning .hub-sidebar {
+        border-right-color: #e2e8f0;
+        background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
+    }
+
+    .hub-theme-business-planning .hub-layout {
+        background: linear-gradient(135deg, #fafbfc 0%, #f1f5f9 100%);
+    }
+
+    /* Hub Theme: Business Operations (Executive & Results-Driven) */
+    .hub-theme-business-operations {
+        --hub-primary: #4c5fd7;
+        --hub-secondary: #059669;
+        --hub-gradient: linear-gradient(135deg, #4c5fd7 0%, #059669 100%);
+        --hub-accent: #d97706;
+        --hub-text: #111827;
+        --hub-background: #f9fafb;
+    }
+
+    .hub-theme-business-operations .hub-sidebar {
+        border-right-color: #e5e7eb;
+        background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+    }
+
+    .hub-theme-business-operations .hub-layout {
+        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    }
+
+    /* Mobile Sidebar Overlay */
+    .mobile-sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 150;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 1024px) {
+        .hub-sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 200;
+        }
+
+        .hub-sidebar.mobile-open {
+            transform: translateX(0);
+        }
+
+        .mobile-sidebar-overlay.show {
+            display: block;
+        }
+
+        .hub-main-content {
+            margin-left: 0;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .hub-main-content {
+            margin-top: 70px; /* Keep consistent with top nav height */
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .hub-content-wrapper {
+            padding: 1rem;
+        }
+    }
+</style>

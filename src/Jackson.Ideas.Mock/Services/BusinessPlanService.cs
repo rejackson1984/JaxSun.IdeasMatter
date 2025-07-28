@@ -283,7 +283,7 @@ public class BusinessPlanService
         // Phase 1: Foundation (Months 1-3)
         milestones.Add(new Milestone
         {
-            Title = "Business Foundation & Setup",
+            Name = "Business Foundation & Setup",
             Timeline = "Months 1-3",
             Description = "Establish legal structure, secure initial funding, and set up core operations",
             Tasks = new List<string>
@@ -298,7 +298,7 @@ public class BusinessPlanService
         // Phase 2: Product/Service Development (Months 2-6)
         milestones.Add(new Milestone
         {
-            Title = "Product/Service Development",
+            Name = "Product/Service Development",
             Timeline = "Months 2-6",
             Description = "Develop minimum viable product and conduct initial testing",
             Tasks = GetDevelopmentTasks(scenario.Industry)
@@ -307,7 +307,7 @@ public class BusinessPlanService
         // Phase 3: Market Entry (Months 4-9)
         milestones.Add(new Milestone
         {
-            Title = "Market Entry & Customer Acquisition",
+            Name = "Market Entry & Customer Acquisition",
             Timeline = "Months 4-9",
             Description = "Launch marketing campaigns and acquire first customers",
             Tasks = new List<string>
@@ -322,7 +322,7 @@ public class BusinessPlanService
         // Phase 4: Scale & Optimize (Months 6-12)
         milestones.Add(new Milestone
         {
-            Title = "Scale Operations & Optimize",
+            Name = "Scale Operations & Optimize",
             Timeline = "Months 6-12",
             Description = "Scale operations, optimize processes, and expand market reach",
             Tasks = new List<string>
@@ -554,6 +554,12 @@ public class BusinessPlan
 public class ExecutiveSummary
 {
     public string BusinessConcept { get; set; } = "";
+    public string MissionStatement { get; set; } = "";
+    public string VisionStatement { get; set; } = "";
+    public string ValueProposition { get; set; } = "";
+    public string KeySuccessFactors { get; set; } = "";
+    public string FundingRequirements { get; set; } = "";
+    public string ExpectedReturns { get; set; } = "";
     public string TargetMarket { get; set; } = "";
     public string RevenueModel { get; set; } = "";
     public decimal FundingRequired { get; set; }
@@ -562,6 +568,12 @@ public class ExecutiveSummary
 
 public class MarketAnalysis
 {
+    public string TargetMarket { get; set; } = "";
+    public string MarketTrends { get; set; } = "";
+    public string CompetitiveAnalysis { get; set; } = "";
+    public string MarketOpportunity { get; set; } = "";
+    public List<CustomerSegment> CustomerSegements { get; set; } = new List<CustomerSegment>();
+    public string IndustryOverview { get; set; } = "";
     public string MarketSize { get; set; } = "";
     public string CompetitionLevel { get; set; } = "";
     public string MarketGrowth { get; set; } = "";
@@ -593,7 +605,10 @@ public class ImplementationPlan
 
 public class Milestone
 {
-    public string Title { get; set; } = "";
+    public string Name { get; set; } = "";
+    public string Criteria { get; set; } = "";
+    public string Status { get; set; } = "";
+    public DateTime TargetDate { get; set; } = DateTime.Now; 
     public string Timeline { get; set; } = "";
     public string Description { get; set; } = "";
     public List<string> Tasks { get; set; } = new();
