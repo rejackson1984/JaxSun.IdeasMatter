@@ -25,8 +25,8 @@ public class DashboardComponentTests : TestContext
         Services.AddScoped(_ => _mockExportService.Object);
         Services.AddScoped<BusinessTranslationService>();
         
-        // Add required navigation service
-        Services.AddSingleton(Mock.Of<NavigationManager>());
+        // Add required navigation service  
+        Services.AddSingleton(Moq.Mock.Of<NavigationManager>());
     }
 
     [Fact]
@@ -188,7 +188,7 @@ public class DashboardComponentTests : TestContext
         {
             // Each action card should have a click handler or be clickable
             var hasOnClick = card.HasAttribute("onclick") || 
-                           card.GetClasses().Any(c => c.Contains("clickable")) ||
+                           card.ClassList.Any(c => c.Contains("clickable")) ||
                            card.TagName.ToLower() == "button";
             
             // Note: In bUnit, Blazor @onclick attributes might not be directly visible

@@ -137,10 +137,25 @@ public class DataExportServiceTests
     public void ExportScenarioToCsv_ShouldHandleSpecialCharacters()
     {
         // Arrange
-        var specialScenario = _testScenario with 
-        { 
+        var specialScenario = new BusinessIdeaScenario
+        {
+            Id = _testScenario.Id,
+            Name = _testScenario.Name,
             Title = "Business with \"Quotes\" and, Commas",
-            Description = "Description with special chars: @#$%^&*()"
+            Description = "Description with special chars: @#$%^&*()",
+            Industry = _testScenario.Industry,
+            TargetMarket = _testScenario.TargetMarket,
+            EstimatedStartupCost = _testScenario.EstimatedStartupCost,
+            StartupCost = _testScenario.StartupCost,
+            ProjectedRevenue = _testScenario.ProjectedRevenue,
+            ViabilityScore = _testScenario.ViabilityScore,
+            MarketSize = _testScenario.MarketSize,
+            CompetitionLevel = _testScenario.CompetitionLevel,
+            MarketResearch = _testScenario.MarketResearch,
+            FinancialProjections = _testScenario.FinancialProjections,
+            KeyChallenges = _testScenario.KeyChallenges,
+            SuccessFactors = _testScenario.SuccessFactors,
+            CreatedAt = _testScenario.CreatedAt
         };
 
         // Act

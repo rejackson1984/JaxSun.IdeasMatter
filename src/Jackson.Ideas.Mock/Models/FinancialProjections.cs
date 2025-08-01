@@ -126,16 +126,6 @@ public class FinancialMetrics
     public decimal RunwayMonths { get; set; }
 }
 
-public class FundingRequirements
-{
-    public decimal TotalFundingNeeded { get; set; }
-    public List<FundingRound> Rounds { get; set; } = new();
-    public string FundingStrategy { get; set; } = "";
-    public List<string> PotentialInvestors { get; set; } = new();
-    public string UseOfFunds { get; set; } = "";
-    public string ExitStrategy { get; set; } = "";
-}
-
 public class FundingRound
 {
     public string Name { get; set; } = "";
@@ -144,4 +134,25 @@ public class FundingRound
     public string Timing { get; set; } = "";
     public string Purpose { get; set; } = "";
     public decimal ValuationEstimate { get; set; }
+}
+
+public class FundingRequirements
+{
+    public decimal TotalRequired { get; set; }
+    public decimal CurrentlyRaised { get; set; }
+    public List<FundingRound> Rounds { get; set; } = new();
+    public List<string> PotentialInvestors { get; set; } = new();
+    public string FundingStrategy { get; set; } = "";
+    public string UseOfFunds { get; set; } = "";
+    public DateTime FundingTimeline { get; set; }
+    public decimal TotalFundingNeeded { get; set; }
+    public decimal StartupCosts { get; set; }
+    public decimal WorkingCapital { get; set; }
+    public decimal GrowthCapital { get; set; }
+    public List<FundingOption> RecommendedOptions { get; set; } = new();
+    public List<string> FundingMilestones { get; set; } = new();
+    public string InvestorTargeting { get; set; } = string.Empty;
+    public decimal EquityDilution { get; set; }
+    public string ExitStrategy { get; set; } = string.Empty;
+
 }

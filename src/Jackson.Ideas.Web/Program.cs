@@ -8,6 +8,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor(options =>
 {
     options.DetailedErrors = builder.Environment.IsDevelopment();
+    options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(3);
 });
 
 // Add HTTP Context Accessor
@@ -16,8 +17,18 @@ builder.Services.AddHttpContextAccessor();
 // Add HTTP Client
 builder.Services.AddHttpClient();
 
+// Add required Blazor services
+builder.Services.AddCascadingAuthenticationState();
+
 // Add Authentication Services
-builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
+if (builder.Configuration.GetValue<bool>("UseMockAuthentication", true))
+{
+    builder.Services.AddScoped<AuthenticationStateProvider, MockAuthenticationStateProvider>();
+}
+else
+{
+    builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
+}
 
 // Register NavigationState service
 builder.Services.AddScoped<Jackson.Ideas.Web.Services.NavigationState>();
@@ -37,6 +48,15 @@ else
 }
 
 var app = builder.Build();
+
+// Configure the HTTP request pipeline
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
 
 // Configure static files
 app.UseStaticFiles();

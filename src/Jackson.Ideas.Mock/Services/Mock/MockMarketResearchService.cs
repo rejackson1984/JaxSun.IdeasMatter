@@ -86,8 +86,8 @@ public class MockMarketResearchService : IMarketResearchService
                         {
                             Name = "DoorDash",
                             MarketShare = "35%",
-                            Strengths = "Largest network, fast delivery",
-                            Weaknesses = "Limited sustainability focus",
+                            Strengths = new List<string> { "Largest network", "fast delivery" },
+                            Weaknesses = new List<string> { "Limited sustainability focus" },
                             PricingStrategy = "Competitive with promotions",
                             DifferentiationFactor = "Speed and convenience"
                         },
@@ -95,8 +95,8 @@ public class MockMarketResearchService : IMarketResearchService
                         {
                             Name = "Uber Eats",
                             MarketShare = "28%",
-                            Strengths = "Strong brand, technology",
-                            Weaknesses = "High fees, environmental impact",
+                            Strengths = new List<string> { "Strong brand", "technology" },
+                            Weaknesses = new List<string> { "High fees", "environmental impact" },
                             PricingStrategy = "Premium pricing",
                             DifferentiationFactor = "Uber ecosystem integration"
                         }
@@ -107,8 +107,8 @@ public class MockMarketResearchService : IMarketResearchService
                         {
                             Name = "Local Pickup Services",
                             MarketShare = "5%",
-                            Strengths = "Personal relationships, lower costs",
-                            Weaknesses = "Limited scale, technology gaps",
+                            Strengths = new List<string> { "Personal relationships", "lower costs" },
+                            Weaknesses = new List<string> { "Limited scale", "technology gaps" },
                             PricingStrategy = "Low-cost",
                             DifferentiationFactor = "Community connection"
                         }
@@ -247,8 +247,8 @@ public class MockMarketResearchService : IMarketResearchService
                         {
                             Name = "Khan Academy",
                             MarketShare = "25%",
-                            Strengths = "Free content, established brand",
-                            Weaknesses = "Limited personalization, no real-time tutoring",
+                            Strengths = new List<string> { "Free content", "established brand" },
+                            Weaknesses = new List<string> { "Limited personalization", "no real-time tutoring" },
                             PricingStrategy = "Freemium model",
                             DifferentiationFactor = "Comprehensive curriculum coverage"
                         },
@@ -256,8 +256,8 @@ public class MockMarketResearchService : IMarketResearchService
                         {
                             Name = "Duolingo",
                             MarketShare = "20%",
-                            Strengths = "Gamification, habit formation",
-                            Weaknesses = "Limited to language learning",
+                            Strengths = new List<string> { "Gamification", "Habit formation" },
+                            Weaknesses = new List<string> { "Limited to language learning" },
                             PricingStrategy = "Freemium with premium subscriptions",
                             DifferentiationFactor = "Gamified learning experience"
                         }
@@ -268,8 +268,8 @@ public class MockMarketResearchService : IMarketResearchService
                         {
                             Name = "Traditional Tutoring",
                             MarketShare = "15%",
-                            Strengths = "Personal connection, customized approach",
-                            Weaknesses = "Expensive, scheduling challenges",
+                            Strengths = new List<string> { "Personal connection", "Customized approach" },
+                            Weaknesses = new List<string> { "Expensive", "Scheduling challenges" },
                             PricingStrategy = "Premium hourly rates ($50-100+)",
                             DifferentiationFactor = "Human interaction and expertise"
                         }
@@ -408,8 +408,8 @@ public class MockMarketResearchService : IMarketResearchService
                         {
                             Name = "Beat Saber Fitness",
                             MarketShare = "15%",
-                            Strengths = "Popular game mechanics, strong community",
-                            Weaknesses = "Limited exercise variety, not fitness-focused",
+                            Strengths = new List<string> { "Popular game mechanics", "Strong community" },
+                            Weaknesses = new List<string> { "Limited exercise variety", "Not fitness-focused" },
                             PricingStrategy = "One-time purchase model",
                             DifferentiationFactor = "Rhythm-based gaming experience"
                         },
@@ -417,8 +417,8 @@ public class MockMarketResearchService : IMarketResearchService
                         {
                             Name = "Supernatural",
                             MarketShare = "12%",
-                            Strengths = "High-quality workouts, scenic environments",
-                            Weaknesses = "Requires Oculus platform, subscription model",
+                            Strengths = new List<string> { "High-quality workouts", "Scenic environments" },
+                            Weaknesses = new List<string> { "Requires Oculus platform", "Subscription model" },
                             PricingStrategy = "Monthly subscription $19/month",
                             DifferentiationFactor = "Premium workout experiences"
                         }
@@ -429,8 +429,8 @@ public class MockMarketResearchService : IMarketResearchService
                         {
                             Name = "Peloton",
                             MarketShare = "8%",
-                            Strengths = "Strong brand, community features",
-                            Weaknesses = "Expensive hardware, limited exercise types",
+                            Strengths = new List<string> { "Strong brand", "Community features" },
+                            Weaknesses = new List<string> { "Expensive hardware", "Limited exercise types" },
                             PricingStrategy = "Hardware + subscription model",
                             DifferentiationFactor = "Live instructor-led classes"
                         }

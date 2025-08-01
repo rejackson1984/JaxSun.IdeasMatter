@@ -413,6 +413,22 @@ namespace Jackson.Ideas.Mock.Services.Interfaces
         public List<string> Dependencies { get; set; } = new();
     }
     
+    public class DevelopmentMilestone
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public DateTime TargetDate { get; set; }
+        public DateTime? CompletedDate { get; set; }
+        public string Status { get; set; } = string.Empty; // Pending, InProgress, Completed, Delayed
+        public string Priority { get; set; } = string.Empty; // Critical, High, Medium, Low
+        public string Criteria { get; set; } = string.Empty;
+        public List<string> Deliverables { get; set; } = new();
+        public List<string> Dependencies { get; set; } = new();
+        public string AssignedTo { get; set; } = string.Empty;
+        public int PercentComplete { get; set; } = 0;
+    }
+    
     public class SolutionTemplate
     {
         public string Id { get; set; } = string.Empty;

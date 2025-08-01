@@ -1,4 +1,5 @@
 @page "/dashboard"
+@page "/app/dashboard"
 @layout HubLayout
 @inject IHubContextService HubContextService
 @inject IJSRuntime JSRuntime
@@ -12,6 +13,7 @@
         <div class="loading-spinner"></div>
         <h2>Loading Dashboard...</h2>
         <p>@_statusMessage</p>
+        <p><strong>Debug:</strong> Loading = @_isLoading, Error = @_hasError</p>
     </div>
 }
 else if (_hasError)
@@ -27,22 +29,32 @@ else if (_hasError)
 else if (_currentContext == null)
 {
     <div class="fallback-container">
-        <h2>Dashboard Unavailable</h2>
-        <p>Unable to load hub context. Showing fallback content.</p>
-        @RenderFallbackDashboard()
+        <h2>Loading Fallback Dashboard</h2>
+        <p>Unable to load hub context from service. Using default Idea Development Hub.</p>
+        <p><strong>Debug:</strong> Context is NULL, showing IdeaDevelopmentDashboard directly</p>
+        <div class="fallback-dashboard-wrapper">
+            <IdeaDevelopmentDashboard />
+        </div>
     </div>
 }
 else
 {
+    <div class="debug-info" style="background: yellow; padding: 10px; margin: 10px;">
+        <strong>DEBUG INFO:</strong> Current Hub = @_currentContext.CurrentHub (@((int)_currentContext.CurrentHub))
+    </div>
+    
     @switch (_currentContext.CurrentHub)
     {
         case BusinessHub.IdeaDevelopment:
+            <div class="hub-debug">Loading IdeaDevelopmentDashboard...</div>
             <IdeaDevelopmentDashboard />
             break;
         case BusinessHub.BusinessPlanning:
+            <div class="hub-debug">Loading BusinessPlanningDashboard...</div>
             <BusinessPlanningDashboard />
             break;
         case BusinessHub.BusinessOperations:
+            <div class="hub-debug">Loading BusinessOperationsDashboard...</div>
             <BusinessOperationsDashboard />
             break;
         default:
@@ -74,18 +86,25 @@ else
             _statusMessage = "Loading hub context...";
             StateHasChanged();
             
-            // Load current context with timeout
+            // Load current context with longer timeout and better error handling
             var contextTask = HubContextService.GetCurrentContextAsync();
-            var timeoutTask = Task.Delay(5000); // 5 second timeout
+            var timeoutTask = Task.Delay(10000); // Increased to 10 second timeout
             
             var completedTask = await Task.WhenAny(contextTask, timeoutTask);
             if (completedTask == timeoutTask)
             {
-                throw new TimeoutException("Hub context loading timed out");
+                throw new TimeoutException("Hub context loading timed out after 10 seconds");
             }
             
             _currentContext = await contextTask;
-            _statusMessage = $"Hub context loaded: {_currentContext?.CurrentHub}";
+            
+            // Additional validation
+            if (_currentContext == null)
+            {
+                throw new InvalidOperationException("Hub context service returned null context");
+            }
+            
+            _statusMessage = $"Hub context loaded: {_currentContext.CurrentHub}";
             _isLoading = false;
             StateHasChanged();
         }
@@ -94,6 +113,15 @@ else
             _hasError = true;
             _errorMessage = $"Failed to initialize dashboard: {ex.Message}";
             _isLoading = false;
+            
+            // Add console logging for debugging
+            Console.WriteLine($"Dashboard initialization error: {ex.Message}");
+            Console.WriteLine($"Exception type: {ex.GetType().Name}");
+            if (ex.InnerException != null)
+            {
+                Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+            }
+            
             StateHasChanged();
         }
     }

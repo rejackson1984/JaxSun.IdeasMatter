@@ -210,26 +210,30 @@ public class MockFinancialProjectionService : IFinancialProjectionService
                     FundingStrategy = "Seed round followed by Series A for expansion",
                     UseOfFunds = "40% technology development, 35% marketing, 15% operations, 10% working capital",
                     ExitStrategy = "Strategic acquisition by major food delivery company or IPO after 7-10 years",
-                    PotentialInvestors = new List<string> { "Sustainability-focused VCs", "Food tech investors", "Impact investors" },
-                    Rounds = new List<FundingRound>
+                    InvestorTargeting = "Sustainability-focused VCs, Food tech investors, Impact investors",
+                    RecommendedOptions = new List<FundingOption>
                     {
-                        new FundingRound
+                        new FundingOption
                         {
                             Name = "Seed Round",
-                            Amount = 500000,
+                            RecommendedAmount = 500000,
                             Stage = "Seed",
-                            Timing = "Month 6",
-                            Purpose = "Platform development and initial market validation",
-                            ValuationEstimate = 2500000
+                            Timeline = "Month 6",
+                            Description = "Platform development and initial market validation",
+                            Type = "Equity",
+                            MinAmount = 400000,
+                            MaxAmount = 600000
                         },
-                        new FundingRound
+                        new FundingOption
                         {
                             Name = "Series A",
-                            Amount = 2500000,
+                            RecommendedAmount = 2500000,
                             Stage = "Series A",
-                            Timing = "Month 18",
-                            Purpose = "Market expansion and team growth",
-                            ValuationEstimate = 12500000
+                            Timeline = "Month 18",
+                            Description = "Market expansion and team growth",
+                            Type = "Equity",
+                            MinAmount = 2000000,
+                            MaxAmount = 3000000
                         }
                     }
                 }
@@ -341,15 +345,18 @@ public class MockFinancialProjectionService : IFinancialProjectionService
                 {
                     TotalFundingNeeded = 1200000,
                     FundingStrategy = "Angel round followed by VC funding for growth",
-                    Rounds = new List<FundingRound>
+                    RecommendedOptions = new List<FundingOption>
                     {
-                        new FundingRound
+                        new FundingOption
                         {
                             Name = "Angel Round",
-                            Amount = 500000,
+                            RecommendedAmount = 500000,
                             Stage = "Angel",
-                            Timing = "Month 3",
-                            Purpose = "AI development and initial product launch"
+                            Timeline = "Month 3",
+                            Description = "AI development and initial product launch",
+                            Type = "Equity",
+                            MinAmount = 400000,
+                            MaxAmount = 600000
                         }
                     }
                 }

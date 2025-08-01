@@ -57,24 +57,61 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Subscribe to hub context changes
-        HubContextService.ContextChanged += OnHubContextChanged;
-        
-        // Initialize current context
-        _hubContext = await HubContextService.GetCurrentContextAsync();
-        _currentHub = _hubContext.CurrentHub;
+        try
+        {
+            // Subscribe to hub context changes
+            HubContextService.ContextChanged += OnHubContextChanged;
+            
+            // Initialize current context with timeout
+            var contextTask = HubContextService.GetCurrentContextAsync();
+            var timeoutTask = Task.Delay(3000); // 3 second timeout
+            
+            var completedTask = await Task.WhenAny(contextTask, timeoutTask);
+            if (completedTask == timeoutTask)
+            {
+                // Timeout - use default context
+                _currentHub = BusinessHub.IdeaDevelopment;
+                Console.WriteLine("HubRouter: Context loading timed out, using default hub");
+            }
+            else
+            {
+                _hubContext = await contextTask;
+                _currentHub = _hubContext?.CurrentHub ?? BusinessHub.IdeaDevelopment;
+                Console.WriteLine($"HubRouter: Context loaded successfully, hub = {_currentHub}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Fallback to default hub if context service fails
+            _currentHub = BusinessHub.IdeaDevelopment;
+            Console.WriteLine($"HubRouter: Error loading context, using default hub: {ex.Message}");
+        }
     }
 
     private void OnHubContextChanged(object? sender, HubContextChangedEventArgs e)
     {
-        _currentHub = e.CurrentHub;
-        InvokeAsync(StateHasChanged);
-        
-        // Optionally trigger any route-specific logic here
-        InvokeAsync(async () =>
+        try
         {
-            await JSRuntime.InvokeVoidAsync("hubRouter.onHubChanged", e.CurrentHub.ToString());
-        });
+            _currentHub = e.CurrentHub;
+            InvokeAsync(StateHasChanged);
+            
+            // Optionally trigger any route-specific logic here
+            InvokeAsync(async () =>
+            {
+                try
+                {
+                    await JSRuntime.InvokeVoidAsync("hubRouter.onHubChanged", e.CurrentHub.ToString());
+                }
+                catch (Exception jsEx)
+                {
+                    Console.WriteLine($"HubRouter: JS call failed: {jsEx.Message}");
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"HubRouter: OnHubContextChanged failed: {ex.Message}");
+        }
     }
 
     private bool IsHubAwareRoute(RouteData routeData)
@@ -83,6 +120,11 @@
         var hubAwareRoutes = new[]
         {
             "/dashboard",
+            "/app/dashboard",
+            "/test-dashboard",
+            "/test-minimal",
+            "/market-research-simple",
+            "/service-diagnostic",
             "/idea-input",
             "/idea-validation",
             "/market-research",
@@ -116,7 +158,17 @@
 
     public void Dispose()
     {
-        HubContextService.ContextChanged -= OnHubContextChanged;
+        try
+        {
+            if (HubContextService != null)
+            {
+                HubContextService.ContextChanged -= OnHubContextChanged;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"HubRouter: Disposal error: {ex.Message}");
+        }
     }
 }
 

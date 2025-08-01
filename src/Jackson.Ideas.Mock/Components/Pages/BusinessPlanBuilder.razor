@@ -3,6 +3,7 @@
 @layout HubLayout
 @using Jackson.Ideas.Mock.Services.Interfaces
 @using Jackson.Ideas.Mock.Models
+@using Jackson.Ideas.Mock.Models.Builder
 @inject IBusinessPlanBuilderService BusinessPlanService
 @inject ICoachPersonaService CoachPersonaService
 @inject IHubContextService HubContextService
@@ -346,9 +347,9 @@
 @code {
     [Parameter] public string? PlanId { get; set; }
     
-    private BusinessPlan? _businessPlan;
+    private BuilderBusinessPlan? _businessPlan;
     private CoachPersona? _currentCoach;
-    private List<StrategicRecommendation>? _recommendations;
+    private List<BuilderStrategicRecommendation>? _recommendations;
     private bool _isLoading = true;
     
     protected override async Task OnInitializedAsync()
@@ -489,7 +490,7 @@
     {
         if (_businessPlan != null)
         {
-            var export = await BusinessPlanService.ExportBusinessPlanAsync(_businessPlan.Id, ExportFormat.PDF);
+            var export = await BusinessPlanService.ExportBusinessPlanAsync(_businessPlan.Id, Jackson.Ideas.Mock.Models.Builder.ExportFormat.PDF);
             // TODO: Download the exported file
         }
     }

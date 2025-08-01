@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.0" />
@@ -22,6 +23,5 @@
     <ProjectReference Include="../Jackson.Ideas.Infrastructure/Jackson.Ideas.Infrastructure.csproj" />
     <ProjectReference Include="../Jackson.Ideas.Shared/Jackson.Ideas.Shared.csproj" />
   </ItemGroup>
-
 
 </Project>

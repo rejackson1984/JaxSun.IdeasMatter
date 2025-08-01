@@ -90,20 +90,6 @@ public class FinancialPlan
     public CashFlowProjections CashFlow { get; set; } = new();
 }
 
-public class OperationalPlan
-{
-    public string BusinessModel { get; set; } = "";
-    public List<string> KeyProcesses { get; set; } = new();
-    public List<string> ResourceRequirements { get; set; } = new();
-    public string ScalingStrategy { get; set; } = "";
-}
-
-public class RiskAssessment
-{
-    public List<string> Risks { get; set; } = new();
-    public List<string> MitigationStrategies { get; set; } = new();
-    public decimal OverallRiskScore { get; set; }
-}
 
 // Supporting Classes
 public class MilestoneAdjustment

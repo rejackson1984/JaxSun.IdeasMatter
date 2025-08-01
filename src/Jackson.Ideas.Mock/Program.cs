@@ -4,6 +4,7 @@ using Jackson.Ideas.Mock.Services;
 using Jackson.Ideas.Mock.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Text.Json;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,11 @@ if (builder.Environment.IsProduction())
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSignalR();
+
+// Add authentication services
+builder.Services.AddScoped<MockAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<MockAuthenticationStateProvider>());
+builder.Services.AddAuthorizationCore();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
@@ -50,6 +56,9 @@ builder.Services.AddScoped<BusinessTranslationService>();
 // Register Business Plan Service
 builder.Services.AddScoped<BusinessPlanService>();
 
+// Register Business Plan Service with Interface
+builder.Services.AddScoped<IBusinessPlanService, MockBusinessPlanService>();
+
 // Register PDF Generation Service
 builder.Services.AddScoped<IPdfGenerationService, PdfGenerationService>();
 
@@ -78,6 +87,9 @@ builder.Services.AddScoped<ISolutionDesignService, MockSolutionDesignService>();
 
 // Register Business Model Canvas Service
 builder.Services.AddScoped<IBusinessModelCanvasService, MockBusinessModelCanvasService>();
+
+// Register Business Operations Service
+builder.Services.AddScoped<IBusinessOperationsService, MockBusinessOperationsService>();
 
 var app = builder.Build();
 
@@ -129,6 +141,10 @@ app.MapGet("/{scenarioId:regex(^[a-z-]+-[0-9]+$)}", async (string scenarioId, Ht
 });
 
 
+// Map the hub system to /app route
+app.MapFallbackToPage("/app", "/_Host");
+
+// Map all other Blazor component routes (like /market-research, /dashboard, etc.)
 app.MapFallbackToPage("/_Host");
 
 app.Run();

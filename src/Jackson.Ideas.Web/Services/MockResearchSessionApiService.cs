@@ -26,7 +26,15 @@ public class MockResearchSessionApiService : IResearchSessionApiService
                 UpdatedAt = DateTime.UtcNow.AddHours(-2),
                 UserId = "demo-user-123",
                 ResearchType = "Market Analysis",
-                Goals = "Analyze market demand, identify competitors, assess technical feasibility"
+                Goals = "Analyze market demand, identify competitors, assess technical feasibility",
+                ProgressPercentage = 75.0,
+                AnalysisConfidence = 85.0,
+                EstimatedDurationMinutes = 45,
+                ResearchInsights = new List<ResearchInsight>
+                {
+                    new ResearchInsight { Id = Guid.NewGuid(), Title = "Strong market demand", Content = "Healthcare professionals show strong interest" },
+                    new ResearchInsight { Id = Guid.NewGuid(), Title = "Competitive landscape", Content = "Few direct competitors in this space" }
+                }
             },
             new ResearchSession
             {
@@ -38,7 +46,16 @@ public class MockResearchSessionApiService : IResearchSessionApiService
                 UpdatedAt = DateTime.UtcNow.AddDays(-1),
                 UserId = "demo-user-123",
                 ResearchType = "Technical Research",
-                Goals = "Evaluate hardware requirements, security protocols, and user experience"
+                Goals = "Evaluate hardware requirements, security protocols, and user experience",
+                ProgressPercentage = 100.0,
+                AnalysisConfidence = 92.0,
+                EstimatedDurationMinutes = 60,
+                ResearchInsights = new List<ResearchInsight>
+                {
+                    new ResearchInsight { Id = Guid.NewGuid(), Title = "Hardware feasibility", Content = "Required components are readily available" },
+                    new ResearchInsight { Id = Guid.NewGuid(), Title = "Security protocols", Content = "Industry-standard encryption protocols identified" },
+                    new ResearchInsight { Id = Guid.NewGuid(), Title = "Market opportunity", Content = "Growing demand for smart home security" }
+                }
             },
             new ResearchSession
             {
@@ -50,7 +67,11 @@ public class MockResearchSessionApiService : IResearchSessionApiService
                 UpdatedAt = DateTime.UtcNow.AddDays(-2),
                 UserId = "demo-user-123",
                 ResearchType = "Business Strategy",
-                Goals = "Research sustainability impact, cost analysis, and market positioning"
+                Goals = "Research sustainability impact, cost analysis, and market positioning",
+                ProgressPercentage = 0.0,
+                AnalysisConfidence = null,
+                EstimatedDurationMinutes = 30,
+                ResearchInsights = new List<ResearchInsight>()
             }
         };
     }

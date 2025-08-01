@@ -262,7 +262,27 @@ public class SecurityTests
     {
         // Arrange
         var maliciousTitle = "../../../etc/passwd<script>alert()</script>";
-        var scenario = CreateTestScenario() with { Title = maliciousTitle };
+        var baseScenario = CreateTestScenario();
+        var scenario = new BusinessIdeaScenario
+        {
+            Id = baseScenario.Id,
+            Name = baseScenario.Name,
+            Title = maliciousTitle,
+            Description = baseScenario.Description,
+            Industry = baseScenario.Industry,
+            TargetMarket = baseScenario.TargetMarket,
+            EstimatedStartupCost = baseScenario.EstimatedStartupCost,
+            StartupCost = baseScenario.StartupCost,
+            ProjectedRevenue = baseScenario.ProjectedRevenue,
+            ViabilityScore = baseScenario.ViabilityScore,
+            MarketSize = baseScenario.MarketSize,
+            CompetitionLevel = baseScenario.CompetitionLevel,
+            MarketResearch = baseScenario.MarketResearch,
+            FinancialProjections = baseScenario.FinancialProjections,
+            KeyChallenges = baseScenario.KeyChallenges,
+            SuccessFactors = baseScenario.SuccessFactors,
+            CreatedAt = baseScenario.CreatedAt
+        };
 
         // Act
         var csvBytes = _exportService.ExportScenarioToCsv(scenario, 7);

@@ -1,5 +1,6 @@
-@page "/"
 @inject NavigationManager Navigation
+@inject Jackson.Ideas.Mock.Services.MockAuthenticationStateProvider AuthStateProvider
+@inject Jackson.Ideas.Mock.Services.Interfaces.IMockAuthenticationService AuthService
 
 <PageTitle>IdeaCoach Pro - Transform Your Ideas Into Million Dollar Businesses</PageTitle>
 
@@ -17,8 +18,8 @@
                 <a href="#coach" class="nav-link">AI Coach</a>
                 <a href="#success" class="nav-link">Success Stories</a>
                 <div class="nav-auth">
-                    <button class="btn btn-secondary">Sign In</button>
-                    <button class="btn btn-primary">Start Free Trial</button>
+                    <button class="btn btn-secondary" @onclick="SignIn">Sign In</button>
+                    <button class="btn btn-primary" @onclick="StartFreeTrial">Start Free Trial</button>
                 </div>
             </div>
         </div>
@@ -45,7 +46,7 @@
                         <i class="fas fa-rocket"></i>
                         Start Your Business Journey
                     </button>
-                    <button class="btn-hero-secondary">
+                    <button class="btn-hero-secondary" @onclick="WatchDemo">
                         <i class="fas fa-play"></i>
                         Watch 2-Min Demo
                     </button>
@@ -255,11 +256,11 @@
                 <h2>Ready to Build Your Dream Business?</h2>
                 <p>Join 50,000+ entrepreneurs who've transformed their ideas into successful companies</p>
                 <div class="cta-buttons">
-                    <button class="btn-cta-primary" @onclick="StartDemo">
+                    <button class="btn-cta-primary" @onclick="StartFreeTrial">
                         <i class="fas fa-rocket"></i>
                         Start Your Free Trial
                     </button>
-                    <button class="btn-cta-secondary">
+                    <button class="btn-cta-secondary" @onclick="BookDemo">
                         <i class="fas fa-calendar"></i>
                         Book a Demo Call
                     </button>
@@ -285,8 +286,41 @@
 
 
 @code {
-    private void StartDemo()
+    private async Task StartDemo()
     {
-        Navigation.NavigateTo("/hub-demo");
+        await AutoLoginAndNavigate();
+    }
+    
+    private async Task SignIn()
+    {
+        await AutoLoginAndNavigate();
+    }
+    
+    private async Task StartFreeTrial()
+    {
+        await AutoLoginAndNavigate();
+    }
+    
+    private async Task AutoLoginAndNavigate()
+    {
+        // In development mode, automatically log in with demo user
+        var demoUser = await AuthService.GetUserByEmailAsync("demo@ideasmatter.com");
+        if (demoUser != null)
+        {
+            await AuthStateProvider.LoginAsync(demoUser);
+        }
+        
+        // Use forceLoad to ensure proper page refresh
+        Navigation.NavigateTo("/app/dashboard", forceLoad: true);
+    }
+    
+    private void WatchDemo()
+    {
+        Navigation.NavigateTo("/app/hub-demo");
+    }
+    
+    private void BookDemo()
+    {
+        Navigation.NavigateTo("/app/hub-demo");
     }
 }

@@ -2,7 +2,7 @@
 @layout HubLayout
 @using Jackson.Ideas.Mock.Services.Interfaces
 @using Jackson.Ideas.Mock.Models
-@inject IFinancialProjectionService FinancialProjectionService
+@inject IBusinessPlanService BusinessPlanService
 @inject IMockDataService MockDataService
 @inject IHubContextService HubContextService
 @inject ICoachPersonaService CoachPersonaService
@@ -429,7 +429,14 @@
     private async Task SelectScenario(string scenarioId)
     {
         selectedScenarioId = scenarioId;
-        financialData = await FinancialProjectionService.GetFinancialProjectionsAsync(scenarioId);
+        var businessPlanRequest = new Jackson.Ideas.Mock.Models.BusinessPlanRequest 
+        { 
+            BusinessIdea = scenarios.FirstOrDefault(s => s.Id == scenarioId)?.Description ?? "Sample business idea",
+            TargetMarket = "Target customers",
+            RevenueModel = "Subscription model",
+            InitialInvestment = 100000
+        };
+        financialData = await BusinessPlanService.GenerateFinancialProjectionsAsync(businessPlanRequest);
         StateHasChanged();
     }
 

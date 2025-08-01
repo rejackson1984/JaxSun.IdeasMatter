@@ -31,24 +31,6 @@ public class MarketSegment
     public string PurchasingPower { get; set; } = "";
 }
 
-public class CompetitiveAnalysis
-{
-    public List<Competitor> DirectCompetitors { get; set; } = new();
-    public List<Competitor> IndirectCompetitors { get; set; } = new();
-    public List<string> CompetitiveAdvantages { get; set; } = new();
-    public List<string> MarketGaps { get; set; } = new();
-    public string CompetitiveIntensity { get; set; } = "";
-}
-
-public class Competitor
-{
-    public string Name { get; set; } = "";
-    public string MarketShare { get; set; } = "";
-    public string Strengths { get; set; } = "";
-    public string Weaknesses { get; set; } = "";
-    public string PricingStrategy { get; set; } = "";
-    public string DifferentiationFactor { get; set; } = "";
-}
 
 public class MarketTrends
 {

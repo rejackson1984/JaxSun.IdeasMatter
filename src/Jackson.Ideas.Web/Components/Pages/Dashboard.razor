@@ -7,6 +7,7 @@
 @using Jackson.Ideas.Web.Services
 @using System.Text.Json
 @using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
 @inject HttpClient Http
 @inject Jackson.Ideas.Web.Services.NavigationState NavigationState
 @inject IAuthenticationService AuthService
@@ -229,10 +230,10 @@
             //{
                 currentUser = new UserInfo
                 {
-                    Id = authState.User.FindFirst("sub")?.Value ?? authState.User.FindFirst("id")?.Value ?? Guid.NewGuid().ToString(),
-                    Name = authState.User.Identity.Name ?? "User",
-                    Email = authState.User.FindFirst("email")?.Value ?? "user@example.com",
-                    Role = authState.User.FindFirst("role")?.Value ?? "User",
+                    Id = authState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? authState.User.FindFirst("sub")?.Value ?? Guid.NewGuid().ToString(),
+                    Name = authState.User.Identity?.Name ?? authState.User.FindFirst(ClaimTypes.Name)?.Value ?? "User",
+                    Email = authState.User.FindFirst(ClaimTypes.Email)?.Value ?? authState.User.FindFirst("email")?.Value ?? "user@example.com",
+                    Role = authState.User.FindFirst(ClaimTypes.Role)?.Value ?? authState.User.FindFirst("role")?.Value ?? "User",
                     IsVerified = true
                 };
            // }

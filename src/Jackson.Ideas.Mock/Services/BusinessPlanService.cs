@@ -63,7 +63,7 @@ public class BusinessPlanService
         };
     }
 
-    private MarketAnalysis GenerateMarketAnalysis(BusinessIdeaScenario scenario)
+    private BusinessPlanMarketAnalysis GenerateMarketAnalysis(BusinessIdeaScenario scenario)
     {
         var insights = new List<string>();
         
@@ -85,7 +85,7 @@ public class BusinessPlanService
         // Add industry-specific insights
         insights.AddRange(GetIndustryInsights(scenario.Industry));
 
-        return new MarketAnalysis
+        return new BusinessPlanMarketAnalysis
         {
             MarketSize = GetMarketSizeDescription(scenario.MarketSize),
             CompetitionLevel = scenario.CompetitionLevel,
@@ -543,7 +543,7 @@ public class BusinessPlan
     public string Id { get; set; } = "";
     public string ScenarioId { get; set; } = "";
     public ExecutiveSummary ExecutiveSummary { get; set; } = new();
-    public MarketAnalysis MarketAnalysis { get; set; } = new();
+    public BusinessPlanMarketAnalysis MarketAnalysis { get; set; } = new();
     public FinancialProjectionsSummary FinancialProjections { get; set; } = new();
     public ImplementationPlan ImplementationPlan { get; set; } = new();
     public RiskAnalysis RiskAnalysis { get; set; } = new();
@@ -566,7 +566,7 @@ public class ExecutiveSummary
     public string Description { get; set; } = "";
 }
 
-public class MarketAnalysis
+public class BusinessPlanMarketAnalysis
 {
     public string TargetMarket { get; set; } = "";
     public string MarketTrends { get; set; } = "";
@@ -625,4 +625,16 @@ public class BusinessRisk
     public string Level { get; set; } = "";
     public string Description { get; set; } = "";
     public string MitigationStrategy { get; set; } = "";
+}
+
+public class CustomerSegment
+{
+    public string Name { get; set; } = "";
+    public string Description { get; set; } = "";
+    public string Demographics { get; set; } = "";
+    public string Psychographics { get; set; } = "";
+    public string PainPoints { get; set; } = "";
+    public string BuyingBehavior { get; set; } = "";
+    public decimal EstimatedSize { get; set; }
+    public string GrowthPotential { get; set; } = "";
 }

@@ -20,22 +20,27 @@ public class PdfGenerationService : IPdfGenerationService
     {
         // Set license for QuestPDF (Community license)
         QuestPDF.Settings.License = LicenseType.Community;
+        
+        // Configure default fonts for cross-platform compatibility
+        QuestPDF.Settings.DocumentLayoutExceptionThreshold = 1000;
     }
 
     public byte[] GenerateBusinessAnalysisReport(BusinessIdeaScenario scenario, int healthScore)
     {
-        return Document.Create(container =>
+        try
+        {
+            return Document.Create(container =>
         {
             container.Page(page =>
             {
                 page.Size(PageSizes.A4);
                 page.Margin(2, Unit.Centimetre);
                 page.PageColor(Colors.White);
-                page.DefaultTextStyle(x => x.FontSize(12).FontFamily("Arial"));
+                page.DefaultTextStyle(x => x.FontSize(12));
 
                 page.Header()
                     .Text("Ideas Matter - Business Analysis Report")
-                    .SemiBold().FontSize(20).FontColor(Colors.Blue.Medium);
+                    .FontSize(20).FontColor(Colors.Blue.Medium);
 
                 page.Content()
                     .PaddingVertical(1, Unit.Centimetre)
@@ -44,7 +49,7 @@ public class PdfGenerationService : IPdfGenerationService
                         // Title Section
                         x.Spacing(20);
                         x.Item().Text($"Business Idea: {scenario.Title}")
-                            .FontSize(18).SemiBold().FontColor(Colors.Grey.Darken3);
+                            .FontSize(18).FontColor(Colors.Grey.Darken3);
                         
                         x.Item().Text($"Generated on: {DateTime.Now:MMMM dd, yyyy}")
                             .FontSize(10).FontColor(Colors.Grey.Medium);
@@ -54,7 +59,7 @@ public class PdfGenerationService : IPdfGenerationService
                         {
                             row.RelativeItem().Column(col =>
                             {
-                                col.Item().Text("Business Health Score").FontSize(16).SemiBold();
+                                col.Item().Text("Business Health Score").FontSize(16);
                                 col.Item().PaddingTop(10).Row(r =>
                                 {
                                     r.ConstantItem(60).Container()
@@ -63,14 +68,14 @@ public class PdfGenerationService : IPdfGenerationService
                                         .AlignMiddle()
                                         .Height(60)
                                         .Text($"{healthScore}/10")
-                                        .FontSize(20).SemiBold().FontColor(GetScoreColor(healthScore));
+                                        .FontSize(20).FontColor(GetScoreColor(healthScore));
                                     
                                     r.RelativeItem().PaddingLeft(20).Column(c =>
                                     {
                                         c.Item().Text(GetScoreDescription(healthScore))
                                             .FontSize(14).FontColor(Colors.Grey.Darken2);
                                         c.Item().Text(GetScoreText(healthScore))
-                                            .FontSize(12).FontColor(GetScoreColor(healthScore)).SemiBold();
+                                            .FontSize(12).FontColor(GetScoreColor(healthScore));
                                     });
                                 });
                             });
@@ -79,7 +84,7 @@ public class PdfGenerationService : IPdfGenerationService
                         // Description
                         x.Item().PaddingTop(20).Column(col =>
                         {
-                            col.Item().Text("Idea Description").FontSize(16).SemiBold();
+                            col.Item().Text("Idea Description").FontSize(16);
                             col.Item().PaddingTop(10).Text(scenario.Description)
                                 .FontSize(12).LineHeight(1.4f);
                         });
@@ -87,7 +92,7 @@ public class PdfGenerationService : IPdfGenerationService
                         // Key Metrics
                         x.Item().PaddingTop(20).Column(col =>
                         {
-                            col.Item().Text("Key Business Metrics").FontSize(16).SemiBold();
+                            col.Item().Text("Key Business Metrics").FontSize(16);
                             col.Item().PaddingTop(10).Table(table =>
                             {
                                 table.ColumnsDefinition(columns =>
@@ -97,9 +102,9 @@ public class PdfGenerationService : IPdfGenerationService
                                 });
 
                                 table.Cell().Border(1).Background(Colors.Grey.Lighten3)
-                                    .Padding(10).Text("Metric").SemiBold();
+                                    .Padding(10).Text("Metric");
                                 table.Cell().Border(1).Background(Colors.Grey.Lighten3)
-                                    .Padding(10).Text("Value").SemiBold();
+                                    .Padding(10).Text("Value");
 
                                 table.Cell().Border(1).Padding(10).Text("Market Size");
                                 table.Cell().Border(1).Padding(10).Text($"{scenario.MarketSize:N0} potential customers");
@@ -121,7 +126,7 @@ public class PdfGenerationService : IPdfGenerationService
                         // Market Analysis Summary
                         x.Item().PaddingTop(20).Column(col =>
                         {
-                            col.Item().Text("Market Analysis Summary").FontSize(16).SemiBold();
+                            col.Item().Text("Market Analysis Summary").FontSize(16);
                             col.Item().PaddingTop(10).Text(GetMarketAnalysisSummary(scenario))
                                 .FontSize(12).LineHeight(1.4f);
                         });
@@ -129,7 +134,7 @@ public class PdfGenerationService : IPdfGenerationService
                         // Next Steps
                         x.Item().PaddingTop(20).Column(col =>
                         {
-                            col.Item().Text("Recommended Next Steps").FontSize(16).SemiBold();
+                            col.Item().Text("Recommended Next Steps").FontSize(16);
                             col.Item().PaddingTop(10).Column(steps =>
                             {
                                 var nextSteps = GetNextSteps(scenario, healthScore);
@@ -150,27 +155,36 @@ public class PdfGenerationService : IPdfGenerationService
                     .Text(x =>
                     {
                         x.Span("Generated by ");
-                        x.Span("Ideas Matter").SemiBold();
+                        x.Span("Ideas Matter");
                         x.Span(" - Your AI Business Partner");
                     });
             });
         }).GeneratePdf();
+        }
+        catch (Exception ex)
+        {
+            // Return a simple fallback PDF if generation fails
+            return CreateFallbackPdf($"Business Analysis Report - {scenario.Title}", 
+                $"Report generation encountered an issue: {ex.Message}. Please try again or contact support.");
+        }
     }
 
     public byte[] GenerateSwotAnalysisReport(BusinessIdeaScenario scenario, SwotAnalysis swotAnalysis)
     {
-        return Document.Create(container =>
+        try
+        {
+            return Document.Create(container =>
         {
             container.Page(page =>
             {
                 page.Size(PageSizes.A4);
                 page.Margin(2, Unit.Centimetre);
                 page.PageColor(Colors.White);
-                page.DefaultTextStyle(x => x.FontSize(12).FontFamily("Arial"));
+                page.DefaultTextStyle(x => x.FontSize(12));
 
                 page.Header()
                     .Text("SWOT Analysis Report")
-                    .SemiBold().FontSize(20).FontColor(Colors.Blue.Medium);
+                    .FontSize(20).FontColor(Colors.Blue.Medium);
 
                 page.Content()
                     .PaddingVertical(1, Unit.Centimetre)
@@ -180,7 +194,7 @@ public class PdfGenerationService : IPdfGenerationService
                         
                         // Title
                         x.Item().Text($"SWOT Analysis: {scenario.Title}")
-                            .FontSize(18).SemiBold().FontColor(Colors.Grey.Darken3);
+                            .FontSize(18).FontColor(Colors.Grey.Darken3);
 
                         // SWOT Matrix
                         x.Item().Table(table =>
@@ -195,7 +209,7 @@ public class PdfGenerationService : IPdfGenerationService
                             table.Cell().Border(2).Background(Colors.Green.Lighten4)
                                 .Padding(15).Column(col =>
                                 {
-                                    col.Item().Text("STRENGTHS").SemiBold().FontSize(14)
+                                    col.Item().Text("STRENGTHS").FontSize(14)
                                         .FontColor(Colors.Green.Darken2);
                                     col.Item().PaddingTop(10).Column(items =>
                                     {
@@ -214,7 +228,7 @@ public class PdfGenerationService : IPdfGenerationService
                             table.Cell().Border(2).Background(Colors.Red.Lighten4)
                                 .Padding(15).Column(col =>
                                 {
-                                    col.Item().Text("WEAKNESSES").SemiBold().FontSize(14)
+                                    col.Item().Text("WEAKNESSES").FontSize(14)
                                         .FontColor(Colors.Red.Darken2);
                                     col.Item().PaddingTop(10).Column(items =>
                                     {
@@ -233,7 +247,7 @@ public class PdfGenerationService : IPdfGenerationService
                             table.Cell().Border(2).Background(Colors.Blue.Lighten4)
                                 .Padding(15).Column(col =>
                                 {
-                                    col.Item().Text("OPPORTUNITIES").SemiBold().FontSize(14)
+                                    col.Item().Text("OPPORTUNITIES").FontSize(14)
                                         .FontColor(Colors.Blue.Darken2);
                                     col.Item().PaddingTop(10).Column(items =>
                                     {
@@ -252,7 +266,7 @@ public class PdfGenerationService : IPdfGenerationService
                             table.Cell().Border(2).Background(Colors.Orange.Lighten4)
                                 .Padding(15).Column(col =>
                                 {
-                                    col.Item().Text("THREATS").SemiBold().FontSize(14)
+                                    col.Item().Text("THREATS").FontSize(14)
                                         .FontColor(Colors.Orange.Darken2);
                                     col.Item().PaddingTop(10).Column(items =>
                                     {
@@ -271,7 +285,7 @@ public class PdfGenerationService : IPdfGenerationService
                         // Strategic Implications
                         x.Item().PaddingTop(30).Column(col =>
                         {
-                            col.Item().Text("Strategic Implications").FontSize(16).SemiBold();
+                            col.Item().Text("Strategic Implications").FontSize(16);
                             col.Item().PaddingTop(10).Text(GetStrategicImplications(swotAnalysis))
                                 .FontSize(12).LineHeight(1.4f);
                         });
@@ -282,27 +296,35 @@ public class PdfGenerationService : IPdfGenerationService
                     .Text(x =>
                     {
                         x.Span("Generated by ");
-                        x.Span("Ideas Matter").SemiBold();
+                        x.Span("Ideas Matter");
                         x.Span($" on {DateTime.Now:MMMM dd, yyyy}");
                     });
             });
         }).GeneratePdf();
+        }
+        catch (Exception ex)
+        {
+            return CreateFallbackPdf($"SWOT Analysis Report - {scenario.Title}", 
+                $"SWOT analysis generation encountered an issue: {ex.Message}. Please try again or contact support.");
+        }
     }
 
     public byte[] GenerateMarketResearchReport(BusinessIdeaScenario scenario, MarketResearchData marketData)
     {
-        return Document.Create(container =>
+        try
+        {
+            return Document.Create(container =>
         {
             container.Page(page =>
             {
                 page.Size(PageSizes.A4);
                 page.Margin(2, Unit.Centimetre);
                 page.PageColor(Colors.White);
-                page.DefaultTextStyle(x => x.FontSize(12).FontFamily("Arial"));
+                page.DefaultTextStyle(x => x.FontSize(12));
 
                 page.Header()
                     .Text("Market Research Report")
-                    .SemiBold().FontSize(20).FontColor(Colors.Blue.Medium);
+                    .FontSize(20).FontColor(Colors.Blue.Medium);
 
                 page.Content()
                     .PaddingVertical(1, Unit.Centimetre)
@@ -311,7 +333,7 @@ public class PdfGenerationService : IPdfGenerationService
                         x.Spacing(20);
                         
                         x.Item().Text($"Market Research: {scenario.Title}")
-                            .FontSize(18).SemiBold().FontColor(Colors.Grey.Darken3);
+                            .FontSize(18).FontColor(Colors.Grey.Darken3);
 
                         x.Item().Text($"Industry: {marketData.Industry}")
                             .FontSize(14).FontColor(Colors.Grey.Medium);
@@ -319,7 +341,7 @@ public class PdfGenerationService : IPdfGenerationService
                         // Market Overview
                         x.Item().Column(col =>
                         {
-                            col.Item().Text("Market Overview").FontSize(16).SemiBold();
+                            col.Item().Text("Market Overview").FontSize(16);
                             col.Item().PaddingTop(10).Text($"The {marketData.Industry} industry represents a significant opportunity with a potential market of {scenario.MarketSize:N0} customers. Competition levels are currently {scenario.CompetitionLevel.ToLower()}, providing {("good".Equals(scenario.CompetitionLevel.ToLower()) ? "balanced" : scenario.CompetitionLevel.ToLower())} entry conditions for new market participants.")
                                 .FontSize(12).LineHeight(1.4f);
                         });
@@ -327,7 +349,7 @@ public class PdfGenerationService : IPdfGenerationService
                         // Financial Projections
                         x.Item().Column(col =>
                         {
-                            col.Item().Text("Financial Projections").FontSize(16).SemiBold();
+                            col.Item().Text("Financial Projections").FontSize(16);
                             col.Item().PaddingTop(10).Table(table =>
                             {
                                 table.ColumnsDefinition(columns =>
@@ -337,9 +359,9 @@ public class PdfGenerationService : IPdfGenerationService
                                 });
 
                                 table.Cell().Border(1).Background(Colors.Grey.Lighten3)
-                                    .Padding(10).Text("Financial Metric").SemiBold();
+                                    .Padding(10).Text("Financial Metric");
                                 table.Cell().Border(1).Background(Colors.Grey.Lighten3)
-                                    .Padding(10).Text("Projection").SemiBold();
+                                    .Padding(10).Text("Projection");
 
                                 table.Cell().Border(1).Padding(10).Text("Required Investment");
                                 table.Cell().Border(1).Padding(10).Text($"${scenario.StartupCost:N0}");
@@ -361,27 +383,35 @@ public class PdfGenerationService : IPdfGenerationService
                     .Text(x =>
                     {
                         x.Span("Generated by ");
-                        x.Span("Ideas Matter").SemiBold();
+                        x.Span("Ideas Matter");
                         x.Span($" on {DateTime.Now:MMMM dd, yyyy}");
                     });
             });
         }).GeneratePdf();
+        }
+        catch (Exception ex)
+        {
+            return CreateFallbackPdf($"Market Research Report - {scenario.Title}", 
+                $"Market research report generation encountered an issue: {ex.Message}. Please try again or contact support.");
+        }
     }
 
     public byte[] GenerateExecutiveSummary(BusinessIdeaScenario scenario, int healthScore)
     {
-        return Document.Create(container =>
+        try
+        {
+            return Document.Create(container =>
         {
             container.Page(page =>
             {
                 page.Size(PageSizes.A4);
                 page.Margin(2, Unit.Centimetre);
                 page.PageColor(Colors.White);
-                page.DefaultTextStyle(x => x.FontSize(12).FontFamily("Arial"));
+                page.DefaultTextStyle(x => x.FontSize(12));
 
                 page.Header()
                     .Text("Executive Summary")
-                    .SemiBold().FontSize(20).FontColor(Colors.Blue.Medium);
+                    .FontSize(20).FontColor(Colors.Blue.Medium);
 
                 page.Content()
                     .PaddingVertical(1, Unit.Centimetre)
@@ -390,16 +420,16 @@ public class PdfGenerationService : IPdfGenerationService
                         x.Spacing(15);
                         
                         x.Item().Text($"Business Opportunity: {scenario.Title}")
-                            .FontSize(16).SemiBold().FontColor(Colors.Grey.Darken3);
+                            .FontSize(16).FontColor(Colors.Grey.Darken3);
 
                         x.Item().Text("Executive Summary")
-                            .FontSize(14).SemiBold();
+                            .FontSize(14);
 
                         x.Item().Text(GetExecutiveSummaryText(scenario, healthScore))
                             .FontSize(12).LineHeight(1.5f);
 
                         x.Item().Text("Key Highlights")
-                            .FontSize(14).SemiBold();
+                            .FontSize(14);
 
                         x.Item().Column(highlights =>
                         {
@@ -415,7 +445,7 @@ public class PdfGenerationService : IPdfGenerationService
                         });
 
                         x.Item().Text("Investment Requirements")
-                            .FontSize(14).SemiBold();
+                            .FontSize(14);
 
                         x.Item().Text($"Initial investment of ${scenario.StartupCost:N0} is required to launch this business opportunity, with projected first-year revenues of ${scenario.FinancialProjections.Revenue.Year1Total:N0} and break-even expected by month {scenario.FinancialProjections.CashFlow.BreakEvenMonth}.")
                             .FontSize(12).LineHeight(1.4f);
@@ -426,11 +456,17 @@ public class PdfGenerationService : IPdfGenerationService
                     .Text(x =>
                     {
                         x.Span("Generated by ");
-                        x.Span("Ideas Matter").SemiBold();
+                        x.Span("Ideas Matter");
                         x.Span($" on {DateTime.Now:MMMM dd, yyyy}");
                     });
             });
         }).GeneratePdf();
+        }
+        catch (Exception ex)
+        {
+            return CreateFallbackPdf($"Executive Summary - {scenario.Title}", 
+                $"Executive summary generation encountered an issue: {ex.Message}. Please try again or contact support.");
+        }
     }
 
     // Helper methods
@@ -545,9 +581,9 @@ public class PdfGenerationService : IPdfGenerationService
                         row.RelativeItem().Column(col =>
                         {
                             col.Item().Text("Ideas Matter - Business Plan")
-                                .SemiBold().FontSize(18).FontColor(Colors.Blue.Medium);
+                                .FontSize(18).FontColor(Colors.Blue.Medium);
                             col.Item().Text($"{scenario.Name}")
-                                .SemiBold().FontSize(14).FontColor(Colors.Grey.Darken3);
+                                .FontSize(14).FontColor(Colors.Grey.Darken3);
                         });
                         
                         row.ConstantItem(100).AlignRight()
@@ -565,21 +601,21 @@ public class PdfGenerationService : IPdfGenerationService
                         content.Item().Column(section =>
                         {
                             section.Item().Text("Executive Summary")
-                                .FontSize(16).SemiBold().FontColor(Colors.Blue.Darken2);
+                                .FontSize(16).FontColor(Colors.Blue.Darken2);
                             
                             section.Item().PaddingTop(10).Row(row =>
                             {
                                 row.RelativeItem(1).Column(col =>
                                 {
                                     col.Item().Text("Business Concept:")
-                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                        .FontSize(10).FontColor(Colors.Grey.Darken2);
                                     col.Item().Text(businessPlan.ExecutiveSummary.BusinessConcept)
                                         .FontSize(9).FontColor(Colors.Grey.Darken1);
                                 });
                                 row.RelativeItem(1).Column(col =>
                                 {
                                     col.Item().Text("Target Market:")
-                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                        .FontSize(10).FontColor(Colors.Grey.Darken2);
                                     col.Item().Text(businessPlan.ExecutiveSummary.TargetMarket)
                                         .FontSize(9).FontColor(Colors.Grey.Darken1);
                                 });
@@ -590,14 +626,14 @@ public class PdfGenerationService : IPdfGenerationService
                                 row.RelativeItem(1).Column(col =>
                                 {
                                     col.Item().Text("Revenue Model:")
-                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                        .FontSize(10).FontColor(Colors.Grey.Darken2);
                                     col.Item().Text(businessPlan.ExecutiveSummary.RevenueModel)
                                         .FontSize(9).FontColor(Colors.Grey.Darken1);
                                 });
                                 row.RelativeItem(1).Column(col =>
                                 {
                                     col.Item().Text("Funding Required:")
-                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                        .FontSize(10).FontColor(Colors.Grey.Darken2);
                                     col.Item().Text($"{businessPlan.ExecutiveSummary.FundingRequired:C0}")
                                         .FontSize(9).FontColor(Colors.Grey.Darken1);
                                 });
@@ -611,35 +647,35 @@ public class PdfGenerationService : IPdfGenerationService
                         content.Item().Column(section =>
                         {
                             section.Item().Text("Market Analysis")
-                                .FontSize(16).SemiBold().FontColor(Colors.Blue.Darken2);
+                                .FontSize(16).FontColor(Colors.Blue.Darken2);
                             
                             section.Item().PaddingTop(10).Row(row =>
                             {
                                 row.RelativeItem(1).Column(col =>
                                 {
                                     col.Item().Text("Market Size:")
-                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                        .FontSize(10).FontColor(Colors.Grey.Darken2);
                                     col.Item().Text(businessPlan.MarketAnalysis.MarketSize)
                                         .FontSize(9).FontColor(Colors.Grey.Darken1);
                                 });
                                 row.RelativeItem(1).Column(col =>
                                 {
                                     col.Item().Text("Competition Level:")
-                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                        .FontSize(10).FontColor(Colors.Grey.Darken2);
                                     col.Item().Text(businessPlan.MarketAnalysis.CompetitionLevel)
                                         .FontSize(9).FontColor(Colors.Grey.Darken1);
                                 });
                                 row.RelativeItem(1).Column(col =>
                                 {
                                     col.Item().Text("Market Growth:")
-                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                        .FontSize(10).FontColor(Colors.Grey.Darken2);
                                     col.Item().Text(businessPlan.MarketAnalysis.MarketGrowth)
                                         .FontSize(9).FontColor(Colors.Grey.Darken1);
                                 });
                             });
 
                             section.Item().PaddingTop(10).Text("Key Market Insights:")
-                                .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                .FontSize(10).FontColor(Colors.Grey.Darken2);
                             
                             foreach (var insight in businessPlan.MarketAnalysis.KeyInsights.Take(4))
                             {
@@ -655,21 +691,21 @@ public class PdfGenerationService : IPdfGenerationService
                         content.Item().Column(section =>
                         {
                             section.Item().Text("Financial Projections")
-                                .FontSize(16).SemiBold().FontColor(Colors.Blue.Darken2);
+                                .FontSize(16).FontColor(Colors.Blue.Darken2);
                             
                             section.Item().PaddingTop(10).Row(row =>
                             {
                                 row.RelativeItem(1).Column(col =>
                                 {
                                     col.Item().Text("Break-even Month:")
-                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                        .FontSize(10).FontColor(Colors.Grey.Darken2);
                                     col.Item().Text($"Month {businessPlan.FinancialProjections.BreakEvenMonth}")
                                         .FontSize(9).FontColor(Colors.Grey.Darken1);
                                 });
                                 row.RelativeItem(1).Column(col =>
                                 {
                                     col.Item().Text("Initial Investment:")
-                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                        .FontSize(10).FontColor(Colors.Grey.Darken2);
                                     col.Item().Text($"{businessPlan.FinancialProjections.InitialInvestment:C0}")
                                         .FontSize(9).FontColor(Colors.Grey.Darken1);
                                 });
@@ -680,14 +716,14 @@ public class PdfGenerationService : IPdfGenerationService
                                 row.RelativeItem(1).Column(col =>
                                 {
                                     col.Item().Text("5-Year ROI:")
-                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                        .FontSize(10).FontColor(Colors.Grey.Darken2);
                                     col.Item().Text($"{businessPlan.FinancialProjections.ProjectedROI:P1}")
                                         .FontSize(9).FontColor(Colors.Grey.Darken1);
                                 });
                                 row.RelativeItem(1).Column(col =>
                                 {
                                     col.Item().Text("Gross Margin:")
-                                        .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                        .FontSize(10).FontColor(Colors.Grey.Darken2);
                                     col.Item().Text($"{businessPlan.FinancialProjections.GrossMargin:P1}")
                                         .FontSize(9).FontColor(Colors.Grey.Darken1);
                                 });
@@ -695,7 +731,7 @@ public class PdfGenerationService : IPdfGenerationService
 
                             // 5-Year Revenue Projection Table
                             section.Item().PaddingTop(15).Text("Revenue Projections (5-Year)")
-                                .FontSize(12).SemiBold().FontColor(Colors.Grey.Darken2);
+                                .FontSize(12).FontColor(Colors.Grey.Darken2);
                             
                             section.Item().PaddingTop(5).Table(table =>
                             {
@@ -710,13 +746,13 @@ public class PdfGenerationService : IPdfGenerationService
                                 table.Header(header =>
                                 {
                                     header.Cell().Background(Colors.Blue.Lighten3).Padding(5)
-                                        .Text("Year").FontSize(9).SemiBold();
+                                        .Text("Year").FontSize(9);
                                     header.Cell().Background(Colors.Blue.Lighten3).Padding(5)
-                                        .Text("Revenue").FontSize(9).SemiBold();
+                                        .Text("Revenue").FontSize(9);
                                     header.Cell().Background(Colors.Blue.Lighten3).Padding(5)
-                                        .Text("Expenses").FontSize(9).SemiBold();
+                                        .Text("Expenses").FontSize(9);
                                     header.Cell().Background(Colors.Blue.Lighten3).Padding(5)
-                                        .Text("Net Income").FontSize(9).SemiBold();
+                                        .Text("Net Income").FontSize(9);
                                 });
 
                                 foreach (var projection in businessPlan.FinancialProjections.YearlyProjections.Take(5))
@@ -737,7 +773,7 @@ public class PdfGenerationService : IPdfGenerationService
                         content.Item().Column(section =>
                         {
                             section.Item().Text("Implementation Timeline")
-                                .FontSize(16).SemiBold().FontColor(Colors.Blue.Darken2);
+                                .FontSize(16).FontColor(Colors.Blue.Darken2);
                             
                             foreach (var milestone in businessPlan.ImplementationPlan.Milestones.Take(4))
                             {
@@ -749,7 +785,7 @@ public class PdfGenerationService : IPdfGenerationService
                                         row.RelativeItem().Column(col =>
                                         {
                                             col.Item().Text($"{milestone.Name} ({milestone.Timeline})")
-                                                .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                                .FontSize(10).FontColor(Colors.Grey.Darken2);
                                             col.Item().Text(milestone.Description)
                                                 .FontSize(9).FontColor(Colors.Grey.Darken1);
                                         });
@@ -777,7 +813,7 @@ public class PdfGenerationService : IPdfGenerationService
                         content.Item().Column(section =>
                         {
                             section.Item().Text("Risk Analysis & Mitigation")
-                                .FontSize(16).SemiBold().FontColor(Colors.Blue.Darken2);
+                                .FontSize(16).FontColor(Colors.Blue.Darken2);
                             
                             foreach (var risk in businessPlan.RiskAnalysis.Risks.Take(4))
                             {
@@ -794,9 +830,9 @@ public class PdfGenerationService : IPdfGenerationService
                                     riskCol.Item().Row(row =>
                                     {
                                         row.RelativeItem().Text(risk.Title)
-                                            .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken2);
+                                            .FontSize(10).FontColor(Colors.Grey.Darken2);
                                         row.ConstantItem(50).AlignRight().Text(risk.Level.ToUpper())
-                                            .FontSize(8).SemiBold().FontColor(Colors.Grey.Darken1);
+                                            .FontSize(8).FontColor(Colors.Grey.Darken1);
                                     });
                                     
                                     riskCol.Item().PaddingTop(5).Text(risk.Description)
@@ -805,7 +841,7 @@ public class PdfGenerationService : IPdfGenerationService
                                     riskCol.Item().PaddingTop(5).Row(mitigationRow =>
                                     {
                                         mitigationRow.ConstantItem(70).Text("Mitigation:")
-                                            .FontSize(9).SemiBold().FontColor(Colors.Grey.Darken2);
+                                            .FontSize(9).FontColor(Colors.Grey.Darken2);
                                         mitigationRow.RelativeItem().Text(risk.MitigationStrategy)
                                             .FontSize(9).FontColor(Colors.Grey.Darken1);
                                     });
@@ -817,7 +853,7 @@ public class PdfGenerationService : IPdfGenerationService
                         content.Item().Column(section =>
                         {
                             section.Item().Text("Key Success Factors")
-                                .FontSize(16).SemiBold().FontColor(Colors.Blue.Darken2);
+                                .FontSize(16).FontColor(Colors.Blue.Darken2);
                             
                             section.Item().PaddingTop(10).Column(factorsCol =>
                             {
@@ -851,5 +887,46 @@ public class PdfGenerationService : IPdfGenerationService
         // For now, we'll just save the fact that this was called
         await Task.CompletedTask;
         System.IO.File.WriteAllBytes($"/tmp/{fileName}", pdfBytes);
+    }
+
+    private byte[] CreateFallbackPdf(string title, string errorMessage)
+    {
+        try
+        {
+            return Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(2, Unit.Centimetre);
+                    page.PageColor(Colors.White);
+                    page.DefaultTextStyle(x => x.FontSize(12));
+
+                    page.Header()
+                        .Text("Ideas Matter - Report Generation Error")
+                        .FontSize(16).FontColor(Colors.Red.Medium);
+
+                    page.Content()
+                        .PaddingVertical(1, Unit.Centimetre)
+                        .Column(x =>
+                        {
+                            x.Spacing(20);
+                            x.Item().Text(title).FontSize(14);
+                            x.Item().Text(errorMessage).FontSize(12);
+                            x.Item().Text("Please contact support if this issue persists.").FontSize(10);
+                        });
+
+                    page.Footer()
+                        .AlignCenter()
+                        .Text($"Generated {DateTime.Now:yyyy-MM-dd HH:mm:ss}")
+                        .FontSize(8);
+                });
+            }).GeneratePdf();
+        }
+        catch
+        {
+            // Ultimate fallback - return minimal PDF as byte array
+            return System.Text.Encoding.UTF8.GetBytes($"PDF Generation Error: {title}\n{errorMessage}");
+        }
     }
 }

@@ -172,7 +172,26 @@ public class PdfGenerationServiceTests
     public void GenerateBusinessAnalysisReport_ShouldHandleEdgeCaseNumbers(int marketSize)
     {
         // Arrange
-        var edgeCaseScenario = _testScenario with { MarketSize = marketSize };
+        var edgeCaseScenario = new BusinessIdeaScenario
+        {
+            Id = _testScenario.Id,
+            Name = _testScenario.Name,
+            Title = _testScenario.Title,
+            Description = _testScenario.Description,
+            Industry = _testScenario.Industry,
+            TargetMarket = _testScenario.TargetMarket,
+            EstimatedStartupCost = _testScenario.EstimatedStartupCost,
+            StartupCost = _testScenario.StartupCost,
+            ProjectedRevenue = _testScenario.ProjectedRevenue,
+            ViabilityScore = _testScenario.ViabilityScore,
+            MarketSize = marketSize,
+            CompetitionLevel = _testScenario.CompetitionLevel,
+            MarketResearch = _testScenario.MarketResearch,
+            FinancialProjections = _testScenario.FinancialProjections,
+            KeyChallenges = _testScenario.KeyChallenges,
+            SuccessFactors = _testScenario.SuccessFactors,
+            CreatedAt = _testScenario.CreatedAt
+        };
 
         // Act
         var result = _pdfService.GenerateBusinessAnalysisReport(edgeCaseScenario, 5);

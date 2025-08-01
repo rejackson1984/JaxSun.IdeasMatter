@@ -1,4 +1,5 @@
 using Jackson.Ideas.Mock.Services.Interfaces;
+using Jackson.Ideas.Mock.Models.Builder;
 
 namespace Jackson.Ideas.Mock.Services.Mock
 {
@@ -7,12 +8,12 @@ namespace Jackson.Ideas.Mock.Services.Mock
     /// </summary>
     public class MockBusinessPlanBuilderService : IBusinessPlanBuilderService
     {
-        private readonly Dictionary<string, Jackson.Ideas.Mock.Services.Interfaces.BusinessPlan> _businessPlans = new();
-        private readonly Dictionary<string, Jackson.Ideas.Mock.Services.Interfaces.BusinessModelCanvas> _canvases = new();
+        private readonly Dictionary<string, BuilderBusinessPlan> _businessPlans = new();
+        private readonly Dictionary<string, BuilderBusinessModelCanvas> _canvases = new();
         
-        public Task<Jackson.Ideas.Mock.Services.Interfaces.BusinessPlan> CreateBusinessPlanAsync(BusinessPlanRequest request)
+        public Task<BuilderBusinessPlan> CreateBusinessPlanAsync(BusinessPlanBuilderRequest request)
         {
-            var businessPlan = new Jackson.Ideas.Mock.Services.Interfaces.BusinessPlan
+            var businessPlan = new BuilderBusinessPlan
             {
                 BusinessName = request.BusinessName,
                 Description = request.Description,
@@ -34,12 +35,51 @@ namespace Jackson.Ideas.Mock.Services.Mock
             return Task.FromResult(businessPlan);
         }
         
-        public Task<Jackson.Ideas.Mock.Services.Interfaces.BusinessPlan?> GetBusinessPlanAsync(string planId)
+        public Task<BusinessPlanBuilderResult> BuildBusinessPlanAsync(BusinessPlanBuilderRequest request)
+        {
+            // Create the business plan using existing logic
+            var businessPlan = new BuilderBusinessPlan
+            {
+                BusinessName = request.BusinessName,
+                Description = request.Description,
+                ExecutiveSummary = CreateExecutiveSummary(request),
+                MarketAnalysis = CreateMarketAnalysis(request),
+                ProductStrategy = CreateProductStrategy(request),
+                MarketingStrategy = CreateMarketingStrategy(request),
+                OperationsStrategy = CreateOperationsStrategy(request),
+                FinancialStrategy = CreateFinancialStrategy(request),
+                RiskAssessment = CreateRiskAssessment(request),
+                ImplementationTimeline = CreateImplementationTimeline(request)
+            };
+            
+            businessPlan.CompletenessScore = CalculateCompletenessScore(businessPlan);
+            businessPlan.ReadyForOperations = businessPlan.CompletenessScore >= 80;
+            
+            _businessPlans[businessPlan.Id] = businessPlan;
+            
+            // Create the comprehensive result wrapper
+            var result = new BusinessPlanBuilderResult
+            {
+                Request = request,
+                BusinessPlan = businessPlan,
+                CompletenessScore = businessPlan.CompletenessScore,
+                ReadyForOperations = businessPlan.ReadyForOperations,
+                Recommendations = GenerateRecommendations(businessPlan),
+                StrategicRecommendations = GenerateStrategicRecommendations(businessPlan),
+                ValidationSummary = GenerateValidationSummary(businessPlan),
+                GeneratedAt = DateTime.UtcNow,
+                Version = "1.0"
+            };
+            
+            return Task.FromResult(result);
+        }
+        
+        public Task<BuilderBusinessPlan?> GetBusinessPlanAsync(string planId)
         {
             // For demo purposes, create a sample plan if none exists
             if (!_businessPlans.ContainsKey(planId))
             {
-                var demoRequest = new BusinessPlanRequest
+                var demoRequest = new BusinessPlanBuilderRequest
                 {
                     BusinessName = "HealthyKids Meal Planner",
                     Description = "An app that helps busy parents find healthy meal ideas their kids will actually eat",
@@ -52,10 +92,10 @@ namespace Jackson.Ideas.Mock.Services.Mock
                 return CreateBusinessPlanAsync(demoRequest);
             }
             
-            return Task.FromResult<Jackson.Ideas.Mock.Services.Interfaces.BusinessPlan?>(_businessPlans[planId]);
+            return Task.FromResult<BuilderBusinessPlan?>(_businessPlans[planId]);
         }
         
-        public Task<Jackson.Ideas.Mock.Services.Interfaces.BusinessPlan> UpdateBusinessPlanSectionAsync(string planId, string sectionName, object sectionData)
+        public Task<BuilderBusinessPlan> UpdateBusinessPlanSectionAsync(string planId, string sectionName, object sectionData)
         {
             if (_businessPlans.TryGetValue(planId, out var plan))
             {
@@ -70,7 +110,7 @@ namespace Jackson.Ideas.Mock.Services.Mock
             throw new ArgumentException($"Business plan with ID '{planId}' not found.", nameof(planId));
         }
         
-        public Task<Jackson.Ideas.Mock.Services.Interfaces.BusinessModelCanvas> GetBusinessModelCanvasAsync(string planId)
+        public Task<BuilderBusinessModelCanvas> GetBusinessModelCanvasAsync(string planId)
         {
             if (!_canvases.ContainsKey(planId))
             {
@@ -80,16 +120,16 @@ namespace Jackson.Ideas.Mock.Services.Mock
             return Task.FromResult(_canvases[planId]);
         }
         
-        public Task<Jackson.Ideas.Mock.Services.Interfaces.BusinessModelCanvas> UpdateBusinessModelCanvasAsync(string planId, Jackson.Ideas.Mock.Services.Interfaces.BusinessModelCanvas canvas)
+        public Task<BuilderBusinessModelCanvas> UpdateBusinessModelCanvasAsync(string planId, BuilderBusinessModelCanvas canvas)
         {
             canvas.UpdatedAt = DateTime.UtcNow;
             _canvases[planId] = canvas;
             return Task.FromResult(canvas);
         }
         
-        public Task<List<Jackson.Ideas.Mock.Services.Interfaces.StrategicRecommendation>> GetStrategicRecommendationsAsync(string planId)
+        public Task<List<BuilderStrategicRecommendation>> GetStrategicRecommendationsAsync(string planId)
         {
-            return Task.FromResult(new List<Jackson.Ideas.Mock.Services.Interfaces.StrategicRecommendation>
+            return Task.FromResult(new List<BuilderStrategicRecommendation>
             {
                 new()
                 {
@@ -142,9 +182,9 @@ namespace Jackson.Ideas.Mock.Services.Mock
             return score >= 80;
         }
         
-        public Task<List<Jackson.Ideas.Mock.Services.Interfaces.BusinessPlanTemplate>> GetBusinessPlanTemplatesAsync()
+        public Task<List<BuilderBusinessPlanTemplate>> GetBusinessPlanTemplatesAsync()
         {
-            return Task.FromResult(new List<Jackson.Ideas.Mock.Services.Interfaces.BusinessPlanTemplate>
+            return Task.FromResult(new List<BuilderBusinessPlanTemplate>
             {
                 new()
                 {
@@ -181,9 +221,9 @@ namespace Jackson.Ideas.Mock.Services.Mock
             });
         }
         
-        public Task<Jackson.Ideas.Mock.Services.Interfaces.BusinessPlanExport> ExportBusinessPlanAsync(string planId, Jackson.Ideas.Mock.Services.Interfaces.ExportFormat format)
+        public Task<BuilderBusinessPlanExport> ExportBusinessPlanAsync(string planId, Models.Builder.ExportFormat format)
         {
-            var export = new Jackson.Ideas.Mock.Services.Interfaces.BusinessPlanExport
+            var export = new BuilderBusinessPlanExport
             {
                 Format = format,
                 FileName = $"business-plan-{planId}.{format.ToString().ToLower()}",
@@ -193,9 +233,9 @@ namespace Jackson.Ideas.Mock.Services.Mock
             return Task.FromResult(export);
         }
         
-        private Jackson.Ideas.Mock.Services.Interfaces.ExecutiveSummary CreateExecutiveSummary(BusinessPlanRequest request)
+        private BuilderExecutiveSummary CreateExecutiveSummary(BusinessPlanBuilderRequest request)
         {
-            return new Jackson.Ideas.Mock.Services.Interfaces.ExecutiveSummary
+            return new BuilderExecutiveSummary
             {
                 BusinessConcept = $"{request.BusinessName} addresses the challenge of {request.ProblemStatement} through an innovative solution that {request.Solution}.",
                 MissionStatement = $"To empower {request.TargetMarket} with innovative solutions that make their lives easier and more productive.",
@@ -207,9 +247,9 @@ namespace Jackson.Ideas.Mock.Services.Mock
             };
         }
         
-        private Jackson.Ideas.Mock.Services.Interfaces.MarketAnalysis CreateMarketAnalysis(BusinessPlanRequest request)
+        private BuilderMarketAnalysis CreateMarketAnalysis(BusinessPlanBuilderRequest request)
         {
-            return new Jackson.Ideas.Mock.Services.Interfaces.MarketAnalysis
+            return new BuilderMarketAnalysis
             {
                 IndustryOverview = $"The industry serving {request.TargetMarket} is experiencing significant growth driven by digital transformation and changing consumer expectations.",
                 TargetMarket = request.TargetMarket,
@@ -217,7 +257,7 @@ namespace Jackson.Ideas.Mock.Services.Mock
                 MarketTrends = "Increasing demand for digital solutions, focus on convenience and efficiency, mobile-first preferences.",
                 CompetitiveAnalysis = "Competitive landscape includes both established players and emerging startups, with opportunities for differentiation through superior user experience and targeted features.",
                 MarketOpportunity = "Significant opportunity exists due to underserved market segments and evolving customer needs.",
-                CustomerSegments = new List<Jackson.Ideas.Mock.Services.Interfaces.CustomerSegment>
+                CustomerSegments = new List<BuilderCustomerSegment>
                 {
                     new() { Name = "Primary Segment", Description = request.TargetMarket, Size = "60% of total market", Characteristics = "High engagement, willing to pay for quality solutions" },
                     new() { Name = "Secondary Segment", Description = "Adjacent customer groups", Size = "25% of total market", Characteristics = "Price-sensitive, moderate engagement" },
@@ -226,34 +266,34 @@ namespace Jackson.Ideas.Mock.Services.Mock
             };
         }
         
-        private ProductStrategy CreateProductStrategy(BusinessPlanRequest request)
+        private BuilderProductStrategy CreateProductStrategy(BusinessPlanBuilderRequest request)
         {
-            return new ProductStrategy
+            return new BuilderProductStrategy
             {
                 ProductDescription = $"{request.BusinessName} is a comprehensive solution that {request.Description}",
                 DevelopmentPlan = "Agile development approach with 2-week sprints, focusing on MVP delivery within 6 months followed by iterative improvements.",
                 TechnicalRequirements = "Cloud-based architecture using modern web technologies, mobile-responsive design, scalable infrastructure.",
                 IntellectualProperty = "Proprietary algorithms and processes, trademark protection for brand, potential patent applications for unique features.",
                 QualityAssurance = "Comprehensive testing strategy including unit tests, integration tests, user acceptance testing, and continuous monitoring.",
-                CoreFeatures = new List<ProductFeature>
+                CoreFeatures = new List<BuilderProductFeature>
                 {
-                    new() { Name = "Core Functionality", Description = "Primary value delivery feature", Priority = "High", Status = "In Development" },
-                    new() { Name = "User Management", Description = "Account creation and management", Priority = "High", Status = "Planned" },
-                    new() { Name = "Analytics Dashboard", Description = "User insights and metrics", Priority = "Medium", Status = "Planned" },
-                    new() { Name = "Integration Capabilities", Description = "Third-party service integrations", Priority = "Medium", Status = "Future" }
+                    new BuilderProductFeature() { Name = "Core Functionality", Description = "Primary value delivery feature", Priority = "High", Status = "In Development" },
+                    new BuilderProductFeature() { Name = "User Management", Description = "Account creation and management", Priority = "High", Status = "Planned" },
+                    new BuilderProductFeature() { Name = "Analytics Dashboard", Description = "User insights and metrics", Priority = "Medium", Status = "Planned" },
+                    new BuilderProductFeature() { Name = "Integration Capabilities", Description = "Third-party service integrations", Priority = "Medium", Status = "Future" }
                 },
-                Milestones = new List<DevelopmentMilestone>
+                Milestones = new List<BuilderDevelopmentMilestone>
                 {
-                    new() { Name = "MVP Launch", Description = "Core features ready for beta testing", TargetDate = DateTime.Now.AddMonths(6), Status = "On Track" },
-                    new() { Name = "Public Launch", Description = "Full public release with marketing campaign", TargetDate = DateTime.Now.AddMonths(9), Status = "Planned" },
-                    new() { Name = "Feature Enhancement", Description = "Additional features based on user feedback", TargetDate = DateTime.Now.AddMonths(12), Status = "Planned" }
+                    new BuilderDevelopmentMilestone() { Name = "MVP Launch", Description = "Core features ready for beta testing", TargetDate = DateTime.Now.AddMonths(6), Status = "On Track" },
+                    new BuilderDevelopmentMilestone() { Name = "Public Launch", Description = "Full public release with marketing campaign", TargetDate = DateTime.Now.AddMonths(9), Status = "Planned" },
+                    new BuilderDevelopmentMilestone() { Name = "Feature Enhancement", Description = "Additional features based on user feedback", TargetDate = DateTime.Now.AddMonths(12), Status = "Planned" }
                 }
             };
         }
         
-        private MarketingStrategy CreateMarketingStrategy(BusinessPlanRequest request)
+        private BuilderMarketingStrategy CreateMarketingStrategy(BusinessPlanBuilderRequest request)
         {
-            return new MarketingStrategy
+            return new BuilderMarketingStrategy
             {
                 BrandPositioning = "Positioned as the premium, user-friendly solution for discerning customers who value quality and effectiveness.",
                 PricingStrategy = $"{request.RevenueModel} with competitive pricing that reflects value delivered.",
@@ -261,7 +301,7 @@ namespace Jackson.Ideas.Mock.Services.Mock
                 PromotionalStrategy = "Digital marketing focus including content marketing, social media, paid advertising, and influencer partnerships.",
                 CustomerAcquisition = "Multi-channel approach targeting customer acquisition cost of under $50 with lifetime value of $300+.",
                 CustomerRetention = "Focus on user engagement, regular feature updates, excellent customer support, and loyalty programs.",
-                Channels = new List<MarketingChannel>
+                Channels = new List<BuilderMarketingChannel>
                 {
                     new() { Name = "Social Media Marketing", Strategy = "Organic and paid social media campaigns", Budget = "$2,000/month", ExpectedROI = "300%" },
                     new() { Name = "Content Marketing", Strategy = "Blog, videos, and educational content", Budget = "$1,500/month", ExpectedROI = "400%" },
@@ -271,33 +311,33 @@ namespace Jackson.Ideas.Mock.Services.Mock
             };
         }
         
-        private OperationsStrategy CreateOperationsStrategy(BusinessPlanRequest request)
+        private BuilderOperationsStrategy CreateOperationsStrategy(BusinessPlanBuilderRequest request)
         {
-            return new OperationsStrategy
+            return new BuilderOperationsStrategy
             {
                 OperationalModel = "Lean startup methodology with focus on rapid iteration and customer feedback integration.",
                 TechnologyInfrastructure = "Cloud-based infrastructure with automatic scaling, robust security measures, and 99.9% uptime target.",
                 QualityControl = "Continuous integration/deployment pipeline with automated testing and monitoring.",
                 SupplyChain = "Digital service delivery with minimal physical supply chain requirements.",
                 Scalability = "Architecture designed to handle 100x growth without major infrastructure changes.",
-                KeyProcesses = new List<KeyProcess>
+                KeyProcesses = new List<BuilderKeyProcess>
                 {
-                    new() { Name = "Customer Onboarding", Description = "Streamlined user registration and setup", Owner = "Product Team", Metrics = "Time to first value, completion rate" },
-                    new() { Name = "Customer Support", Description = "Multi-channel customer service", Owner = "Support Team", Metrics = "Response time, satisfaction scores" },
-                    new() { Name = "Product Development", Description = "Agile development and release process", Owner = "Engineering Team", Metrics = "Sprint velocity, bug rates" }
+                    new BuilderKeyProcess() { Name = "Customer Onboarding", Description = "Streamlined user registration and setup", Owner = "Product Team", Metrics = "Time to first value, completion rate" },
+                    new BuilderKeyProcess() { Name = "Customer Support", Description = "Multi-channel customer service", Owner = "Support Team", Metrics = "Response time, satisfaction scores" },
+                    new BuilderKeyProcess() { Name = "Product Development", Description = "Agile development and release process", Owner = "Engineering Team", Metrics = "Sprint velocity, bug rates" }
                 },
-                RequiredResources = new List<Resource>
+                RequiredResources = new List<BuilderResource>
                 {
-                    new() { Name = "Development Team", Type = "Human", Quantity = "5 developers", Cost = "$50,000/month" },
-                    new() { Name = "Cloud Infrastructure", Type = "Technology", Quantity = "Scalable", Cost = "$2,000/month" },
-                    new() { Name = "Office Space", Type = "Physical", Quantity = "Co-working space", Cost = "$1,500/month" }
+                    new BuilderResource() { Name = "Development Team", Type = "Human", Quantity = "5 developers", Cost = "$50,000/month" },
+                    new BuilderResource() { Name = "Cloud Infrastructure", Type = "Technology", Quantity = "Scalable", Cost = "$2,000/month" },
+                    new BuilderResource() { Name = "Office Space", Type = "Physical", Quantity = "Co-working space", Cost = "$1,500/month" }
                 }
             };
         }
         
-        private FinancialStrategy CreateFinancialStrategy(BusinessPlanRequest request)
+        private BuilderFinancialStrategy CreateFinancialStrategy(BusinessPlanBuilderRequest request)
         {
-            return new FinancialStrategy
+            return new BuilderFinancialStrategy
             {
                 RevenueModel = request.RevenueModel,
                 CostStructure = "Variable costs scale with usage, fixed costs include team salaries and infrastructure.",
@@ -308,11 +348,11 @@ namespace Jackson.Ideas.Mock.Services.Mock
             };
         }
         
-        private Jackson.Ideas.Mock.Services.Interfaces.RiskAssessment CreateRiskAssessment(BusinessPlanRequest request)
+        private BuilderRiskAssessment CreateRiskAssessment(BusinessPlanBuilderRequest request)
         {
-            return new Jackson.Ideas.Mock.Services.Interfaces.RiskAssessment
+            return new BuilderRiskAssessment
             {
-                IdentifiedRisks = new List<Jackson.Ideas.Mock.Services.Interfaces.BusinessRisk>
+                IdentifiedRisks = new List<BuilderBusinessRisk>
                 {
                     new() { Name = "Market Competition", Description = "Increased competition from established players", Impact = "High", Probability = "Medium", MitigationStrategy = "Focus on differentiation and superior user experience" },
                     new() { Name = "Technology Risk", Description = "Technical challenges or security issues", Impact = "Medium", Probability = "Low", MitigationStrategy = "Robust testing, security audits, and backup systems" },
@@ -325,17 +365,17 @@ namespace Jackson.Ideas.Mock.Services.Mock
             };
         }
         
-        private ImplementationTimeline CreateImplementationTimeline(BusinessPlanRequest request)
+        private BuilderImplementationTimeline CreateImplementationTimeline(BusinessPlanBuilderRequest request)
         {
-            return new ImplementationTimeline
+            return new BuilderImplementationTimeline
             {
-                Phases = new List<Phase>
+                Phases = new List<BuilderPhase>
                 {
                     new() { Name = "Phase 1: MVP Development", Description = "Build and test core functionality", StartDate = DateTime.Now, EndDate = DateTime.Now.AddMonths(6), Deliverables = new() { "MVP Release", "Beta Testing", "Initial User Feedback" } },
                     new() { Name = "Phase 2: Market Launch", Description = "Public launch and marketing campaign", StartDate = DateTime.Now.AddMonths(6), EndDate = DateTime.Now.AddMonths(12), Deliverables = new() { "Public Release", "Marketing Campaign", "Customer Support System" } },
                     new() { Name = "Phase 3: Growth & Scale", Description = "Feature expansion and market growth", StartDate = DateTime.Now.AddMonths(12), EndDate = DateTime.Now.AddMonths(24), Deliverables = new() { "Feature Enhancements", "Market Expansion", "Team Growth" } }
                 },
-                KeyMilestones = new List<Jackson.Ideas.Mock.Services.Interfaces.Milestone>
+                KeyMilestones = new List<BuilderMilestone>
                 {
                     new() { Name = "MVP Complete", Description = "Core product ready for testing", TargetDate = DateTime.Now.AddMonths(6), Status = "On Track", Criteria = "All core features functional and tested" },
                     new() { Name = "First 100 Customers", Description = "Achieve initial customer base", TargetDate = DateTime.Now.AddMonths(9), Status = "Planned", Criteria = "100 paying customers acquired" },
@@ -346,9 +386,9 @@ namespace Jackson.Ideas.Mock.Services.Mock
             };
         }
         
-        private Jackson.Ideas.Mock.Services.Interfaces.BusinessModelCanvas CreateSampleCanvas(string planId)
+        private BuilderBusinessModelCanvas CreateSampleCanvas(string planId)
         {
-            return new Jackson.Ideas.Mock.Services.Interfaces.BusinessModelCanvas
+            return new BuilderBusinessModelCanvas
             {
                 BusinessPlanId = planId,
                 KeyPartners = new() { "Technology providers", "Marketing agencies", "Strategic advisors", "Complementary service providers" },
@@ -363,7 +403,7 @@ namespace Jackson.Ideas.Mock.Services.Mock
             };
         }
         
-        private int CalculateCompletenessScore(Jackson.Ideas.Mock.Services.Interfaces.BusinessPlan plan)
+        private int CalculateCompletenessScore(BuilderBusinessPlan plan)
         {
             int score = 0;
             
@@ -404,11 +444,79 @@ namespace Jackson.Ideas.Mock.Services.Mock
             return score;
         }
         
-        private byte[] GenerateMockExportData(Jackson.Ideas.Mock.Services.Interfaces.ExportFormat format)
+        private byte[] GenerateMockExportData(Models.Builder.ExportFormat format)
         {
             // Return mock data for demo purposes
             string content = $"Mock {format} export data - Business Plan Content";
             return System.Text.Encoding.UTF8.GetBytes(content);
+        }
+        
+        private List<string> GenerateRecommendations(BuilderBusinessPlan plan)
+        {
+            var recommendations = new List<string>();
+            
+            if (plan.CompletenessScore < 60)
+            {
+                recommendations.Add("Consider expanding your market analysis section for better insights");
+                recommendations.Add("Develop more detailed financial projections");
+            }
+            if (plan.CompletenessScore < 80)
+            {
+                recommendations.Add("Add more specific implementation milestones");
+                recommendations.Add("Include competitive analysis details");
+            }
+            
+            recommendations.Add("Consider conducting customer interviews to validate assumptions");
+            recommendations.Add("Review regulatory requirements for your industry");
+            recommendations.Add("Develop contingency plans for key risks");
+            
+            return recommendations;
+        }
+        
+        private List<BuilderStrategicRecommendation> GenerateStrategicRecommendations(BuilderBusinessPlan plan)
+        {
+            return new List<BuilderStrategicRecommendation>
+            {
+                new BuilderStrategicRecommendation
+                {
+                    Title = "Market Entry Strategy",
+                    Description = "Focus on early adopter segment for initial market validation",
+                    Category = "Market Strategy",
+                    Priority = 1,
+                    Impact = "High",
+                    Implementation = "Conduct customer discovery interviews and pilot testing"
+                },
+                new BuilderStrategicRecommendation
+                {
+                    Title = "Technology Development",
+                    Description = "Build MVP with core features first, iterate based on feedback",
+                    Category = "Product Strategy",
+                    Priority = 2,
+                    Impact = "High",
+                    Implementation = "Create development roadmap with 3-month iterations"
+                },
+                new BuilderStrategicRecommendation
+                {
+                    Title = "Funding Strategy",
+                    Description = "Bootstrap initially, seek seed funding after product-market fit",
+                    Category = "Financial Strategy",
+                    Priority = 3,
+                    Impact = "Medium",
+                    Implementation = "Prepare investor pitch deck and financial model"
+                }
+            };
+        }
+        
+        private string GenerateValidationSummary(BuilderBusinessPlan plan)
+        {
+            if (plan.CompletenessScore >= 90)
+                return "Excellent: Business plan is comprehensive and ready for implementation. All key sections are well-developed.";
+            if (plan.CompletenessScore >= 80)
+                return "Good: Business plan covers most essential elements. Minor enhancements recommended before full implementation.";
+            if (plan.CompletenessScore >= 60)
+                return "Fair: Business plan has solid foundation but requires additional development in several areas.";
+            
+            return "Needs Improvement: Business plan requires significant development across multiple sections before implementation.";
         }
     }
 }
