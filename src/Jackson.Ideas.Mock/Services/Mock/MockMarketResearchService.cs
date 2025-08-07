@@ -86,7 +86,7 @@ public class MockMarketResearchService : IMarketResearchService
                         {
                             Name = "DoorDash",
                             MarketShare = "35%",
-                            Strengths = new List<string> { "Largest network", "fast delivery" },
+                            Strengths = new List<string> { "Largest network", "Fast delivery" },
                             Weaknesses = new List<string> { "Limited sustainability focus" },
                             PricingStrategy = "Competitive with promotions",
                             DifferentiationFactor = "Speed and convenience"
@@ -95,8 +95,8 @@ public class MockMarketResearchService : IMarketResearchService
                         {
                             Name = "Uber Eats",
                             MarketShare = "28%",
-                            Strengths = new List<string> { "Strong brand", "technology" },
-                            Weaknesses = new List<string> { "High fees", "environmental impact" },
+                            Strengths = new List<string> { "Strong brand", "Technology" },
+                            Weaknesses = new List<string> { "High fees", "Environmental impact" },
                             PricingStrategy = "Premium pricing",
                             DifferentiationFactor = "Uber ecosystem integration"
                         }
@@ -107,8 +107,8 @@ public class MockMarketResearchService : IMarketResearchService
                         {
                             Name = "Local Pickup Services",
                             MarketShare = "5%",
-                            Strengths = new List<string> { "Personal relationships", "lower costs" },
-                            Weaknesses = new List<string> { "Limited scale", "technology gaps" },
+                            Strengths = new List<string> { "Personal relationships", "Lower costs" },
+                            Weaknesses = new List<string> { "Limited scale", "Technology gaps" },
                             PricingStrategy = "Low-cost",
                             DifferentiationFactor = "Community connection"
                         }

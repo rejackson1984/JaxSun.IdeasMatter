@@ -13,6 +13,11 @@ namespace Jackson.Ideas.Mock.Services.Interfaces
         Task<IdeaValidationResult> ValidateIdeaAsync(IdeaValidationRequest request);
         
         /// <summary>
+        /// Gets validation result for a user by ID
+        /// </summary>
+        Task<IdeaValidationResult?> GetValidationResultAsync(string userId);
+        
+        /// <summary>
         /// Gets validation criteria for different validation strategies
         /// </summary>
         Task<List<ValidationCriteria>> GetValidationCriteriaAsync(string strategy);

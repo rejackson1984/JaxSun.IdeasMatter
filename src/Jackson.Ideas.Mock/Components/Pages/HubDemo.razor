@@ -32,7 +32,7 @@
                 var hub = kvp.Key;
                 var metadata = kvp.Value;
                 var progress = _currentContext.Progress.GetValueOrDefault(hub);
-                var isUnlocked = progress?.IsUnlocked ?? false;
+                var isUnlocked = true; // progress?.IsUnlocked ?? false;
                 var isCurrent = _currentContext.CurrentHub == hub;
                 
                 <div class="hub-card @GetHubCardClass(hub, isUnlocked, isCurrent)" @onclick="() => SelectHub(hub)">

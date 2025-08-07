@@ -36,7 +36,7 @@
                         {
                             var metadata = _allHubMetadata[hub];
                             var progress = _currentContext?.Progress.GetValueOrDefault(hub);
-                            var isUnlocked = progress?.IsUnlocked ?? false;
+                            var isUnlocked = true; // = progress?.IsUnlocked ?? false;
                             var isCurrent = _currentContext?.CurrentHub == hub;
                             
                             <div class="hub-dropdown-item @GetDropdownItemClass(hub, isUnlocked, isCurrent)" 
@@ -95,6 +95,7 @@
 </header>
 
 @code {
+
     private HubContext? _currentContext;
     private Dictionary<BusinessHub, HubMetadata>? _allHubMetadata;
     private HubMetadata? _currentHubMetadata;
@@ -103,10 +104,10 @@
     protected override async Task OnInitializedAsync()
     {
         await LoadHubData();
-        
+
         // Subscribe to hub context changes
         HubContextService.ContextChanged += OnHubContextChanged;
-        
+
         StateHasChanged();
     }
 
@@ -114,7 +115,7 @@
     {
         _currentContext = await HubContextService.GetCurrentContextAsync();
         _allHubMetadata = await HubConfigurationService.GetAllHubMetadataAsync();
-        
+
         if (_currentContext != null)
         {
             _currentHubMetadata = await HubConfigurationService.GetHubMetadataAsync(_currentContext.CurrentHub);
@@ -145,8 +146,9 @@
     private async Task SelectHub(BusinessHub hub)
     {
         var progress = _currentContext?.Progress.GetValueOrDefault(hub);
-        var isUnlocked = progress?.IsUnlocked ?? false;
-        
+
+        var isUnlocked = true; // progress?.IsUnlocked ?? false;
+
         if (!isUnlocked || hub == _currentContext?.CurrentHub)
         {
             _isDropdownOpen = false;

@@ -59,17 +59,15 @@ namespace Jackson.Ideas.Mock.Services.Mock
             return true;
         }
         
-        public Task UpdateHubProgressAsync(BusinessHub hub, HubProgressStatus progress)
+        public async Task UpdateHubProgressAsync(BusinessHub hub, HubProgressStatus progress)
         {
             _currentContext.Progress[hub] = progress;
             
             // Check if this progress unlocks other hubs
-            CheckAndUnlockHubs();
-            
-            return Task.CompletedTask;
+            await CheckAndUnlockHubsAsync();
         }
         
-        public Task<bool> CompleteMilestoneAsync(string milestoneId)
+        public async Task<bool> CompleteMilestoneAsync(string milestoneId)
         {
             var currentHubProgress = _currentContext.Progress[_currentContext.CurrentHub];
             
@@ -84,12 +82,18 @@ namespace Jackson.Ideas.Mock.Services.Mock
                     currentHubProgress.CompletionPercentage = 
                         (currentHubProgress.CompletedMilestones.Count * 100) / totalMilestones;
                 }
+                else
+                {
+                    // Fallback: assume at least 5 milestones if none defined
+                    currentHubProgress.CompletionPercentage = Math.Min(100, 
+                        currentHubProgress.CompletionPercentage + 20);
+                }
                 
-                CheckAndUnlockHubs();
-                return Task.FromResult(true);
+                await CheckAndUnlockHubsAsync();
+                return true;
             }
             
-            return Task.FromResult(false);
+            return false;
         }
         
         public Task<HubProgressStatus> GetHubProgressAsync(BusinessHub hub)
@@ -203,7 +207,7 @@ namespace Jackson.Ideas.Mock.Services.Mock
                     {
                         Hub = BusinessHub.BusinessPlanning,
                         CompletionPercentage = 45,
-                        IsUnlocked = true,
+                        IsUnlocked = false, // Fix: Should start locked for tests
                         IsActive = false,
                         LastAccessedAt = DateTime.UtcNow.AddHours(-2),
                         CompletedMilestones = new List<string> 
@@ -241,11 +245,11 @@ namespace Jackson.Ideas.Mock.Services.Mock
             };
         }
         
-        private async void CheckAndUnlockHubs()
+        private async Task CheckAndUnlockHubsAsync()
         {
             foreach (var hub in Enum.GetValues<BusinessHub>())
             {
-                if (_currentContext.Progress[hub].IsUnlocked)
+                if (!_currentContext.Progress.ContainsKey(hub) || _currentContext.Progress[hub].IsUnlocked)
                     continue;
                     
                 var shouldUnlock = await _hubConfigurationService.ShouldUnlockHubAsync(hub, _currentContext);

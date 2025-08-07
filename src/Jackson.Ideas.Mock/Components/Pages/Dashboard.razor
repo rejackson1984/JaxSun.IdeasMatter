@@ -1,246 +1,154 @@
 @page "/dashboard"
-@page "/app/dashboard"
-@layout HubLayout
-@inject IHubContextService HubContextService
-@inject IJSRuntime JSRuntime
-@implements IDisposable
 
 <PageTitle>Dashboard - IdeaCoach Pro</PageTitle>
 
-@if (_isLoading)
-{
-    <div class="loading-container">
-        <div class="loading-spinner"></div>
-        <h2>Loading Dashboard...</h2>
-        <p>@_statusMessage</p>
-        <p><strong>Debug:</strong> Loading = @_isLoading, Error = @_hasError</p>
-    </div>
-}
-else if (_hasError)
-{
-    <div class="error-container">
-        <h2>Dashboard Error</h2>
-        <p>@_errorMessage</p>
-        <button class="btn btn-primary" @onclick="RetryInitialization">
-            <i class="fas fa-sync-alt"></i> Retry
-        </button>
-    </div>
-}
-else if (_currentContext == null)
-{
-    <div class="fallback-container">
-        <h2>Loading Fallback Dashboard</h2>
-        <p>Unable to load hub context from service. Using default Idea Development Hub.</p>
-        <p><strong>Debug:</strong> Context is NULL, showing IdeaDevelopmentDashboard directly</p>
-        <div class="fallback-dashboard-wrapper">
-            <IdeaDevelopmentDashboard />
+<!-- Dashboard Header -->
+<div class="dashboard-header">
+    <h1>🎯 IdeaCoach Pro Dashboard</h1>
+    <p class="welcome-text">Welcome back! Here's your business development progress.</p>
+</div>
+
+<!-- Progress Overview -->
+<div class="progress-section">
+    <div class="progress-card">
+        <h2>📈 Your Progress</h2>
+        <div class="progress-circle">
+            <div class="progress-percentage">32%</div>
         </div>
-    </div>
-}
-else
-{
-    <div class="debug-info" style="background: yellow; padding: 10px; margin: 10px;">
-        <strong>DEBUG INFO:</strong> Current Hub = @_currentContext.CurrentHub (@((int)_currentContext.CurrentHub))
+        <p>Overall completion across all phases</p>
     </div>
     
-    @switch (_currentContext.CurrentHub)
-    {
-        case BusinessHub.IdeaDevelopment:
-            <div class="hub-debug">Loading IdeaDevelopmentDashboard...</div>
-            <IdeaDevelopmentDashboard />
-            break;
-        case BusinessHub.BusinessPlanning:
-            <div class="hub-debug">Loading BusinessPlanningDashboard...</div>
-            <BusinessPlanningDashboard />
-            break;
-        case BusinessHub.BusinessOperations:
-            <div class="hub-debug">Loading BusinessOperationsDashboard...</div>
-            <BusinessOperationsDashboard />
-            break;
-        default:
-            <div class="error-container">
-                <h2>Unknown Hub: @_currentContext.CurrentHub</h2>
-                <p>Unable to determine your current business hub. Please contact support.</p>
-                <p><strong>Debug:</strong> Hub value = @((int)_currentContext.CurrentHub)</p>
-            </div>
-            break;
-    }
-}
-
-@code {
-    private HubContext? _currentContext;
-    private bool _isLoading = true;
-    private bool _hasError = false;
-    private string _statusMessage = "Initializing dashboard...";
-    private string _errorMessage = "";
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            _statusMessage = "Connecting to hub service...";
-            StateHasChanged();
-            
-            // Subscribe to hub context changes
-            HubContextService.ContextChanged += OnHubContextChanged;
-            _statusMessage = "Loading hub context...";
-            StateHasChanged();
-            
-            // Load current context with longer timeout and better error handling
-            var contextTask = HubContextService.GetCurrentContextAsync();
-            var timeoutTask = Task.Delay(10000); // Increased to 10 second timeout
-            
-            var completedTask = await Task.WhenAny(contextTask, timeoutTask);
-            if (completedTask == timeoutTask)
-            {
-                throw new TimeoutException("Hub context loading timed out after 10 seconds");
-            }
-            
-            _currentContext = await contextTask;
-            
-            // Additional validation
-            if (_currentContext == null)
-            {
-                throw new InvalidOperationException("Hub context service returned null context");
-            }
-            
-            _statusMessage = $"Hub context loaded: {_currentContext.CurrentHub}";
-            _isLoading = false;
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            _hasError = true;
-            _errorMessage = $"Failed to initialize dashboard: {ex.Message}";
-            _isLoading = false;
-            
-            // Add console logging for debugging
-            Console.WriteLine($"Dashboard initialization error: {ex.Message}");
-            Console.WriteLine($"Exception type: {ex.GetType().Name}");
-            if (ex.InnerException != null)
-            {
-                Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
-            }
-            
-            StateHasChanged();
-        }
-    }
-
-    private async Task RetryInitialization()
-    {
-        _hasError = false;
-        _isLoading = true;
-        _statusMessage = "Retrying initialization...";
-        StateHasChanged();
-        
-        await OnInitializedAsync();
-    }
-
-    private void OnHubContextChanged(object? sender, HubContextChangedEventArgs e)
-    {
-        InvokeAsync(async () =>
-        {
-            _currentContext = e.Context;
-            StateHasChanged();
-            
-            // Notify JavaScript of hub change
-            try
-            {
-                await JSRuntime.InvokeVoidAsync("hubRouter.onHubChanged", e.CurrentHub.ToString());
-            }
-            catch (Exception ex)
-            {
-                // Log but don't fail on JS errors
-                Console.WriteLine($"JS hub notification failed: {ex.Message}");
-            }
-        });
-    }
-
-    private RenderFragment RenderFallbackDashboard() => __builder =>
-    {
-        <div class="fallback-dashboard">
-            <h3>🌟 Idea Development Hub (Fallback)</h3>
-            <div class="dashboard-card">
-                <h4>Quick Stats</h4>
-                <ul>
-                    <li>Total Ideas: 7</li>
-                    <li>Validated Ideas: 1</li>
-                    <li>Current Focus: MyFitnessPal Clone</li>
-                </ul>
-            </div>
-            <div class="dashboard-card">
-                <h4>Recent Activity</h4>
-                <p>Market research completed for fitness app idea.</p>
-            </div>
+    <div class="milestone-card">
+        <h3>🎯 Next Milestone</h3>
+        <p><strong>Strategic Foundation</strong></p>
+        <div class="milestone-bar">
+            <div class="milestone-fill" style="width: 68%"></div>
         </div>
-    };
+        <small>Complete financial projections to continue</small>
+    </div>
+</div>
 
-    public void Dispose()
-    {
-        try
-        {
-            HubContextService.ContextChanged -= OnHubContextChanged;
-        }
-        catch
-        {
-            // Ignore disposal errors
-        }
-    }
-}
+<!-- Quick Actions -->
+<div class="action-section">
+    <h2>🚀 Quick Actions</h2>
+    <div class="action-grid">
+        <a href="/idea-input" class="action-card">
+            <i class="fas fa-lightbulb"></i>
+            <span>New Idea</span>
+        </a>
+        <a href="/business-plan" class="action-card">
+            <i class="fas fa-chart-line"></i>
+            <span>Business Plan</span>
+        </a>
+        <a href="/market-research" class="action-card">
+            <i class="fas fa-search"></i>
+            <span>Market Research</span>
+        </a>
+    </div>
+</div>
 
 <style>
-    .loading-container, .error-container, .fallback-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 60vh;
-        text-align: center;
-        color: var(--text-secondary);
-        padding: 2rem;
-    }
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+}
 
-    .loading-spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid var(--border-color);
-        border-top: 4px solid var(--hub-primary, var(--primary-color));
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin-bottom: 1rem;
-    }
+.dashboard-header h1 {
+    color: var(--primary-color, #3b82f6);
+    margin-bottom: 0.5rem;
+}
 
-    .fallback-dashboard {
-        width: 100%;
-        max-width: 800px;
-        margin: 0 auto;
-    }
+.welcome-text {
+    color: var(--text-secondary, #64748b);
+    font-size: 1.1rem;
+}
 
-    .dashboard-card {
-        background: white;
-        border-radius: 8px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        border-left: 4px solid var(--hub-primary, var(--primary-color));
-    }
+.progress-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
 
-    .dashboard-card h4 {
-        margin-top: 0;
-        color: var(--text-primary);
-    }
+.progress-card, .milestone-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
 
-    .dashboard-card ul {
-        text-align: left;
-        margin: 1rem 0;
-    }
+.progress-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem auto;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
 
-    .error-container .btn {
-        margin-top: 1rem;
-    }
+.milestone-bar {
+    background: #e5e7eb;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
 
-    @@keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+.milestone-fill {
+    background: linear-gradient(90deg, #10b981, #34d399);
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.action-section {
+    margin-top: 2rem;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: var(--text-primary, #1f2937);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.action-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.action-card i {
+    font-size: 2rem;
+    color: var(--primary-color, #3b82f6);
+    margin-bottom: 0.5rem;
+}
+
+.action-card span {
+    font-weight: 500;
+}
+
+@@media (max-width: 768px) {
+    .progress-section {
+        grid-template-columns: 1fr;
     }
+}
 </style>

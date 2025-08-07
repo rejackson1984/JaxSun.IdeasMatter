@@ -1,5 +1,6 @@
 using Jackson.Ideas.Mock.Models;
 using Jackson.Ideas.Mock.Services.Interfaces;
+using ValidationCriteria = Jackson.Ideas.Mock.Services.Interfaces.ValidationCriteria;
 
 namespace Jackson.Ideas.Mock.Services.Mock
 {
@@ -9,6 +10,7 @@ namespace Jackson.Ideas.Mock.Services.Mock
     public class MockIdeaValidationService : IIdeaValidationService
     {
         private readonly Random _random = new(42); // Fixed seed for consistent results
+        private readonly Dictionary<string, IdeaValidationResult> _validationResults = new();
         
         public Task<IdeaValidationResult> ValidateIdeaAsync(IdeaValidationRequest request)
         {
@@ -38,6 +40,130 @@ namespace Jackson.Ideas.Mock.Services.Mock
             result.Competition = GenerateCompetitiveAnalysis(request);
             
             return Task.FromResult(result);
+        }
+        
+        public Task<IdeaValidationResult?> GetValidationResultAsync(string userId)
+        {
+            // Check if we have a stored validation result for this user
+            if (_validationResults.TryGetValue(userId, out var result))
+            {
+                return Task.FromResult<IdeaValidationResult?>(result);
+            }
+            
+            // For mock purposes, create a sample validation result if none exists
+            var mockRequest = new IdeaValidationRequest
+            {
+                Description = "Sample business idea for testing",
+                ProblemSolved = "Helps users organize their daily tasks more efficiently",
+                TargetAudience = "Busy professionals aged 25-45",
+                RevenueModel = "Subscription-based model at $9.99/month",
+                Strategy = "quick"
+            };
+            
+            var mockResult = new IdeaValidationResult
+            {
+                Request = mockRequest,
+                OverallScore = 75,
+                CategoryScores = new Dictionary<string, int>
+                {
+                    ["Problem Clarity"] = 80,
+                    ["Market Potential"] = 75,
+                    ["Revenue Viability"] = 70,
+                    ["Innovation Factor"] = 70,
+                    ["Execution Feasibility"] = 80
+                },
+                Strengths = new List<string>
+                {
+                    "Clear problem definition - you understand the pain point well",
+                    "Well-defined target audience with specific characteristics",
+                    "Realistic revenue model with clear monetization path"
+                },
+                Weaknesses = new List<string>
+                {
+                    "Competitive differentiation could be more clearly defined"
+                },
+                Opportunities = new List<string>
+                {
+                    "Growing demand for digital solutions in your target market",
+                    "Potential for subscription-based recurring revenue models"
+                },
+                Threats = new List<string>
+                {
+                    "Established competitors with existing market share",
+                    "Technology and market preferences change rapidly"
+                },
+                NextSteps = new List<string>
+                {
+                    "🎉 Congratulations! Your idea shows strong potential",
+                    "🔍 Conduct customer interviews to validate your assumptions",
+                    "📊 Research market size and competitive landscape in detail"
+                },
+                ReadyForNextHub = true,
+                MarketOpportunity = new MarketOpportunity
+                {
+                    MarketSize = "$150M",
+                    GrowthRate = "12%",
+                    Trends = "Growing demand for digital solutions, increased focus on efficiency and convenience",
+                    KeyDrivers = new List<string>
+                    {
+                        "Digital transformation trends",
+                        "Changing consumer expectations",
+                        "Mobile-first preferences"
+                    },
+                    Barriers = new List<string>
+                    {
+                        "Customer acquisition costs",
+                        "Market education requirements"
+                    },
+                    OpportunityScore = 75,
+                    SizeCategory = "Medium"
+                },
+                Competition = new Services.Interfaces.CompetitiveAnalysis
+                {
+                    DirectCompetitors = new List<Services.Interfaces.Competitor>
+                    {
+                        new()
+                        {
+                            Name = "SmartTaskPro",
+                            Description = "Established player in the task management space",
+                            Strengths = "Large user base, proven business model",
+                            Weaknesses = "Complex interface, high pricing",
+                            MarketShare = "25%",
+                            IsDirect = true
+                        }
+                    },
+                    IndirectCompetitors = new List<Services.Interfaces.Competitor>
+                    {
+                        new()
+                        {
+                            Name = "QuickProductivityHub",
+                            Description = "Adjacent productivity tools",
+                            Strengths = "Adjacent market presence, resources",
+                            Weaknesses = "Not focused on your specific problem",
+                            MarketShare = "10%",
+                            IsDirect = false
+                        }
+                    },
+                    CompetitiveLandscape = "The task management market shows moderate competition with established players and emerging startups.",
+                    CompetitiveAdvantages = new List<string>
+                    {
+                        "First-mover advantage in your specific niche",
+                        "Focused approach to a specific customer segment"
+                    },
+                    CompetitiveThreats = new List<string>
+                    {
+                        "Established brands with marketing resources",
+                        "Price competition from larger players"
+                    },
+                    CompetitionIntensity = 6
+                },
+                ValidatedAt = DateTime.UtcNow
+            };
+            
+            // Store the result for future calls
+            _validationResults[userId] = mockResult;
+            
+            return Task.FromResult<IdeaValidationResult?>(mockResult);
         }
         
         public Task<List<ValidationCriteria>> GetValidationCriteriaAsync(string strategy)

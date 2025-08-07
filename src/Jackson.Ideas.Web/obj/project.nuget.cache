@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Z28G3tnkhbI=",
+  "dgSpecHash": "uFHZ+yDN5L4=",
   "success": true,
-  "projectFilePath": "C:\\Development\\Jackson.Ideas\\src\\Jackson.Ideas.Web\\Jackson.Ideas.Web.csproj",
+  "projectFilePath": "C:\\Development\\Jackson.Ideas\\src\\Jackson.Ideas.Web\\Jackson.Ideas.Web.old.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Owner\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Owner\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

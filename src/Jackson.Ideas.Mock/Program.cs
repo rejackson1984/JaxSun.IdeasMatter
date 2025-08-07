@@ -20,7 +20,10 @@ if (builder.Environment.IsProduction())
 
 // Add services to the container
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddServerSideBlazor(options =>
+{
+    options.DetailedErrors = true;  // Show detailed errors for debugging
+});
 builder.Services.AddSignalR();
 
 // Add authentication services
@@ -92,6 +95,55 @@ builder.Services.AddScoped<IBusinessModelCanvasService, MockBusinessModelCanvasS
 builder.Services.AddScoped<IBusinessOperationsService, MockBusinessOperationsService>();
 
 var app = builder.Build();
+
+// === DI CONTAINER DIAGNOSTIC START ===
+app.Logger.LogInformation("=== DI CONTAINER DIAGNOSTIC START ===");
+
+try 
+{
+    using var scope = app.Services.CreateScope();
+    
+    // Test each service that pages depend on
+    Console.WriteLine("Testing IHubContextService...");
+    var hubService = scope.ServiceProvider.GetService<IHubContextService>();
+    app.Logger.LogInformation($"IHubContextService: {hubService?.GetType()?.Name ?? "NULL"}");
+    
+    Console.WriteLine("Testing IMarketResearchService...");
+    var marketService = scope.ServiceProvider.GetService<IMarketResearchService>();  
+    app.Logger.LogInformation($"IMarketResearchService: {marketService?.GetType()?.Name ?? "NULL"}");
+    
+    Console.WriteLine("Testing IMockDataService...");
+    var mockDataService = scope.ServiceProvider.GetService<IMockDataService>();
+    app.Logger.LogInformation($"IMockDataService: {mockDataService?.GetType()?.Name ?? "NULL"}");
+    
+    Console.WriteLine("Testing IHubConfigurationService...");
+    var hubConfigService = scope.ServiceProvider.GetService<IHubConfigurationService>();
+    app.Logger.LogInformation($"IHubConfigurationService: {hubConfigService?.GetType()?.Name ?? "NULL"}");
+    
+    Console.WriteLine("Testing ICoachPersonaService...");
+    var coachService = scope.ServiceProvider.GetService<ICoachPersonaService>();
+    app.Logger.LogInformation($"ICoachPersonaService: {coachService?.GetType()?.Name ?? "NULL"}");
+    
+    Console.WriteLine("All DI services tested successfully!");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"*** DI CONTAINER FAILURE: {ex.Message} ***");
+    app.Logger.LogError($"DI CONTAINER FAILURE: {ex.Message}");
+    app.Logger.LogError($"STACK TRACE: {ex.StackTrace}");
+    
+    // Also log inner exceptions
+    var innerEx = ex.InnerException;
+    while (innerEx != null)
+    {
+        Console.WriteLine($"*** INNER EXCEPTION: {innerEx.Message} ***");
+        app.Logger.LogError($"INNER EXCEPTION: {innerEx.Message}");
+        innerEx = innerEx.InnerException;
+    }
+}
+
+app.Logger.LogInformation("=== DI CONTAINER DIAGNOSTIC END ===");
+// === DI CONTAINER DIAGNOSTIC END ===
 
 // Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())

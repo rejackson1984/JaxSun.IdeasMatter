@@ -719,5 +719,11 @@ namespace Jackson.Ideas.Mock.Tests.Services
         Task SendAchievementNotificationAsync(string userId, Achievement achievement);
     }
 
+    public class IdeaValidationResult
+    {
+        public int OverallScore { get; set; }
+        public Dictionary<string, int> CategoryScores { get; set; } = new();
+    }
+
     #endregion
 }

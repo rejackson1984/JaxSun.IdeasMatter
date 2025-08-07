@@ -556,4 +556,78 @@ namespace Jackson.Ideas.Mock.Tests.Services
         public BusinessHub Hub { get; set; }
     }
 
+    #region Supporting Models
+
+    public class IdeaValidationRequest
+    {
+        public string Description { get; set; } = string.Empty;
+        public string TargetAudience { get; set; } = string.Empty;
+        public string ProblemSolved { get; set; } = string.Empty;
+    }
+
+    public class IdeaValidationResult
+    {
+        public IdeaValidationRequest Request { get; set; } = new();
+        public int OverallScore { get; set; }
+        public Dictionary<string, int> CategoryScores { get; set; } = new();
+        public List<string> NextSteps { get; set; } = new();
+    }
+
+    public class BusinessPlanBuilderRequest
+    {
+        public string Description { get; set; } = string.Empty;
+        public string TargetMarket { get; set; } = string.Empty;
+        public string RevenueModel { get; set; } = string.Empty;
+    }
+
+    public class BusinessPlanBuilderResult
+    {
+        public BusinessPlanBuilderRequest Request { get; set; } = new();
+        public BuilderBusinessPlan BusinessPlan { get; set; } = new();
+        public int CompletenessScore { get; set; }
+        public bool ReadyForOperations { get; set; }
+    }
+
+    public class BusinessOperationsRequest
+    {
+        public string BusinessIdea { get; set; } = string.Empty;
+        public string TargetMarket { get; set; } = string.Empty;
+    }
+
+    public class BusinessOperationsResult
+    {
+        public BusinessOperationsRequest Request { get; set; } = new();
+        public LaunchPlan LaunchPlan { get; set; } = new();
+        public int OperationalReadinessScore { get; set; }
+    }
+
+    public class LaunchPlan
+    {
+        public List<string> LaunchPhases { get; set; } = new();
+        public int TimelineWeeks { get; set; }
+        public List<string> CriticalSuccessFactors { get; set; } = new();
+    }
+
+    #endregion
+
+    #region Service Interfaces
+
+    public interface IIdeaValidationService
+    {
+        Task<int> CalculateValidationScoreAsync(IdeaValidationRequest request);
+        Task<bool> IsReadyForNextHubAsync(IdeaValidationResult result);
+    }
+
+    public interface IBusinessPlanBuilderService
+    {
+        Task<BusinessPlanBuilderResult> BuildBusinessPlanAsync(BusinessPlanBuilderRequest request);
+    }
+
+    public interface IBusinessOperationsService
+    {
+        Task<BusinessOperationsResult> AnalyzeBusinessOperationsAsync(BusinessOperationsRequest request);
+    }
+
+    #endregion
+
 }

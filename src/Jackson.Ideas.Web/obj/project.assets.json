@@ -7936,9 +7936,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Development\\Jackson.Ideas\\src\\Jackson.Ideas.Web\\Jackson.Ideas.Web.csproj",
-      "projectName": "Jackson.Ideas.Web",
-      "projectPath": "C:\\Development\\Jackson.Ideas\\src\\Jackson.Ideas.Web\\Jackson.Ideas.Web.csproj",
+      "projectUniqueName": "C:\\Development\\Jackson.Ideas\\src\\Jackson.Ideas.Web\\Jackson.Ideas.Web.old.csproj",
+      "projectName": "Jackson.Ideas.Web.old",
+      "projectPath": "C:\\Development\\Jackson.Ideas\\src\\Jackson.Ideas.Web\\Jackson.Ideas.Web.old.csproj",
       "packagesPath": "C:\\Users\\Owner\\.nuget\\packages\\",
       "outputPath": "C:\\Development\\Jackson.Ideas\\src\\Jackson.Ideas.Web\\obj\\",
       "projectStyle": "PackageReference",

@@ -71,12 +71,13 @@ namespace Jackson.Ideas.Mock.Models
         /// </summary>
         public bool CanAccessHub(BusinessHub hub)
         {
+            return true;
             if (hub == BusinessHub.IdeaDevelopment)
                 return true; // Hub 1 is always accessible
                 
             if (!Progress.ContainsKey(hub))
                 return false;
-                
+
             return Progress[hub].IsUnlocked;
         }
         

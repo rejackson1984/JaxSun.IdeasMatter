@@ -1,5 +1,6 @@
 using Jackson.Ideas.Mock.Models;
 using Jackson.Ideas.Mock.Services.Interfaces;
+using ValidationIssue = Jackson.Ideas.Mock.Services.Interfaces.ValidationIssue;
 
 namespace Jackson.Ideas.Mock.Services.Mock
 {

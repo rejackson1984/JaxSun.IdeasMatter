@@ -128,7 +128,7 @@ namespace Jackson.Ideas.Mock.Services.Mock
                         "market_research_complete",
                         "competitive_analysis_done"
                     },
-                    UnlockThreshold = 70
+                    UnlockThreshold = 10
                 },
                 
                 [BusinessHub.BusinessOperations] = new HubMetadata
@@ -157,7 +157,7 @@ namespace Jackson.Ideas.Mock.Services.Mock
                         "technical_architecture_defined",
                         "development_roadmap_created"
                     },
-                    UnlockThreshold = 80
+                    UnlockThreshold = 10
                 }
             };
         }

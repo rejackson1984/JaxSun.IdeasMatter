@@ -152,7 +152,16 @@
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span>LTV/CAC Ratio</span>
-                                <span class="fw-bold text-success">@((financialData.Metrics.CustomerLifetimeValue / financialData.Metrics.CustomerAcquisitionCost).ToString("F1"))</span>
+                                    <span class="fw-bold text-success">
+                                        @if (financialData?.Metrics != null && financialData.Metrics.CustomerAcquisitionCost != 0)
+                                        {
+                                            @((financialData.Metrics.CustomerLifetimeValue / financialData.Metrics.CustomerAcquisitionCost).ToString("F1"))
+                                        }
+                                        else
+                                        {
+                                            <span>N/A</span>
+                                        }
+                                    </span>
                             </div>
                         </div>
 

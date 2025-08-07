@@ -1,5 +1,6 @@
 using Jackson.Ideas.Mock.Models;
 using Jackson.Ideas.Mock.Services.Interfaces;
+using CoachingContextChangedEventArgs = Jackson.Ideas.Mock.Services.Interfaces.CoachingContextChangedEventArgs;
 
 namespace Jackson.Ideas.Mock.Services.Mock
 {
@@ -32,6 +33,12 @@ namespace Jackson.Ideas.Mock.Services.Mock
         public async Task<string> GetCoachMessageAsync(BusinessHub hub, CoachingContext context)
         {
             var persona = await GetCoachForHubAsync(hub);
+            
+            // Handle null context gracefully
+            if (context == null)
+            {
+                return persona.Greeting;
+            }
             
             // Generate contextual message based on hub and progress
             if (context.IsFirstTimeInHub)
@@ -238,7 +245,7 @@ namespace Jackson.Ideas.Mock.Services.Mock
                     Style = CoachingStyle.Enthusiastic,
                     PrimaryColor = "#7b8fef",
                     SecondaryColor = "#22d3ee",
-                    Description = "The Innovation Catalyst - transforms concepts into validated opportunities",
+                    Description = "The Innovation Catalyst - transforms ideas into validated opportunities",
                     Specialties = new List<string>
                     {
                         "Idea Development",
@@ -376,6 +383,12 @@ namespace Jackson.Ideas.Mock.Services.Mock
         
         private List<CoachingSuggestion> GetIdeaDevelopmentSuggestions(CoachingContext context)
         {
+            // Handle null context gracefully
+            if (context == null)
+            {
+                return new List<CoachingSuggestion>();
+            }
+
             var suggestions = new List<CoachingSuggestion>
             {
                 new CoachingSuggestion
@@ -422,6 +435,12 @@ namespace Jackson.Ideas.Mock.Services.Mock
         
         private List<CoachingSuggestion> GetBusinessPlanningSuggestions(CoachingContext context)
         {
+            // Handle null context gracefully
+            if (context == null)
+            {
+                return new List<CoachingSuggestion>();
+            }
+
             return new List<CoachingSuggestion>
             {
                 new CoachingSuggestion
@@ -451,6 +470,12 @@ namespace Jackson.Ideas.Mock.Services.Mock
         
         private List<CoachingSuggestion> GetBusinessOperationsSuggestions(CoachingContext context)
         {
+            // Handle null context gracefully
+            if (context == null)
+            {
+                return new List<CoachingSuggestion>();
+            }
+
             return new List<CoachingSuggestion>
             {
                 new CoachingSuggestion
@@ -474,6 +499,17 @@ namespace Jackson.Ideas.Mock.Services.Mock
                     Priority = 8,
                     ActionUrl = "/progress",
                     ActionText = "View Analytics"
+                },
+                new CoachingSuggestion
+                {
+                    Id = "operations-warning",
+                    Title = "Performance Alert",
+                    Message = "Monitor your operational metrics closely to avoid potential bottlenecks.",
+                    Icon = "fas fa-exclamation-triangle",
+                    Type = CoachingSuggestionType.Warning,
+                    Priority = 7,
+                    ActionUrl = "/alerts",
+                    ActionText = "View Alerts"
                 }
             };
         }

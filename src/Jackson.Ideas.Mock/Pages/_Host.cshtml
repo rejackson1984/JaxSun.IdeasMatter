@@ -1,4 +1,4 @@
-@page "/app/{*path:nonfile}"
+@page "/{*path:nonfile}"
 @using Microsoft.AspNetCore.Components.Web
 @using Jackson.Ideas.Mock.Components
 @namespace Jackson.Ideas.Mock.Pages
@@ -7,4 +7,4 @@
     Layout = "_Layout";
 }
 
-<component type="typeof(App)" render-mode="ServerPrerendered" />
+<component type="typeof(App)" render-mode="Server" />

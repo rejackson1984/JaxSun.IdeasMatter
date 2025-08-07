@@ -461,7 +461,7 @@ namespace Jackson.Ideas.Mock.Tests.Models
 
         [Theory]
         [InlineData(0, 0)]
-        [InlineData(1, 16)] // 1 of 6 milestones = ~16%
+        [InlineData(1, 17)] // 1 of 6 milestones = ~16.67% rounds to 17%
         [InlineData(3, 50)] // 3 of 6 milestones = 50%
         [InlineData(6, 100)] // 6 of 6 milestones = 100%
         public void CoachingContext_ShouldCalculate_ProgressFromMilestones(int completedCount, int expectedProgress)
