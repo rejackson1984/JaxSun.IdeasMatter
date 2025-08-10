@@ -1,10 +1,10 @@
 using FluentAssertions;
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Services.Mock;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Services.Mock;
 using Xunit;
 
-namespace JaxSun.Ideas.Mock.Tests.Features.Hub3
+namespace JaxSun.Ideas.WebApp.Tests.Features.Hub3
 {
     /// <summary>
     /// Comprehensive tests for Hub 3 (Business Operations) service functionality

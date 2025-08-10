@@ -1,10 +1,10 @@
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
 using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace JaxSun.Ideas.Mock.Tests.Services
+namespace JaxSun.Ideas.WebApp.Tests.Services
 {
     /// <summary>
     /// Tests for gamification service that manages achievements, progress tracking, and user engagement

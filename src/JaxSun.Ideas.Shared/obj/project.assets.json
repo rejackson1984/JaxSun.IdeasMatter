@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Development\\JaxSun.Ideas\\src\\JaxSun.Ideas.Shared\\JaxSun.Ideas.Shared.csproj",
+      "projectUniqueName": "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Shared\\JaxSun.Ideas.Shared.csproj",
       "projectName": "JaxSun.Ideas.Shared",
-      "projectPath": "C:\\Development\\JaxSun.Ideas\\src\\JaxSun.Ideas.Shared\\JaxSun.Ideas.Shared.csproj",
+      "projectPath": "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Shared\\JaxSun.Ideas.Shared.csproj",
       "packagesPath": "C:\\Users\\Owner\\.nuget\\packages\\",
-      "outputPath": "C:\\Development\\JaxSun.Ideas\\src\\JaxSun.Ideas.Shared\\obj\\",
+      "outputPath": "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Shared\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -5,12 +5,12 @@ using FluentAssertions;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net;
-using JaxSun.Ideas.Mock;
+using JaxSun.Ideas.WebApp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using HtmlAgilityPack;
 
-namespace JaxSun.Ideas.Mock.Tests.Integration
+namespace JaxSun.Ideas.WebApp.Tests.Integration
 {
     /// <summary>
     /// Integration tests for routing to verify that the empty middle area issue is resolved
@@ -221,7 +221,7 @@ namespace JaxSun.Ideas.Mock.Tests.Integration
         public async Task StaticAssets_ShouldLoad_ForProperStyling()
         {
             // Act - Try to load CSS and JS assets that are critical for layout
-            var cssResponse = await _client.GetAsync("/_content/JaxSun.Ideas.Mock/css/bootstrap/bootstrap.min.css");
+            var cssResponse = await _client.GetAsync("/_content/JaxSun.Ideas.WebApp/css/bootstrap/bootstrap.min.css");
             var jsResponse = await _client.GetAsync("/_framework/blazor.server.js");
 
             // Assert - These might not exist in test environment, but check what we can

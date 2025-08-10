@@ -1,7 +1,7 @@
-using JaxSun.Ideas.Mock.Models;
+using JaxSun.Ideas.WebApp.Models;
 using System.Text.Json;
 
-namespace JaxSun.Ideas.Mock.Services.Interfaces;
+namespace JaxSun.Ideas.WebApp.Services.Interfaces;
 
 public interface IDataExportService
 {

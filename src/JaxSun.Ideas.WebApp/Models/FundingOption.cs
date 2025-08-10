@@ -1,4 +1,4 @@
-namespace JaxSun.Ideas.Mock.Models
+namespace JaxSun.Ideas.WebApp.Models
 {
     /// <summary>
     /// Funding option recommendation for business plan financing

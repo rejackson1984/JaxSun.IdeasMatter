@@ -1,4 +1,4 @@
-namespace JaxSun.Ideas.Mock.Models
+namespace JaxSun.Ideas.WebApp.Models
 {
     /// <summary>
     /// Defines the three main business development hubs in the platform

@@ -9946,11 +9946,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Development\\JaxSun.Ideas\\tests\\JaxSun.Ideas.Infrastructure.Tests\\JaxSun.Ideas.Infrastructure.Tests.csproj",
+      "projectUniqueName": "C:\\Development\\Jackson.Ideas\\tests\\JaxSun.Ideas.Infrastructure.Tests\\JaxSun.Ideas.Infrastructure.Tests.csproj",
       "projectName": "JaxSun.Ideas.Infrastructure.Tests",
-      "projectPath": "C:\\Development\\JaxSun.Ideas\\tests\\JaxSun.Ideas.Infrastructure.Tests\\JaxSun.Ideas.Infrastructure.Tests.csproj",
+      "projectPath": "C:\\Development\\Jackson.Ideas\\tests\\JaxSun.Ideas.Infrastructure.Tests\\JaxSun.Ideas.Infrastructure.Tests.csproj",
       "packagesPath": "C:\\Users\\Owner\\.nuget\\packages\\",
-      "outputPath": "C:\\Development\\JaxSun.Ideas\\tests\\JaxSun.Ideas.Infrastructure.Tests\\obj\\",
+      "outputPath": "C:\\Development\\Jackson.Ideas\\tests\\JaxSun.Ideas.Infrastructure.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -9972,14 +9972,14 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Development\\JaxSun.Ideas\\src\\JaxSun.Ideas.Application\\JaxSun.Ideas.Application.csproj": {
-              "projectPath": "C:\\Development\\JaxSun.Ideas\\src\\JaxSun.Ideas.Application\\JaxSun.Ideas.Application.csproj"
+            "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Application\\JaxSun.Ideas.Application.csproj": {
+              "projectPath": "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Application\\JaxSun.Ideas.Application.csproj"
             },
-            "C:\\Development\\JaxSun.Ideas\\src\\JaxSun.Ideas.Core\\JaxSun.Ideas.Core.csproj": {
-              "projectPath": "C:\\Development\\JaxSun.Ideas\\src\\JaxSun.Ideas.Core\\JaxSun.Ideas.Core.csproj"
+            "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Core\\JaxSun.Ideas.Core.csproj": {
+              "projectPath": "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Core\\JaxSun.Ideas.Core.csproj"
             },
-            "C:\\Development\\JaxSun.Ideas\\src\\JaxSun.Ideas.Infrastructure\\JaxSun.Ideas.Infrastructure.csproj": {
-              "projectPath": "C:\\Development\\JaxSun.Ideas\\src\\JaxSun.Ideas.Infrastructure\\JaxSun.Ideas.Infrastructure.csproj"
+            "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Infrastructure\\JaxSun.Ideas.Infrastructure.csproj": {
+              "projectPath": "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Infrastructure\\JaxSun.Ideas.Infrastructure.csproj"
             }
           }
         }

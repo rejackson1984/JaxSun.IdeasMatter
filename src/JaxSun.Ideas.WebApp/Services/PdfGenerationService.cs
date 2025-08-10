@@ -1,10 +1,10 @@
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-namespace JaxSun.Ideas.Mock.Services;
+namespace JaxSun.Ideas.WebApp.Services;
 
 /// <summary>
 /// Service for generating PDF reports using QuestPDF library.

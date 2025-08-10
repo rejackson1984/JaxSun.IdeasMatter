@@ -3,14 +3,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using FluentAssertions;
 using Microsoft.AspNetCore.Components;
-using JaxSun.Ideas.Mock.Components.Pages;
-using JaxSun.Ideas.Mock.Components.Layout;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Services.Mock;
-using JaxSun.Ideas.Mock.Models;
+using JaxSun.Ideas.WebApp.Components.Pages;
+using JaxSun.Ideas.WebApp.Components.Layout;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Services.Mock;
+using JaxSun.Ideas.WebApp.Models;
 using Moq;
 
-namespace JaxSun.Ideas.Mock.Tests.Components.Routing
+namespace JaxSun.Ideas.WebApp.Tests.Components.Routing
 {
     /// <summary>
     /// Regression tests for routing issues to prevent the empty middle area bug from reoccurring.

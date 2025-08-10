@@ -1,8 +1,8 @@
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using CoachingContextChangedEventArgs = JaxSun.Ideas.Mock.Services.Interfaces.CoachingContextChangedEventArgs;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using CoachingContextChangedEventArgs = JaxSun.Ideas.WebApp.Services.Interfaces.CoachingContextChangedEventArgs;
 
-namespace JaxSun.Ideas.Mock.Services.Mock
+namespace JaxSun.Ideas.WebApp.Services.Mock
 {
     /// <summary>
     /// Mock implementation of coach persona service with predefined coach personalities

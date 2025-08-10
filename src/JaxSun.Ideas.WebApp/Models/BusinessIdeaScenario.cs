@@ -1,4 +1,4 @@
-namespace JaxSun.Ideas.Mock.Models;
+namespace JaxSun.Ideas.WebApp.Models;
 
 public class BusinessIdeaScenario
 {

@@ -1,7 +1,7 @@
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Models.Builder;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Models.Builder;
 
-namespace JaxSun.Ideas.Mock.Services.Interfaces
+namespace JaxSun.Ideas.WebApp.Services.Interfaces
 {
     /// <summary>
     /// Service for building comprehensive business plans with strategic frameworks

@@ -1,4 +1,4 @@
-namespace JaxSun.Ideas.Mock.Models.Builder
+namespace JaxSun.Ideas.WebApp.Models.Builder
 {
     /// <summary>
     /// Request for creating a new business plan

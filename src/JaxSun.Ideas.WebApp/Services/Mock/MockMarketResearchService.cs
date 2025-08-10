@@ -1,7 +1,7 @@
-using JaxSun.Ideas.Mock.Models;
-using IMarketResearchService = JaxSun.Ideas.Mock.Services.Interfaces.IMarketResearchService;
+using JaxSun.Ideas.WebApp.Models;
+using IMarketResearchService = JaxSun.Ideas.WebApp.Services.Interfaces.IMarketResearchService;
 
-namespace JaxSun.Ideas.Mock.Services.Mock;
+namespace JaxSun.Ideas.WebApp.Services.Mock;
 
 public class MockMarketResearchService : IMarketResearchService
 {

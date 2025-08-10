@@ -1,8 +1,8 @@
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using ValidationIssue = JaxSun.Ideas.Mock.Services.Interfaces.ValidationIssue;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using ValidationIssue = JaxSun.Ideas.WebApp.Services.Interfaces.ValidationIssue;
 
-namespace JaxSun.Ideas.Mock.Services.Mock
+namespace JaxSun.Ideas.WebApp.Services.Mock
 {
     /// <summary>
     /// Mock implementation of business model canvas service with realistic collaborative features

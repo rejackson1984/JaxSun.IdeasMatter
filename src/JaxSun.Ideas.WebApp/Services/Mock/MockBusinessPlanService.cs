@@ -1,7 +1,7 @@
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
 
-namespace JaxSun.Ideas.Mock.Services.Mock
+namespace JaxSun.Ideas.WebApp.Services.Mock
 {
     /// <summary>
     /// Mock implementation of business plan service with realistic business planning logic
@@ -10,7 +10,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
     {
         private readonly Random _random = new(42); // Fixed seed for consistent results
         
-        public Task<BusinessPlanResult> GenerateBusinessPlanAsync(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        public Task<BusinessPlanResult> GenerateBusinessPlanAsync(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var result = new BusinessPlanResult
             {
@@ -31,27 +31,27 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return Task.FromResult(result);
         }
         
-        public Task<JaxSun.Ideas.Mock.Models.FinancialProjections> GenerateFinancialProjectionsAsync(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        public Task<JaxSun.Ideas.WebApp.Models.FinancialProjections> GenerateFinancialProjectionsAsync(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return Task.FromResult(GenerateFinancialProjectionsInternal(request));
         }
         
-        public Task<JaxSun.Ideas.Mock.Models.MarketingStrategy> GenerateMarketingStrategyAsync(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        public Task<JaxSun.Ideas.WebApp.Models.MarketingStrategy> GenerateMarketingStrategyAsync(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return Task.FromResult(GenerateMarketingStrategyInternal(request));
         }
         
-        public Task<JaxSun.Ideas.Mock.Models.OperationalPlan> GenerateOperationalPlanAsync(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        public Task<JaxSun.Ideas.WebApp.Models.OperationalPlan> GenerateOperationalPlanAsync(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return Task.FromResult(GenerateOperationalPlanInternal(request));
         }
         
-        public Task<JaxSun.Ideas.Mock.Models.RiskAssessment> GenerateRiskAssessmentAsync(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        public Task<JaxSun.Ideas.WebApp.Models.RiskAssessment> GenerateRiskAssessmentAsync(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return Task.FromResult(GenerateRiskAssessmentInternal(request));
         }
         
-        public Task<int> CalculateBusinessViabilityScoreAsync(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        public Task<int> CalculateBusinessViabilityScoreAsync(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return Task.FromResult(CalculateViabilityScore(request));
         }
@@ -62,7 +62,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return Task.FromResult(businessPlan.ViabilityScore >= 80);
         }
         
-        public Task<List<JaxSun.Ideas.Mock.Models.BusinessPlanTemplate>> GetBusinessPlanTemplatesAsync()
+        public Task<List<JaxSun.Ideas.WebApp.Models.BusinessPlanTemplate>> GetBusinessPlanTemplatesAsync()
         {
             var templates = new List<BusinessPlanTemplate>
             {
@@ -111,7 +111,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return Task.FromResult(templates);
         }
         
-        public Task<List<FundingOption>> GetFundingOptionsAsync(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        public Task<List<FundingOption>> GetFundingOptionsAsync(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var fundingOptions = new List<FundingOption>
             {
@@ -170,7 +170,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return Task.FromResult(fundingOptions.OrderByDescending(f => f.SuitabilityScore).ToList());
         }
         
-        public Task<BusinessModelValidation> ValidateBusinessModelAsync(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        public Task<BusinessModelValidation> ValidateBusinessModelAsync(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var viabilityScore = CalculateViabilityScore(request);
             
@@ -187,12 +187,12 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return Task.FromResult(validation);
         }
         
-        public Task<JaxSun.Ideas.Mock.Models.CompetitiveAnalysis> GenerateCompetitiveAnalysisAsync(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        public Task<JaxSun.Ideas.WebApp.Models.CompetitiveAnalysis> GenerateCompetitiveAnalysisAsync(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return Task.FromResult(GenerateCompetitiveAnalysisInternal(request));
         }
         
-        public Task<JaxSun.Ideas.Mock.Models.ImplementationTimeline> GenerateTimelineAsync(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        public Task<JaxSun.Ideas.WebApp.Models.ImplementationTimeline> GenerateTimelineAsync(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var phases = GenerateImplementationPhases(request);
             
@@ -229,7 +229,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return "General Business";
         }
         
-        private string GenerateExecutiveSummary(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateExecutiveSummary(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return $"This business plan outlines the development and launch of {request.BusinessIdea}. " +
                    $"The venture addresses {request.ProblemSolved} for {request.TargetMarket}. " +
@@ -239,7 +239,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
                    $"achieve profitability within 18-24 months and scale to significant market presence.";
         }
         
-        private MarketAnalysis GenerateMarketAnalysisInternal(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private MarketAnalysis GenerateMarketAnalysisInternal(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var marketSizes = new[] { "$50M", "$150M", "$500M", "$1.2B", "$3.5B", "$8.7B" };
             var growthRates = new[] { "8%", "12%", "18%", "25%", "35%" };
@@ -255,9 +255,9 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private JaxSun.Ideas.Mock.Models.CompetitiveAnalysis GenerateCompetitiveAnalysisInternal(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private JaxSun.Ideas.WebApp.Models.CompetitiveAnalysis GenerateCompetitiveAnalysisInternal(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
-            return new JaxSun.Ideas.Mock.Models.CompetitiveAnalysis
+            return new JaxSun.Ideas.WebApp.Models.CompetitiveAnalysis
             {
                 DirectCompetitors = GenerateDirectCompetitors(request),
                 IndirectCompetitors = GenerateIndirectCompetitors(request),
@@ -270,9 +270,9 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private JaxSun.Ideas.Mock.Models.MarketingStrategy GenerateMarketingStrategyInternal(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private JaxSun.Ideas.WebApp.Models.MarketingStrategy GenerateMarketingStrategyInternal(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
-            return new JaxSun.Ideas.Mock.Models.MarketingStrategy
+            return new JaxSun.Ideas.WebApp.Models.MarketingStrategy
             {
                 TargetMarketSegments = GenerateTargetSegments(request),
                 ValueProposition = GenerateValueProposition(request),
@@ -285,9 +285,9 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private JaxSun.Ideas.Mock.Models.OperationalPlan GenerateOperationalPlanInternal(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private JaxSun.Ideas.WebApp.Models.OperationalPlan GenerateOperationalPlanInternal(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
-            return new JaxSun.Ideas.Mock.Models.OperationalPlan
+            return new JaxSun.Ideas.WebApp.Models.OperationalPlan
             {
                 BusinessModel = GenerateBusinessModel(request),
                 OperationalStructure = GenerateOperationalStructure(request),
@@ -299,7 +299,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private JaxSun.Ideas.Mock.Models.FinancialProjections GenerateFinancialProjectionsInternal(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private JaxSun.Ideas.WebApp.Models.FinancialProjections GenerateFinancialProjectionsInternal(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var hasRecurring = request.RevenueModel.ToLower().Contains("subscription") || 
                               request.RevenueModel.ToLower().Contains("saas") ||
@@ -308,22 +308,22 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             var revenueProjections = GenerateRevenueProjections(request, hasRecurring);
             var expenseProjections = GenerateExpenseProjections(request);
             
-            return new JaxSun.Ideas.Mock.Models.FinancialProjections
+            return new JaxSun.Ideas.WebApp.Models.FinancialProjections
             {
-                Revenue = new JaxSun.Ideas.Mock.Models.RevenueProjections(),
-                Expenses = new JaxSun.Ideas.Mock.Models.ExpenseProjections(),
-                CashFlow = new JaxSun.Ideas.Mock.Models.CashFlowProjections(),
-                YearlyBreakdown = new List<JaxSun.Ideas.Mock.Models.YearlyFinancials>(),
-                Metrics = new JaxSun.Ideas.Mock.Models.FinancialMetrics(),
+                Revenue = new JaxSun.Ideas.WebApp.Models.RevenueProjections(),
+                Expenses = new JaxSun.Ideas.WebApp.Models.ExpenseProjections(),
+                CashFlow = new JaxSun.Ideas.WebApp.Models.CashFlowProjections(),
+                YearlyBreakdown = new List<JaxSun.Ideas.WebApp.Models.YearlyFinancials>(),
+                Metrics = new JaxSun.Ideas.WebApp.Models.FinancialMetrics(),
                 Funding = new FundingRequirements()
             };
         }
         
-        private JaxSun.Ideas.Mock.Models.RiskAssessment GenerateRiskAssessmentInternal(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private JaxSun.Ideas.WebApp.Models.RiskAssessment GenerateRiskAssessmentInternal(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var riskLevels = new[] { "Low", "Medium", "High" };
             
-            return new JaxSun.Ideas.Mock.Models.RiskAssessment
+            return new JaxSun.Ideas.WebApp.Models.RiskAssessment
             {
                 MarketRisks = GenerateMarketRisks(request),
                 CompetitiveRisks = GenerateCompetitiveRisks(request),
@@ -336,7 +336,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private FundingRequirements GenerateFundingRequirements(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private FundingRequirements GenerateFundingRequirements(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var totalFunding = request.InitialInvestment * (decimal)(1.2 + (_random.NextDouble() * 0.8)); // 20-100% buffer
             
@@ -356,7 +356,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private int CalculateViabilityScore(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private int CalculateViabilityScore(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             int score = 50; // Base score
             
@@ -400,7 +400,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return Math.Clamp(score, 30, 95);
         }
         
-        private List<string> GenerateRecommendations(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateRecommendations(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var recommendations = new List<string>();
             var viabilityScore = CalculateViabilityScore(request);
@@ -428,7 +428,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
         }
         
         // Helper methods for generating specific plan sections
-        private List<string> GenerateTargetSegments(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateTargetSegments(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<string>
             {
@@ -438,7 +438,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private string GenerateMarketTrends(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateMarketTrends(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var category = DetermineBusinessCategory(request.BusinessIdea);
             return category switch
@@ -451,7 +451,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<string> GenerateMarketDrivers(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateMarketDrivers(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<string>
             {
@@ -462,7 +462,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<string> GenerateMarketBarriers(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateMarketBarriers(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<string>
             {
@@ -473,14 +473,14 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<JaxSun.Ideas.Mock.Models.Competitor> GenerateDirectCompetitors(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<JaxSun.Ideas.WebApp.Models.Competitor> GenerateDirectCompetitors(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var category = DetermineBusinessCategory(request.BusinessIdea);
-            var competitors = new List<JaxSun.Ideas.Mock.Models.Competitor>();
+            var competitors = new List<JaxSun.Ideas.WebApp.Models.Competitor>();
             
             for (int i = 0; i < 3; i++)
             {
-                competitors.Add(new JaxSun.Ideas.Mock.Models.Competitor
+                competitors.Add(new JaxSun.Ideas.WebApp.Models.Competitor
                 {
                     Name = $"{category} Leader {i + 1}",
                     Description = $"Established player in {category.ToLower()} market",
@@ -494,13 +494,13 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return competitors;
         }
         
-        private List<JaxSun.Ideas.Mock.Models.Competitor> GenerateIndirectCompetitors(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<JaxSun.Ideas.WebApp.Models.Competitor> GenerateIndirectCompetitors(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
-            var competitors = new List<JaxSun.Ideas.Mock.Models.Competitor>();
+            var competitors = new List<JaxSun.Ideas.WebApp.Models.Competitor>();
             
             for (int i = 0; i < 2; i++)
             {
-                competitors.Add(new JaxSun.Ideas.Mock.Models.Competitor
+                competitors.Add(new JaxSun.Ideas.WebApp.Models.Competitor
                 {
                     Name = $"Alternative Solution {i + 1}",
                     Description = "Alternative approach to solving similar customer problems",
@@ -514,13 +514,13 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return competitors;
         }
         
-        private string GenerateMarketPositioning(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateMarketPositioning(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return $"Position as the premium solution for {request.TargetMarket} seeking {request.ProblemSolved.ToLower()}. " +
                    $"Differentiate through {request.CompetitiveAdvantages} while maintaining competitive pricing.";
         }
         
-        private List<string> GenerateCompetitiveThreats(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateCompetitiveThreats(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<string>
             {
@@ -531,7 +531,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<string> GenerateMarketGaps(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateMarketGaps(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<string>
             {
@@ -542,20 +542,20 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private string GenerateCompetitiveStrategy(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateCompetitiveStrategy(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return "Focus on rapid customer acquisition through superior user experience and targeted marketing. " +
                    "Build defensible competitive advantages through technology, partnerships, and customer loyalty. " +
                    "Monitor competitive responses and adapt strategy to maintain market position.";
         }
         
-        private string GenerateValueProposition(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateValueProposition(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return $"We help {request.TargetMarket} {request.ProblemSolved.ToLower()} through our innovative approach. " +
                    $"Unlike alternatives, we provide {request.CompetitiveAdvantages} at an accessible price point.";
         }
         
-        private List<string> GenerateMarketingChannels(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateMarketingChannels(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var category = DetermineBusinessCategory(request.BusinessIdea);
             
@@ -577,14 +577,14 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return channels;
         }
         
-        private string GenerateAcquisitionStrategy(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateAcquisitionStrategy(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return "Multi-channel approach focusing on digital marketing for cost-effective customer acquisition. " +
                    "Implement referral programs to leverage satisfied customers. " +
                    "Strategic partnerships to access complementary customer bases.";
         }
         
-        private BrandingStrategy GenerateBrandingStrategy(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private BrandingStrategy GenerateBrandingStrategy(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new BrandingStrategy
             {
@@ -595,7 +595,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private string GeneratePricingStrategyString(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GeneratePricingStrategyString(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var isSubscription = request.RevenueModel.ToLower().Contains("subscription");
             
@@ -609,12 +609,12 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             }
         }
         
-        private decimal CalculateMarketingBudget(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private decimal CalculateMarketingBudget(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return request.InitialInvestment * 0.3m; // 30% of initial investment for marketing
         }
         
-        private string GenerateBusinessModel(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateBusinessModel(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var category = DetermineBusinessCategory(request.BusinessIdea);
             return category switch
@@ -626,14 +626,14 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private string GenerateOperationalStructure(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateOperationalStructure(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return "Lean startup structure with core team handling key functions. " +
                    "Outsource non-core activities initially, bring in-house as scale increases. " +
                    "Remote-first approach for talent acquisition flexibility.";
         }
         
-        private List<string> GenerateTechnologyRequirements(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateTechnologyRequirements(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var category = DetermineBusinessCategory(request.BusinessIdea);
             
@@ -659,7 +659,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private StaffingPlan GenerateStaffingPlan(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private StaffingPlan GenerateStaffingPlan(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var estimatedSalary = request.InitialInvestment * 0.4m; // 40% for salaries
             
@@ -678,7 +678,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private string GenerateSupplyChainStrategy(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateSupplyChainStrategy(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var category = DetermineBusinessCategory(request.BusinessIdea);
             
@@ -691,7 +691,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<string> GenerateQualityProcesses(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateQualityProcesses(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<string>
             {
@@ -703,14 +703,14 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private string GenerateScalingStrategy(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateScalingStrategy(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return "Scale operations based on validated customer demand and market feedback. " +
                    "Prioritize systems and processes that can handle 10x growth. " +
                    "Geographic expansion after establishing strong local presence.";
         }
         
-        private List<YearlyProjection> GenerateRevenueProjections(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request, bool hasRecurring)
+        private List<YearlyProjection> GenerateRevenueProjections(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request, bool hasRecurring)
         {
             var baseRevenue = request.InitialInvestment * 0.5m; // Conservative start
             var growthMultiplier = hasRecurring ? 2.5 : 1.8; // Recurring revenue grows faster
@@ -723,7 +723,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<YearlyProjection> GenerateExpenseProjections(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<YearlyProjection> GenerateExpenseProjections(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var baseExpenses = request.InitialInvestment * 0.8m; // Higher initial costs
             
@@ -780,7 +780,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<string> GenerateFinancialAssumptions(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateFinancialAssumptions(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<string>
             {
@@ -792,7 +792,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<string> GenerateMarketRisks(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateMarketRisks(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<string>
             {
@@ -803,7 +803,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<string> GenerateCompetitiveRisks(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateCompetitiveRisks(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<string>
             {
@@ -814,7 +814,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<string> GenerateFinancialRisks(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateFinancialRisks(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<string>
             {
@@ -825,7 +825,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<string> GenerateOperationalRisks(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateOperationalRisks(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<string>
             {
@@ -836,7 +836,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<string> GenerateTechnologyRisks(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateTechnologyRisks(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var category = DetermineBusinessCategory(request.BusinessIdea);
             
@@ -860,7 +860,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<string> GenerateRegulatoryRisks(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateRegulatoryRisks(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var category = DetermineBusinessCategory(request.BusinessIdea);
             
@@ -873,7 +873,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<string> GenerateMitigationStrategies(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateMitigationStrategies(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<string>
             {
@@ -898,14 +898,14 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private string GenerateFundingTimeline(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateFundingTimeline(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return "Initial funding needed within 3 months to begin operations. " +
                    "Additional funding rounds anticipated at 12-month intervals based on growth milestones. " +
                    "Series A funding targeted for month 18-24 to accelerate scaling.";
         }
         
-        private List<string> GenerateRecommendedFundingSources(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request, decimal totalFunding)
+        private List<string> GenerateRecommendedFundingSources(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request, decimal totalFunding)
         {
             var sources = new List<string>();
             
@@ -925,7 +925,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return sources;
         }
         
-        private int CalculateFundingSuitability(string fundingType, JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private int CalculateFundingSuitability(string fundingType, JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             var baseScore = 50;
             var category = DetermineBusinessCategory(request.BusinessIdea);
@@ -962,7 +962,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return Math.Clamp(baseScore, 10, 95);
         }
         
-        private List<string> GenerateModelStrengths(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request, int viabilityScore)
+        private List<string> GenerateModelStrengths(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request, int viabilityScore)
         {
             var strengths = new List<string>();
             
@@ -997,7 +997,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return strengths;
         }
         
-        private List<string> GenerateModelWeaknesses(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request, int viabilityScore)
+        private List<string> GenerateModelWeaknesses(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request, int viabilityScore)
         {
             var weaknesses = new List<string>();
             
@@ -1028,7 +1028,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return weaknesses;
         }
         
-        private List<string> GenerateModelRecommendations(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request, int viabilityScore)
+        private List<string> GenerateModelRecommendations(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request, int viabilityScore)
         {
             var recommendations = new List<string>();
             
@@ -1063,7 +1063,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             return recommendations;
         }
         
-        private Dictionary<string, decimal> GenerateKeyMetrics(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private Dictionary<string, decimal> GenerateKeyMetrics(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new Dictionary<string, decimal>
             {
@@ -1075,7 +1075,7 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
         
-        private List<ImplementationPhase> GenerateImplementationPhases(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<ImplementationPhase> GenerateImplementationPhases(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<ImplementationPhase>
             {
@@ -1152,22 +1152,22 @@ namespace JaxSun.Ideas.Mock.Services.Mock
             };
         }
 
-        private string GenerateRetentionStrategy(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateRetentionStrategy(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return "Multi-faceted retention approach including excellent customer support, regular product updates, loyalty programs, and community building initiatives.";
         }
 
-        private string GenerateFundingStrategy(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateFundingStrategy(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return "Phased funding approach starting with bootstrap/angel funding, followed by seed round and potential Series A based on growth milestones.";
         }
 
-        private string GenerateUseOfFunds(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private string GenerateUseOfFunds(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return "40% product development, 30% marketing and customer acquisition, 20% operations and infrastructure, 10% working capital and contingency.";
         }
 
-        private List<string> GenerateFundingMilestones(JaxSun.Ideas.Mock.Models.BusinessPlanRequest request)
+        private List<string> GenerateFundingMilestones(JaxSun.Ideas.WebApp.Models.BusinessPlanRequest request)
         {
             return new List<string>
             {

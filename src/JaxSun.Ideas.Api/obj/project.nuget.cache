@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6Z1iB1wg1/M=",
+  "dgSpecHash": "xcC6FeAYUbM=",
   "success": true,
-  "projectFilePath": "C:\\Development\\Jackson.Ideas\\src\\Jackson.Ideas.Api\\Jackson.Ideas.Api.csproj",
+  "projectFilePath": "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Api\\JaxSun.Ideas.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Owner\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Owner\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

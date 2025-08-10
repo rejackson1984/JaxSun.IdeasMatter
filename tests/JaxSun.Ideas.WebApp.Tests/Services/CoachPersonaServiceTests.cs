@@ -1,10 +1,10 @@
 using FluentAssertions;
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Services.Mock;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Services.Mock;
 using Xunit;
 
-namespace JaxSun.Ideas.Mock.Tests.Services
+namespace JaxSun.Ideas.WebApp.Tests.Services
 {
     /// <summary>
     /// Comprehensive tests for Coach Persona Service functionality

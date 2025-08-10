@@ -1,4 +1,4 @@
-namespace JaxSun.Ideas.Mock.Models
+namespace JaxSun.Ideas.WebApp.Models
 {
     /// <summary>
     /// Business model validation result containing viability assessment and recommendations

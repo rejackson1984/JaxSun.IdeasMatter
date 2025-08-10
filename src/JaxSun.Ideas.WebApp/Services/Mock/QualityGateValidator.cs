@@ -1,8 +1,8 @@
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Models.Builder;
-using JaxSun.Ideas.Mock.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Models.Builder;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
 
-namespace JaxSun.Ideas.Mock.Services.Mock
+namespace JaxSun.Ideas.WebApp.Services.Mock
 {
     /// <summary>
     /// Validates quality gates for hub progression based on PRD requirements

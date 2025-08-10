@@ -1,12 +1,12 @@
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Models.Builder;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Services.Mock;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Models.Builder;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Services.Mock;
 using Microsoft.Extensions.DependencyInjection;
 using FluentAssertions;
 using Xunit;
 
-namespace JaxSun.Ideas.Mock.Tests.Integration
+namespace JaxSun.Ideas.WebApp.Tests.Integration
 {
     /// <summary>
     /// Integration tests for service layer interactions and data flow

@@ -1,12 +1,12 @@
 using FluentAssertions;
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services;
-using JaxSun.Ideas.Mock.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
 using System.Text;
 using System.Text.Json;
 using Xunit;
 
-namespace JaxSun.Ideas.Mock.Tests.Security;
+namespace JaxSun.Ideas.WebApp.Tests.Security;
 
 public class SecurityTests
 {

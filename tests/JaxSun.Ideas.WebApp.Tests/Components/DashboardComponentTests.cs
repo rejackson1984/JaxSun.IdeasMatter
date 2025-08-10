@@ -1,14 +1,14 @@
 using Bunit;
 using FluentAssertions;
-using JaxSun.Ideas.Mock.Components.Pages;
-using JaxSun.Ideas.Mock.Services;
-using JaxSun.Ideas.Mock.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Components.Pages;
+using JaxSun.Ideas.WebApp.Services;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
-namespace JaxSun.Ideas.Mock.Tests.Components;
+namespace JaxSun.Ideas.WebApp.Tests.Components;
 
 public class DashboardComponentTests : TestContext
 {

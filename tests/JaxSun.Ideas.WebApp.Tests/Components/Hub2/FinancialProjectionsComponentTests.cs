@@ -1,14 +1,14 @@
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Components.Pages;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Components.Pages;
 using FluentAssertions;
 using Moq;
 using Xunit;
 using Microsoft.AspNetCore.Components;
 
-namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
+namespace JaxSun.Ideas.WebApp.Tests.Components.Hub2
 {
     public class FinancialProjectionsComponentTests : TestContext
     {
@@ -38,7 +38,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             component.Markup.Should().Contain("Financial Projections - IdeaCoach Pro");
@@ -51,7 +51,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var welcomeSection = component.Find(".coach-welcome-section");
@@ -68,7 +68,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             // Component should render without layout errors
@@ -83,7 +83,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var themeElements = component.FindAll(".hub-planning-theme, .hub-planning-avatar");
@@ -97,7 +97,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupMocksWithStrategyCoach();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var coachAvatar = component.Find(".coach-avatar-large");
@@ -114,7 +114,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var revenueForm = component.Find(".revenue-projection-form");
@@ -131,7 +131,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var expenseSection = component.Find(".expense-categories");
@@ -148,7 +148,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var breakEvenSection = component.Find(".break-even-analysis");
@@ -165,7 +165,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var projectionYears = component.FindAll(".projection-year");
@@ -184,7 +184,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var profitabilitySection = component.Find(".profitability-metrics");
@@ -204,7 +204,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var cashFlowChart = component.Find(".cash-flow-chart");
@@ -218,7 +218,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var validationSummary = component.FindComponents<Microsoft.AspNetCore.Components.Forms.ValidationSummary>();
@@ -232,7 +232,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var fundingSection = component.Find(".funding-requirements");
@@ -252,7 +252,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
                 .ReturnsAsync(mockProjections);
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
             var submitButton = component.Find("button[type='submit']");
 
             // Assert
@@ -266,7 +266,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupMocksWithStrategyCoach();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var coachGuidance = component.Find(".coach-guidance");
@@ -284,7 +284,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupMocksWithContext(hub2Context);
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var container = component.Find(".financial-projections-container");
@@ -303,7 +303,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
 
             // Act & Assert
             // Component implements IDisposable for proper cleanup
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
             
             // Component should render without disposal issues
             component.Find(".financial-projections-container").Should().NotBeNull();
@@ -316,7 +316,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var revenueModelSelect = component.Find("select#revenue-model");
@@ -334,7 +334,7 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             SetupDefaultMocks();
 
             // Act
-            var component = RenderComponent<JaxSun.Ideas.Mock.Components.Pages.FinancialProjections>();
+            var component = RenderComponent<JaxSun.Ideas.WebApp.Components.Pages.FinancialProjections>();
 
             // Assert
             var keyMetrics = component.Find(".key-metrics");
@@ -412,9 +412,9 @@ namespace JaxSun.Ideas.Mock.Tests.Components.Hub2
             };
         }
 
-        private JaxSun.Ideas.Mock.Models.FinancialProjections CreateMockFinancialProjections()
+        private JaxSun.Ideas.WebApp.Models.FinancialProjections CreateMockFinancialProjections()
         {
-            return new JaxSun.Ideas.Mock.Models.FinancialProjections
+            return new JaxSun.Ideas.WebApp.Models.FinancialProjections
             {
                 YearlyBreakdown = new List<YearlyFinancials>
                 {

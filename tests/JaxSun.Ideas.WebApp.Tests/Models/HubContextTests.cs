@@ -1,8 +1,8 @@
-using JaxSun.Ideas.Mock.Models;
+using JaxSun.Ideas.WebApp.Models;
 using FluentAssertions;
 using Xunit;
 
-namespace JaxSun.Ideas.Mock.Tests.Models
+namespace JaxSun.Ideas.WebApp.Tests.Models
 {
     public class HubContextTests
     {

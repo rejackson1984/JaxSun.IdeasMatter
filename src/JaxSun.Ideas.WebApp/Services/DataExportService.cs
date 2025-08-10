@@ -1,9 +1,9 @@
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
 using System.Text;
 using System.Text.Json;
 
-namespace JaxSun.Ideas.Mock.Services;
+namespace JaxSun.Ideas.WebApp.Services;
 
 /// <summary>
 /// Service for exporting business analysis data to various formats including CSV and JSON.

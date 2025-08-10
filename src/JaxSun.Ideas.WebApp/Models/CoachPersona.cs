@@ -1,6 +1,6 @@
-using JaxSun.Ideas.Mock.Models;
+using JaxSun.Ideas.WebApp.Models;
 
-namespace JaxSun.Ideas.Mock.Models
+namespace JaxSun.Ideas.WebApp.Models
 {
     /// <summary>
     /// Defines the coaching style for different personas

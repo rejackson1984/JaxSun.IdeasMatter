@@ -1,4 +1,4 @@
-namespace JaxSun.Ideas.Mock.Models
+namespace JaxSun.Ideas.WebApp.Models
 {
     /// <summary>
     /// Comprehensive business plan result containing all generated business planning components

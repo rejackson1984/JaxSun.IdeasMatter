@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
 using System.Security.Claims;
 
-namespace JaxSun.Ideas.Mock.Services;
+namespace JaxSun.Ideas.WebApp.Services;
 
 public class MockAuthenticationStateProvider : AuthenticationStateProvider
 {

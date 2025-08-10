@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Models;
 
-namespace JaxSun.Ideas.Mock.HealthChecks;
+namespace JaxSun.Ideas.WebApp.HealthChecks;
 
 public class PdfServiceHealthCheck : IHealthCheck
 {

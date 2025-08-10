@@ -1,10 +1,10 @@
 using FluentAssertions;
-using JaxSun.Ideas.Mock.Services;
-using JaxSun.Ideas.Mock.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Services;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
 using System.Reflection;
 using Xunit;
 
-namespace JaxSun.Ideas.Mock.Tests.Quality;
+namespace JaxSun.Ideas.WebApp.Tests.Quality;
 
 /// <summary>
 /// Tests to validate code quality, architecture compliance, and documentation standards.
@@ -94,21 +94,21 @@ public class CodeQualityTests
 
         // Act & Assert - Test key methods with null inputs
         // These should not throw exceptions but handle nulls gracefully
-        var nullScenario = new JaxSun.Ideas.Mock.Models.BusinessIdeaScenario
+        var nullScenario = new JaxSun.Ideas.WebApp.Models.BusinessIdeaScenario
         {
             Title = null!,
             Description = null!,
             MarketSize = 0,
             CompetitionLevel = null!,
             StartupCost = 0,
-            MarketResearch = new JaxSun.Ideas.Mock.Models.MarketResearchData
+            MarketResearch = new JaxSun.Ideas.WebApp.Models.MarketResearchData
             {
                 Industry = null!
             },
-            FinancialProjections = new JaxSun.Ideas.Mock.Models.FinancialProjections
+            FinancialProjections = new JaxSun.Ideas.WebApp.Models.FinancialProjections
             {
-                Revenue = new JaxSun.Ideas.Mock.Models.RevenueProjections { Year1Total = 0 },
-                CashFlow = new JaxSun.Ideas.Mock.Models.CashFlowProjections { BreakEvenMonth = 0 }
+                Revenue = new JaxSun.Ideas.WebApp.Models.RevenueProjections { Year1Total = 0 },
+                CashFlow = new JaxSun.Ideas.WebApp.Models.CashFlowProjections { BreakEvenMonth = 0 }
             }
         };
 
@@ -167,7 +167,7 @@ public class CodeQualityTests
     public void Models_ShouldHaveValidProperties()
     {
         // Arrange
-        var modelTypes = typeof(JaxSun.Ideas.Mock.Models.BusinessIdeaScenario).Assembly
+        var modelTypes = typeof(JaxSun.Ideas.WebApp.Models.BusinessIdeaScenario).Assembly
             .GetTypes()
             .Where(t => t.Namespace?.Contains("Models") == true && t.IsClass)
             .ToList();
@@ -242,23 +242,23 @@ public class CodeQualityTests
             "Should have performance tests");
     }
 
-    private static JaxSun.Ideas.Mock.Models.BusinessIdeaScenario CreateValidTestScenario()
+    private static JaxSun.Ideas.WebApp.Models.BusinessIdeaScenario CreateValidTestScenario()
     {
-        return new JaxSun.Ideas.Mock.Models.BusinessIdeaScenario
+        return new JaxSun.Ideas.WebApp.Models.BusinessIdeaScenario
         {
             Title = "Test Business Idea",
             Description = "A valid test business idea for quality testing",
             MarketSize = 100000,
             CompetitionLevel = "Medium",
             StartupCost = 15000,
-            MarketResearch = new JaxSun.Ideas.Mock.Models.MarketResearchData
+            MarketResearch = new JaxSun.Ideas.WebApp.Models.MarketResearchData
             {
                 Industry = "Technology"
             },
-            FinancialProjections = new JaxSun.Ideas.Mock.Models.FinancialProjections
+            FinancialProjections = new JaxSun.Ideas.WebApp.Models.FinancialProjections
             {
-                Revenue = new JaxSun.Ideas.Mock.Models.RevenueProjections { Year1Total = 200000 },
-                CashFlow = new JaxSun.Ideas.Mock.Models.CashFlowProjections { BreakEvenMonth = 8 }
+                Revenue = new JaxSun.Ideas.WebApp.Models.RevenueProjections { Year1Total = 200000 },
+                CashFlow = new JaxSun.Ideas.WebApp.Models.CashFlowProjections { BreakEvenMonth = 8 }
             }
         };
     }

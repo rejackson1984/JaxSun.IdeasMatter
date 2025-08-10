@@ -1,4 +1,4 @@
-namespace JaxSun.Ideas.Mock.Models
+namespace JaxSun.Ideas.WebApp.Models
 {
     /// <summary>
     /// Event arguments for coaching context changes

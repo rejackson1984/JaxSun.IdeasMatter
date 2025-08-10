@@ -2,14 +2,14 @@ using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using FluentAssertions;
-using JaxSun.Ideas.Mock.Components.Pages;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Models;
+using JaxSun.Ideas.WebApp.Components.Pages;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Models;
 using Moq;
 using Microsoft.AspNetCore.Components;
 using System.Threading.Tasks;
 
-namespace JaxSun.Ideas.Mock.Tests.Components.Pages
+namespace JaxSun.Ideas.WebApp.Tests.Components.Pages
 {
     /// <summary>
     /// Comprehensive tests for MarketResearch component to ensure it loads and renders correctly,

@@ -1,14 +1,14 @@
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Components.Pages;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Components.Pages;
 using FluentAssertions;
 using Moq;
 using Xunit;
 using Microsoft.AspNetCore.Components;
 
-namespace JaxSun.Ideas.Mock.Tests.Components.Hub3
+namespace JaxSun.Ideas.WebApp.Tests.Components.Hub3
 {
     /// <summary>
     /// Comprehensive tests for detailed Hub 3 operations management components

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "215UGCv/ug0=",
+  "dgSpecHash": "kcWyHqQfnKM=",
   "success": true,
-  "projectFilePath": "C:\\Development\\Jackson.Ideas\\src\\Jackson.Ideas.Core\\Jackson.Ideas.Core.csproj",
+  "projectFilePath": "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Core\\JaxSun.Ideas.Core.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Owner\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\9.0.0\\microsoft.aspnetcore.cryptography.internal.9.0.0.nupkg.sha512",
     "C:\\Users\\Owner\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\9.0.0\\microsoft.aspnetcore.cryptography.keyderivation.9.0.0.nupkg.sha512",

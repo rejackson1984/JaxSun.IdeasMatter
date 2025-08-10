@@ -1,9 +1,9 @@
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Services.Mock;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Services.Mock;
 using FluentAssertions;
 using Xunit;
 
-namespace JaxSun.Ideas.Mock.Tests.Features.Hub1
+namespace JaxSun.Ideas.WebApp.Tests.Features.Hub1
 {
     public class IdeaValidationServiceTests
     {

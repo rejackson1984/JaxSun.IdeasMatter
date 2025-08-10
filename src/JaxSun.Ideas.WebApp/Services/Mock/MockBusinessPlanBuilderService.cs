@@ -1,7 +1,7 @@
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Models.Builder;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Models.Builder;
 
-namespace JaxSun.Ideas.Mock.Services.Mock
+namespace JaxSun.Ideas.WebApp.Services.Mock
 {
     /// <summary>
     /// Mock implementation of business plan builder service with realistic data

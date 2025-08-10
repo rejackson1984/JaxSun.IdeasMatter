@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\JaxSun.Ideas.Mock\JaxSun.Ideas.Mock.csproj" />
+    <ProjectReference Include="..\..\src\JaxSun.Ideas.WebApp\JaxSun.Ideas.WebApp.csproj" />
     <ProjectReference Include="..\..\src\JaxSun.Ideas.Shared\JaxSun.Ideas.Shared.csproj" />
   </ItemGroup>
 

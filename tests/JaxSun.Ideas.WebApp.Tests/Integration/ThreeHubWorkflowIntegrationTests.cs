@@ -1,17 +1,17 @@
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Models.Builder;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Components.Pages;
-using JaxSun.Ideas.Mock.Components.Shared;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Models.Builder;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Components.Pages;
+using JaxSun.Ideas.WebApp.Components.Shared;
 using FluentAssertions;
 using Moq;
 using Xunit;
 using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 
-namespace JaxSun.Ideas.Mock.Tests.Integration
+namespace JaxSun.Ideas.WebApp.Tests.Integration
 {
     /// <summary>
     /// Comprehensive integration tests for the three-hub workflow system

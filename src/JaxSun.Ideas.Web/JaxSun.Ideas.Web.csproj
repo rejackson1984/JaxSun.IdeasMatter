@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JaxSun.Ideas.Application\JaxSun.Ideas.Application.csproj" />
+    <ProjectReference Include="..\JaxSun.Ideas.Core\JaxSun.Ideas.Core.csproj" />
+    <ProjectReference Include="..\JaxSun.Ideas.Infrastructure\JaxSun.Ideas.Infrastructure.csproj" />
+    <ProjectReference Include="..\JaxSun.Ideas.Shared\JaxSun.Ideas.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Models;
 
-namespace JaxSun.Ideas.Mock.Controllers;
+namespace JaxSun.Ideas.WebApp.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

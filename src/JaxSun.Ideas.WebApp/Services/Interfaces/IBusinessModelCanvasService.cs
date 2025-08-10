@@ -1,6 +1,6 @@
-using JaxSun.Ideas.Mock.Models;
+using JaxSun.Ideas.WebApp.Models;
 
-namespace JaxSun.Ideas.Mock.Services.Interfaces
+namespace JaxSun.Ideas.WebApp.Services.Interfaces
 {
     /// <summary>
     /// Service for managing business model canvas creation and collaboration

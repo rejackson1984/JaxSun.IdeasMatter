@@ -1,8 +1,8 @@
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using ValidationCriteria = JaxSun.Ideas.Mock.Services.Interfaces.ValidationCriteria;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using ValidationCriteria = JaxSun.Ideas.WebApp.Services.Interfaces.ValidationCriteria;
 
-namespace JaxSun.Ideas.Mock.Services.Mock
+namespace JaxSun.Ideas.WebApp.Services.Mock
 {
     /// <summary>
     /// Mock implementation of idea validation service with realistic validation logic

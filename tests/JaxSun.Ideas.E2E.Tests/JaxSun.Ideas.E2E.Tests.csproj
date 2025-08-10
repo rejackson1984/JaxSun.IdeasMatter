@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/JaxSun.Ideas.Mock/JaxSun.Ideas.Mock.csproj" />
+    <ProjectReference Include="../../src/JaxSun.Ideas.WebApp/JaxSun.Ideas.WebApp.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,14 +2,14 @@ using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using FluentAssertions;
-using JaxSun.Ideas.Mock.Components.Layout;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Models;
+using JaxSun.Ideas.WebApp.Components.Layout;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Models;
 using Moq;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace JaxSun.Ideas.Mock.Tests.Components.Layout
+namespace JaxSun.Ideas.WebApp.Tests.Components.Layout
 {
     /// <summary>
     /// Comprehensive tests for HubLayout component rendering to ensure it properly displays child content

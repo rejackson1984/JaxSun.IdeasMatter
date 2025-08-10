@@ -1,16 +1,16 @@
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
-using JaxSun.Ideas.Mock.Models;
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Components.Shared;
-using JaxSun.Ideas.Mock.Components.Layout;
+using JaxSun.Ideas.WebApp.Models;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Components.Shared;
+using JaxSun.Ideas.WebApp.Components.Layout;
 using FluentAssertions;
 using Moq;
 using Xunit;
 using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 
-namespace JaxSun.Ideas.Mock.Tests.Components
+namespace JaxSun.Ideas.WebApp.Tests.Components
 {
     public class HubNavigationIntegrationTests : TestContext
     {

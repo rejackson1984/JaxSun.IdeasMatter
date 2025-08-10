@@ -798,11 +798,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Development\\JaxSun.Ideas\\src\\JaxSun.Ideas.Core\\JaxSun.Ideas.Core.csproj",
+      "projectUniqueName": "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Core\\JaxSun.Ideas.Core.csproj",
       "projectName": "JaxSun.Ideas.Core",
-      "projectPath": "C:\\Development\\JaxSun.Ideas\\src\\JaxSun.Ideas.Core\\JaxSun.Ideas.Core.csproj",
+      "projectPath": "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Core\\JaxSun.Ideas.Core.csproj",
       "packagesPath": "C:\\Users\\Owner\\.nuget\\packages\\",
-      "outputPath": "C:\\Development\\JaxSun.Ideas\\src\\JaxSun.Ideas.Core\\obj\\",
+      "outputPath": "C:\\Development\\Jackson.Ideas\\src\\JaxSun.Ideas.Core\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

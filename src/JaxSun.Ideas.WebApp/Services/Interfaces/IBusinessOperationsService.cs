@@ -1,6 +1,6 @@
-using JaxSun.Ideas.Mock.Models;
+using JaxSun.Ideas.WebApp.Models;
 
-namespace JaxSun.Ideas.Mock.Services.Interfaces
+namespace JaxSun.Ideas.WebApp.Services.Interfaces
 {
     /// <summary>
     /// Service for comprehensive business operations management and launch planning

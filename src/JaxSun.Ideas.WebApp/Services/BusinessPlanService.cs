@@ -1,6 +1,6 @@
-using JaxSun.Ideas.Mock.Models;
+using JaxSun.Ideas.WebApp.Models;
 
-namespace JaxSun.Ideas.Mock.Services;
+namespace JaxSun.Ideas.WebApp.Services;
 
 public class BusinessPlanService
 {

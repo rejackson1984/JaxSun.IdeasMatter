@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using JaxSun.Ideas.Mock.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
 using System.Reflection;
 
-namespace JaxSun.Ideas.Mock.Controllers;
+namespace JaxSun.Ideas.WebApp.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -336,23 +336,23 @@ public class HealthController : ControllerBase
         }
     }
 
-    private static JaxSun.Ideas.Mock.Models.BusinessIdeaScenario CreateTestScenario()
+    private static JaxSun.Ideas.WebApp.Models.BusinessIdeaScenario CreateTestScenario()
     {
-        return new JaxSun.Ideas.Mock.Models.BusinessIdeaScenario
+        return new JaxSun.Ideas.WebApp.Models.BusinessIdeaScenario
         {
             Title = "Health Check Test",
             Description = "Test scenario for health checks",
             MarketSize = 1000,
             CompetitionLevel = "Low",
             StartupCost = 1000,
-            MarketResearch = new JaxSun.Ideas.Mock.Models.MarketResearchData
+            MarketResearch = new JaxSun.Ideas.WebApp.Models.MarketResearchData
             {
                 Industry = "Test"
             },
-            FinancialProjections = new JaxSun.Ideas.Mock.Models.FinancialProjections
+            FinancialProjections = new JaxSun.Ideas.WebApp.Models.FinancialProjections
             {
-                Revenue = new JaxSun.Ideas.Mock.Models.RevenueProjections { Year1Total = 10000 },
-                CashFlow = new JaxSun.Ideas.Mock.Models.CashFlowProjections { BreakEvenMonth = 6 }
+                Revenue = new JaxSun.Ideas.WebApp.Models.RevenueProjections { Year1Total = 10000 },
+                CashFlow = new JaxSun.Ideas.WebApp.Models.CashFlowProjections { BreakEvenMonth = 6 }
             }
         };
     }

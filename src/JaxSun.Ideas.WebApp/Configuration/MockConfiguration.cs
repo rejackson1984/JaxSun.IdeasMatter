@@ -1,4 +1,4 @@
-namespace JaxSun.Ideas.Mock.Configuration;
+namespace JaxSun.Ideas.WebApp.Configuration;
 
 public class MockConfiguration
 {

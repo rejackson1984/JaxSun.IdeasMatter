@@ -1,6 +1,6 @@
-using JaxSun.Ideas.Mock.Models;
+using JaxSun.Ideas.WebApp.Models;
 
-namespace JaxSun.Ideas.Mock.Services;
+namespace JaxSun.Ideas.WebApp.Services;
 
 /// <summary>
 /// Service for translating technical AI analysis into beginner-friendly plain English

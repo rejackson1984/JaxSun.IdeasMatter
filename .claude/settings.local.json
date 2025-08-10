@@ -235,7 +235,9 @@
       "mcp__playwright__browser_install",
       "Bash(/mnt/c/Program Files/dotnet/dotnet.exe build src/Jackson.Ideas.Mock/Jackson.Ideas.Mock.csproj)",
       "Bash([ -n \"$GITHUB_TOKEN\" ])",
-      "Bash(env)"
+      "Bash(env)",
+      "Bash(\"/mnt/c/Program Files/dotnet/dotnet.exe\" sln JaxSun.Ideas.sln add src/JaxSun.Ideas.Web/JaxSun.Ideas.Web.csproj)",
+      "Bash(\"/mnt/c/Program Files/dotnet/dotnet.exe\" sln JaxSun.Ideas.sln add tests/JaxSun.Ideas.Web.Tests/JaxSun.Ideas.Web.Tests.csproj)"
     ],
     "deny": []
   }

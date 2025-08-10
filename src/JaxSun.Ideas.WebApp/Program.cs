@@ -1,7 +1,7 @@
-using JaxSun.Ideas.Mock.Services.Interfaces;
-using JaxSun.Ideas.Mock.Services.Mock;
-using JaxSun.Ideas.Mock.Services;
-using JaxSun.Ideas.Mock.Configuration;
+using JaxSun.Ideas.WebApp.Services.Interfaces;
+using JaxSun.Ideas.WebApp.Services.Mock;
+using JaxSun.Ideas.WebApp.Services;
+using JaxSun.Ideas.WebApp.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -39,8 +39,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 // Add health checks with specific services
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy(), tags: new[] { "ready", "live" })
-    .AddCheck<JaxSun.Ideas.Mock.HealthChecks.PdfServiceHealthCheck>("pdf_service", tags: new[] { "ready" })
-    .AddCheck<JaxSun.Ideas.Mock.HealthChecks.ExportServiceHealthCheck>("export_service", tags: new[] { "ready" });
+    .AddCheck<JaxSun.Ideas.WebApp.HealthChecks.PdfServiceHealthCheck>("pdf_service", tags: new[] { "ready" })
+    .AddCheck<JaxSun.Ideas.WebApp.HealthChecks.ExportServiceHealthCheck>("export_service", tags: new[] { "ready" });
 
 // Configure Mock services
 builder.Services.Configure<MockConfiguration>(builder.Configuration.GetSection("MockConfiguration"));
