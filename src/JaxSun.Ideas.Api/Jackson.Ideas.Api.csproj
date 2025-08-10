@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>6457e7b6-ba4a-4e82-8405-acaf95cdefe8</UserSecretsId>
+  </PropertyGroup>
+
+  <!-- Make Program class accessible for integration tests -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="JaxSun.Ideas.Api.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JaxSun.Ideas.Core\JaxSun.Ideas.Core.csproj" />
+    <ProjectReference Include="..\JaxSun.Ideas.Infrastructure\JaxSun.Ideas.Infrastructure.csproj" />
+    <ProjectReference Include="..\JaxSun.Ideas.Application\JaxSun.Ideas.Application.csproj" />
+    <ProjectReference Include="..\JaxSun.Ideas.Shared\JaxSun.Ideas.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

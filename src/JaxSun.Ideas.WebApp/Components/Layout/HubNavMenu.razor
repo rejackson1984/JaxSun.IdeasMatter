@@ -1,0 +1,527 @@
+@inject IHubContextService HubContextService
+@inject ICoachPersonaService CoachPersonaService
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<!-- Sidebar Header -->
+<div class="sidebar-header">
+    @if (_currentContext != null)
+    {
+        <div class="current-hub-nav-header @GetHeaderClass()">
+            <i class="@GetHubIcon() hub-nav-icon"></i>
+            <div class="hub-nav-info">
+                <span class="hub-nav-title">@GetHubName()</span>
+                <span class="hub-nav-subtitle">Navigation</span>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Hub-Specific Navigation -->
+<nav class="hub-sidebar-nav">
+    @if (_currentContext?.CurrentHub == BusinessHub.IdeaDevelopment)
+    {
+        @RenderIdeaDevelopmentNav()
+    }
+    else if (_currentContext?.CurrentHub == BusinessHub.BusinessPlanning)
+    {
+        @RenderBusinessPlanningNav()
+    }
+    else if (_currentContext?.CurrentHub == BusinessHub.BusinessOperations)
+    {
+        @RenderBusinessOperationsNav()
+    }
+</nav>
+
+<!-- AI Coach Section -->
+<div class="hub-coach-section">
+    @if (_currentCoach != null)
+    {
+        <div class="coach-widget @GetCoachWidgetClass()">
+            <div class="coach-avatar">
+                <i class="@_currentCoach.Avatar coach-avatar-icon"></i>
+            </div>
+            <div class="coach-content">
+                <h4 class="coach-name">@_currentCoach.Name</h4>
+                <p class="coach-status">
+                    <span class="status-dot online"></span>
+                    @GetCoachStatusMessage()
+                </p>
+                @if (!string.IsNullOrEmpty(_currentCoachMessage))
+                {
+                    <p class="coach-message">@_currentCoachMessage</p>
+                }
+            </div>
+        </div>
+        <button class="btn-coach @GetCoachButtonClass()" @onclick="OpenCoachChat">
+            <i class="fas fa-comments"></i>
+            Ask @_currentCoach.Name
+        </button>
+    }
+</div>
+
+@code {
+    private HubContext? _currentContext;
+    private CoachPersona? _currentCoach;
+    private string _currentCoachMessage = "";
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadHubData();
+        
+        // Subscribe to hub context changes
+        HubContextService.ContextChanged += OnHubContextChanged;
+        
+        StateHasChanged();
+    }
+    
+    private async Task LoadHubData()
+    {
+        _currentContext = await HubContextService.GetCurrentContextAsync();
+        
+        if (_currentContext != null)
+        {
+            _currentCoach = await CoachPersonaService.GetCoachForHubAsync(_currentContext.CurrentHub);
+            
+            // Get a contextual coach message
+            var coachingContext = new CoachingContext
+            {
+                CurrentHub = _currentContext.CurrentHub,
+                UserProgress = _currentContext.Progress.GetValueOrDefault(_currentContext.CurrentHub)?.CompletionPercentage ?? 0,
+                CompletedMilestones = _currentContext.Progress.GetValueOrDefault(_currentContext.CurrentHub)?.CompletedMilestones ?? new List<string>(),
+                IsFirstTimeInHub = false
+            };
+            
+            _currentCoachMessage = await CoachPersonaService.GetCoachMessageAsync(_currentContext.CurrentHub, coachingContext);
+        }
+    }
+    
+    private void OnHubContextChanged(object? sender, HubContextChangedEventArgs e)
+    {
+        InvokeAsync(async () =>
+        {
+            await LoadHubData();
+            StateHasChanged();
+        });
+    }
+
+    private string GetHeaderClass()
+    {
+        return _currentContext?.CurrentHub switch
+        {
+            BusinessHub.IdeaDevelopment => "nav-header-idea",
+            BusinessHub.BusinessPlanning => "nav-header-planning", 
+            BusinessHub.BusinessOperations => "nav-header-operations",
+            _ => "nav-header-default"
+        };
+    }
+
+    private string GetHubIcon()
+    {
+        return _currentContext?.CurrentHub switch
+        {
+            BusinessHub.IdeaDevelopment => "fas fa-lightbulb",
+            BusinessHub.BusinessPlanning => "fas fa-clipboard-list",
+            BusinessHub.BusinessOperations => "fas fa-chart-line",
+            _ => "fas fa-rocket"
+        };
+    }
+
+    private string GetHubName()
+    {
+        return _currentContext?.CurrentHub switch
+        {
+            BusinessHub.IdeaDevelopment => "Idea Development",
+            BusinessHub.BusinessPlanning => "Business Planning",
+            BusinessHub.BusinessOperations => "Business Operations",
+            _ => "Unknown Hub"
+        };
+    }
+    
+    private string GetCoachWidgetClass()
+    {
+        return _currentContext?.CurrentHub switch
+        {
+            BusinessHub.IdeaDevelopment => "coach-widget-idea",
+            BusinessHub.BusinessPlanning => "coach-widget-planning",
+            BusinessHub.BusinessOperations => "coach-widget-operations", 
+            _ => "coach-widget-default"
+        };
+    }
+    
+    private string GetCoachButtonClass()
+    {
+        return _currentContext?.CurrentHub switch
+        {
+            BusinessHub.IdeaDevelopment => "btn-coach-idea",
+            BusinessHub.BusinessPlanning => "btn-coach-planning",
+            BusinessHub.BusinessOperations => "btn-coach-operations",
+            _ => "btn-coach-default"
+        };
+    }
+    
+    private string GetCoachStatusMessage()
+    {
+        return _currentContext?.CurrentHub switch
+        {
+            BusinessHub.IdeaDevelopment => "Ready to spark ideas!",
+            BusinessHub.BusinessPlanning => "Planning your strategy",
+            BusinessHub.BusinessOperations => "Tracking performance",
+            _ => "Ready to help"
+        };
+    }
+    
+    private RenderFragment RenderIdeaDevelopmentNav()
+    {
+        return @<div class="nav-section">
+            <div class="nav-section-header">
+                <span class="section-title">IDEA DEVELOPMENT</span>
+            </div>
+            
+            <NavLink class="nav-item nav-item-idea" href="/idea-input">
+                <i class="fas fa-lightbulb nav-icon"></i>
+                <span class="nav-text">Submit New Idea</span>
+                <span class="nav-badge spark">Start Here!</span>
+            </NavLink>
+            
+            <NavLink class="nav-item nav-item-idea" href="/market-research">
+                <i class="fas fa-search nav-icon"></i>
+                <span class="nav-text">Market Research</span>
+            </NavLink>
+            
+            <NavLink class="nav-item nav-item-idea" href="/scenarios">
+                <i class="fas fa-folder-open nav-icon"></i>
+                <span class="nav-text">My Ideas</span>
+            </NavLink>
+            
+            <NavLink class="nav-item nav-item-idea" href="/dashboard">
+                <i class="fas fa-tachometer-alt nav-icon"></i>
+                <span class="nav-text">Progress Dashboard</span>
+            </NavLink>
+        </div>;
+    }
+    
+    private RenderFragment RenderBusinessPlanningNav()
+    {
+        return @<div class="nav-section">
+            <div class="nav-section-header">
+                <span class="section-title">BUSINESS PLANNING</span>
+            </div>
+            
+            <NavLink class="nav-item nav-item-planning" href="/financial-projections">
+                <i class="fas fa-chart-bar nav-icon"></i>
+                <span class="nav-text">Financial Projections</span>
+            </NavLink>
+            
+            <NavLink class="nav-item nav-item-planning" href="/action-plan">
+                <i class="fas fa-clipboard-list nav-icon"></i>
+                <span class="nav-text">Strategic Planning</span>
+            </NavLink>
+            
+            <NavLink class="nav-item nav-item-planning" href="/business-plan-builder">
+                <i class="fas fa-clipboard-list nav-icon"></i>
+                <span class="nav-text">Business Plan Builder</span>
+            </NavLink>
+            
+            <NavLink class="nav-item nav-item-planning" href="/solution-design">
+                <i class="fas fa-cogs nav-icon"></i>
+                <span class="nav-text">Solution Design Suite</span>
+            </NavLink>
+            
+            <NavLink class="nav-item nav-item-planning" href="/business-model-canvas">
+                <i class="fas fa-th-large nav-icon"></i>
+                <span class="nav-text">Business Model Canvas</span>
+            </NavLink>
+            
+            <NavLink class="nav-item nav-item-planning" href="/dashboard">
+                <i class="fas fa-tachometer-alt nav-icon"></i>
+                <span class="nav-text">Planning Dashboard</span>
+            </NavLink>
+        </div>;
+    }
+    
+    private RenderFragment RenderBusinessOperationsNav()
+    {
+        return @<div class="nav-section">
+            <div class="nav-section-header">
+                <span class="section-title">BUSINESS OPERATIONS</span>
+            </div>
+            
+            <NavLink class="nav-item nav-item-operations" href="/dashboard">
+                <i class="fas fa-tachometer-alt nav-icon"></i>
+                <span class="nav-text">Operations Dashboard</span>
+            </NavLink>
+            
+            <NavLink class="nav-item nav-item-operations" href="/progress">
+                <i class="fas fa-chart-line nav-icon"></i>
+                <span class="nav-text">Growth Analytics</span>
+            </NavLink>
+            
+            <NavLink class="nav-item nav-item-operations" href="/user-profile">
+                <i class="fas fa-user-tie nav-icon"></i>
+                <span class="nav-text">CEO Development</span>
+            </NavLink>
+            
+            <NavLink class="nav-item nav-item-operations" href="/scenarios">
+                <i class="fas fa-building nav-icon"></i>
+                <span class="nav-text">Business Portfolio</span>
+            </NavLink>
+        </div>;
+    }
+    
+    private void OpenCoachChat()
+    {
+        // TODO: Implement coach chat modal or navigate to coach interaction page
+        // For now, just show a simple alert
+        // This would be enhanced in a later phase
+    }
+    
+    public void Dispose()
+    {
+        if (HubContextService != null)
+        {
+            HubContextService.ContextChanged -= OnHubContextChanged;
+        }
+    }
+}
+
+<style>
+    /* Sidebar Header */
+    .sidebar-header {
+        padding: 1.5rem 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .current-hub-nav-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border-radius: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .nav-header-idea {
+        background: linear-gradient(135deg, #7b8fef15, #22d3ee15);
+        border: 1px solid #7b8fef25;
+    }
+
+    .nav-header-planning {
+        background: linear-gradient(135deg, #5a6fd815, #3b82f615);
+        border: 1px solid #5a6fd825;
+    }
+
+    .nav-header-operations {
+        background: linear-gradient(135deg, #4c5fd715, #05966915);
+        border: 1px solid #4c5fd725;
+    }
+
+    .hub-nav-icon {
+        font-size: 1.25rem;
+        color: var(--hub-primary, #667eea);
+    }
+
+    .hub-nav-info {
+        flex: 1;
+    }
+
+    .hub-nav-title {
+        display: block;
+        font-weight: 700;
+        font-size: 0.875rem;
+        color: var(--hub-text, #1a202c);
+        margin-bottom: 2px;
+    }
+
+    .hub-nav-subtitle {
+        display: block;
+        font-weight: 500;
+        font-size: 0.75rem;
+        color: var(--hub-primary, #667eea);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Navigation Sections */
+    .hub-sidebar-nav {
+        flex: 1;
+        padding: 1rem;
+        overflow-y: auto;
+    }
+
+    .nav-section {
+        margin-bottom: 2rem;
+    }
+
+    .nav-section-header {
+        margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        color: #64748b;
+        transition: all 0.3s ease;
+        gap: 0.75rem;
+        position: relative;
+    }
+
+    .nav-item:hover {
+        background: rgba(0, 0, 0, 0.03);
+        transform: translateX(2px);
+    }
+
+    .nav-item.active {
+        background: var(--hub-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+        color: white;
+        font-weight: 600;
+    }
+
+    .nav-icon {
+        font-size: 1rem;
+        width: 1.25rem;
+        text-align: center;
+    }
+
+    .nav-text {
+        flex: 1;
+        font-weight: 500;
+    }
+
+    .nav-badge {
+        padding: 2px 6px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .nav-badge.spark {
+        background: linear-gradient(135deg, #22d3ee, #10b981);
+        color: white;
+    }
+
+    /* Coach Section */
+    .hub-coach-section {
+        padding: 1rem;
+        border-top: 1px solid #e2e8f0;
+        margin-top: auto;
+    }
+
+    .coach-widget {
+        padding: 1rem;
+        border-radius: 0.75rem;
+        margin-bottom: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .coach-widget-idea {
+        background: linear-gradient(135deg, #7b8fef15, #22d3ee15);
+        border: 1px solid #7b8fef25;
+    }
+
+    .coach-widget-planning {
+        background: linear-gradient(135deg, #5a6fd815, #3b82f615);
+        border: 1px solid #5a6fd825;
+    }
+
+    .coach-widget-operations {
+        background: linear-gradient(135deg, #4c5fd715, #05966915);
+        border: 1px solid #4c5fd725;
+    }
+
+    .coach-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--hub-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .coach-avatar-icon {
+        color: white;
+        font-size: 1.125rem;
+    }
+
+    .coach-name {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: var(--hub-text, #1a202c);
+        margin: 0 0 0.25rem 0;
+    }
+
+    .coach-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #64748b;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #10b981;
+    }
+
+    .coach-message {
+        font-size: 0.75rem;
+        color: var(--hub-text, #1a202c);
+        font-style: italic;
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    .btn-coach {
+        width: 100%;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-coach-idea {
+        background: linear-gradient(135deg, #7b8fef, #22d3ee);
+        color: white;
+    }
+
+    .btn-coach-planning {
+        background: linear-gradient(135deg, #5a6fd8, #3b82f6);
+        color: white;
+    }
+
+    .btn-coach-operations {
+        background: linear-gradient(135deg, #4c5fd7, #059669);
+        color: white;
+    }
+
+    .btn-coach:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+</style>

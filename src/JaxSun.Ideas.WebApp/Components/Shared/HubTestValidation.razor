@@ -1,0 +1,219 @@
+@using JaxSun.Ideas.Mock.Models
+@using JaxSun.Ideas.Mock.Services.Interfaces
+@inject IHubContextService HubContextService
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<!-- Hub Testing Validation Component -->
+<div class="hub-test-validation" style="position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 1rem; border-radius: 8px; z-index: 9999; font-size: 0.875rem;">
+    <h5 style="margin: 0 0 0.5rem 0; color: #fff;">🧪 Hub Test Status</h5>
+    
+    <div style="margin-bottom: 0.5rem;">
+        <strong>Current Hub:</strong> @(_currentContext?.CurrentHub.ToString() ?? "Loading...")
+    </div>
+    
+    <div style="margin-bottom: 0.5rem;">
+        <strong>Dashboard Type:</strong> @GetDashboardType()
+    </div>
+    
+    <div style="margin-bottom: 0.5rem;">
+        <strong>Context Changes:</strong> @_contextChangeCount
+    </div>
+    
+    <div style="margin-bottom: 0.5rem;">
+        <strong>Theme Applied:</strong> @GetAppliedTheme()
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+        <strong>Status:</strong> 
+        <span style="color: @(_isContextValid ? "#10b981" : "#ef4444");">
+            @(_isContextValid ? "✅ Valid" : "❌ Invalid")
+        </span>
+    </div>
+    
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button class="btn btn-sm btn-primary" @onclick="() => TestHubSwitch(BusinessHub.IdeaDevelopment)">
+            Test Hub 1
+        </button>
+        <button class="btn btn-sm btn-primary" @onclick="() => TestHubSwitch(BusinessHub.BusinessPlanning)">
+            Test Hub 2
+        </button>
+        <button class="btn btn-sm btn-primary" @onclick="() => TestHubSwitch(BusinessHub.BusinessOperations)">
+            Test Hub 3
+        </button>
+    </div>
+    
+    <div style="margin-top: 0.5rem;">
+        <button class="btn btn-sm btn-secondary" @onclick="RunFullTest">
+            🚀 Run Full Test
+        </button>
+    </div>
+    
+    @if (!string.IsNullOrEmpty(_testResults))
+    {
+        <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #e5e7eb;">
+            @_testResults
+        </div>
+    }
+</div>
+
+@code {
+    private HubContext? _currentContext;
+    private int _contextChangeCount = 0;
+    private bool _isContextValid = false;
+    private string _testResults = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Subscribe to hub context changes
+        HubContextService.ContextChanged += OnHubContextChanged;
+        
+        // Load initial context
+        _currentContext = await HubContextService.GetCurrentContextAsync();
+        ValidateContext();
+        StateHasChanged();
+    }
+
+    private void OnHubContextChanged(object? sender, HubContextChangedEventArgs e)
+    {
+        _contextChangeCount++;
+        _currentContext = e.Context;
+        ValidateContext();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void ValidateContext()
+    {
+        _isContextValid = _currentContext != null && 
+                         Enum.IsDefined(typeof(BusinessHub), _currentContext.CurrentHub) &&
+                         _currentContext.Progress.ContainsKey(_currentContext.CurrentHub);
+    }
+
+    private string GetDashboardType()
+    {
+        if (_currentContext == null) return "Unknown";
+        
+        return _currentContext.CurrentHub switch
+        {
+            BusinessHub.IdeaDevelopment => "IdeaDevelopmentDashboard",
+            BusinessHub.BusinessPlanning => "BusinessPlanningDashboard",
+            BusinessHub.BusinessOperations => "BusinessOperationsDashboard",
+            _ => "Unknown"
+        };
+    }
+
+    private string GetAppliedTheme()
+    {
+        if (_currentContext == null) return "None";
+        
+        return _currentContext.CurrentHub switch
+        {
+            BusinessHub.IdeaDevelopment => "hub-theme-idea-development",
+            BusinessHub.BusinessPlanning => "hub-theme-business-planning",
+            BusinessHub.BusinessOperations => "hub-theme-business-operations",
+            _ => "Default"
+        };
+    }
+
+    private async Task TestHubSwitch(BusinessHub targetHub)
+    {
+        try
+        {
+            var previousHub = _currentContext?.CurrentHub;
+            var success = await HubContextService.SwitchToHubAsync(targetHub);
+            
+            if (success)
+            {
+                _testResults = $"✅ Switch from {previousHub} to {targetHub} successful";
+            }
+            else
+            {
+                _testResults = $"❌ Switch to {targetHub} failed (may be locked)";
+            }
+        }
+        catch (Exception ex)
+        {
+            _testResults = $"❌ Error switching to {targetHub}: {ex.Message}";
+        }
+        
+        StateHasChanged();
+    }
+
+    private async Task RunFullTest()
+    {
+        var results = new List<string>();
+        var originalHub = _currentContext?.CurrentHub;
+        
+        try
+        {
+            // Test switching to each hub
+            foreach (var hub in Enum.GetValues<BusinessHub>())
+            {
+                var canAccess = _currentContext?.CanAccessHub(hub) ?? false;
+                if (canAccess)
+                {
+                    var success = await HubContextService.SwitchToHubAsync(hub);
+                    results.Add($"{hub}: {(success ? "✅" : "❌")}");
+                    
+                    // Brief delay for context to update
+                    await Task.Delay(100);
+                }
+                else
+                {
+                    results.Add($"{hub}: 🔒 Locked");
+                }
+            }
+            
+            // Return to original hub if possible
+            if (originalHub.HasValue)
+            {
+                await HubContextService.SwitchToHubAsync(originalHub.Value);
+            }
+            
+            _testResults = $"Full test complete: {string.Join(", ", results)}";
+        }
+        catch (Exception ex)
+        {
+            _testResults = $"❌ Full test failed: {ex.Message}";
+        }
+        
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        if (HubContextService != null)
+        {
+            HubContextService.ContextChanged -= OnHubContextChanged;
+        }
+    }
+}
+
+<style>
+    .hub-test-validation .btn {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .hub-test-validation .btn-primary {
+        background: #3b82f6;
+        color: white;
+    }
+    
+    .hub-test-validation .btn-primary:hover {
+        background: #2563eb;
+    }
+    
+    .hub-test-validation .btn-secondary {
+        background: #6b7280;
+        color: white;
+    }
+    
+    .hub-test-validation .btn-secondary:hover {
+        background: #4b5563;
+    }
+</style>

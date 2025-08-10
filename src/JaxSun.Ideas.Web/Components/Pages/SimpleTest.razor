@@ -1,0 +1,15 @@
+@page "/simple-test"
+
+<h1>✅ Blazor is Working!</h1>
+<p>Current time: @DateTime.Now.ToString("HH:mm:ss")</p>
+<p>Counter: @counter</p>
+<button @onclick="IncrementCounter">Click me</button>
+
+@code {
+    private int counter = 0;
+
+    private void IncrementCounter()
+    {
+        counter++;
+    }
+}

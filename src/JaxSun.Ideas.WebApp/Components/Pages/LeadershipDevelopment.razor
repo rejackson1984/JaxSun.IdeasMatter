@@ -1,0 +1,1306 @@
+@page "/leadership-development"
+@layout HubLayout
+@using JaxSun.Ideas.Mock.Services.Interfaces
+@using JaxSun.Ideas.Mock.Models
+@inject IHubContextService HubContextService
+@inject ICoachPersonaService CoachPersonaService
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<PageTitle>Leadership Development Plan - Execute Coach</PageTitle>
+
+<div class="leadership-development-container">
+    <!-- Execute Coach Welcome Section -->
+    <div class="coach-welcome-section hub-operations-theme">
+        <div class="coach-welcome-content">
+            <div class="coach-avatar-large hub-operations-avatar">
+                <i class="fas fa-rocket"></i>
+            </div>
+            <div class="welcome-text-content">
+                <h1 class="coach-welcome-title">Executive Leadership Development 🚀</h1>
+                <p class="coach-message-text">Your personalized development plan designed to elevate your leadership effectiveness and drive exceptional business results.</p>
+                <div class="coach-guidance">
+                    <div class="guidance-item">
+                        <i class="fas fa-target"></i>
+                        <span>Focus on high-impact development priorities</span>
+                    </div>
+                    <div class="guidance-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Track progress with measurable milestones</span>
+                    </div>
+                    <div class="guidance-item">
+                        <i class="fas fa-users"></i>
+                        <span>Connect with mentors and leadership resources</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        
+        <!-- Development Progress Overview -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="progress-overview-card">
+                    <div class="card-header">
+                        <h2>📊 Your Leadership Development Progress</h2>
+                        <div class="overall-score">
+                            <div class="score-circle">
+                                <div class="score-value">78%</div>
+                                <div class="score-label">Overall</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress-metrics">
+                            <div class="metric-item">
+                                <div class="metric-icon">🎯</div>
+                                <div class="metric-content">
+                                    <div class="metric-label">Goals Completed</div>
+                                    <div class="metric-value">7 of 12</div>
+                                    <div class="metric-progress">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 58%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-icon">⏱️</div>
+                                <div class="metric-content">
+                                    <div class="metric-label">Time Invested</div>
+                                    <div class="metric-value">24 hours</div>
+                                    <div class="metric-detail">This month</div>
+                                </div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-icon">📈</div>
+                                <div class="metric-content">
+                                    <div class="metric-label">Skill Growth</div>
+                                    <div class="metric-value">+15%</div>
+                                    <div class="metric-detail">Since last assessment</div>
+                                </div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-icon">🏆</div>
+                                <div class="metric-content">
+                                    <div class="metric-label">Achievements</div>
+                                    <div class="metric-value">3 badges</div>
+                                    <div class="metric-detail">Earned this quarter</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Development Areas -->
+        <div class="row mb-4">
+            <div class="col-lg-8">
+                <div class="development-areas-card">
+                    <div class="card-header">
+                        <h3>🎯 Active Development Areas</h3>
+                        <button class="btn btn-sm btn-outline-light" @onclick="ViewAllAreas">
+                            View All
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var area in GetActiveDevelopmentAreas())
+                        {
+                            <div class="development-area @area.Priority.ToLower()">
+                                <div class="area-header">
+                                    <div class="area-info">
+                                        <div class="area-icon">@area.Icon</div>
+                                        <div class="area-content">
+                                            <h4 class="area-title">@area.Title</h4>
+                                            <p class="area-description">@area.Description</p>
+                                        </div>
+                                    </div>
+                                    <div class="area-progress">
+                                        <div class="progress-circle @area.Priority.ToLower()">
+                                            <div class="progress-value">@area.Progress%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="area-actions">
+                                    <div class="current-milestone">
+                                        <strong>Current:</strong> @area.CurrentMilestone
+                                    </div>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-primary" @onclick="() => ContinueDevelopment(area.Id)">
+                                            Continue
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" @onclick="() => ViewAreaDetails(area.Id)">
+                                            Details
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="next-actions-card">
+                    <div class="card-header">
+                        <h3>⚡ Next Actions</h3>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var action in GetNextActions())
+                        {
+                            <div class="next-action @action.Priority.ToLower()">
+                                <div class="action-header">
+                                    <div class="action-icon">@action.Icon</div>
+                                    <div class="action-info">
+                                        <div class="action-title">@action.Title</div>
+                                        <div class="action-time">@action.EstimatedTime</div>
+                                    </div>
+                                    <div class="action-priority @action.Priority.ToLower()">@action.Priority</div>
+                                </div>
+                                <div class="action-description">@action.Description</div>
+                                <button class="btn btn-sm btn-primary action-btn" @onclick="() => StartAction(action.Id)">
+                                    Start Now
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Resources & Mentorship -->
+        <div class="row mb-4">
+            <div class="col-lg-6">
+                <div class="resources-card">
+                    <div class="card-header">
+                        <h3>📚 Learning Resources</h3>
+                        <button class="btn btn-sm btn-outline-light" @onclick="ViewAllResources">
+                            Browse All
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var resource in GetRecommendedResources())
+                        {
+                            <div class="resource-item">
+                                <div class="resource-header">
+                                    <div class="resource-type @resource.Type.ToLower()">@GetResourceTypeIcon(resource.Type)</div>
+                                    <div class="resource-info">
+                                        <h4 class="resource-title">@resource.Title</h4>
+                                        <div class="resource-meta">
+                                            <span class="resource-author">@resource.Author</span>
+                                            <span class="resource-duration">@resource.Duration</span>
+                                            <span class="resource-rating">⭐ @resource.Rating</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="resource-description">@resource.Description</div>
+                                <div class="resource-actions">
+                                    <button class="btn btn-sm btn-primary" @onclick="() => AccessResource(resource.Id)">
+                                        @GetResourceActionText(resource.Type)
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" @onclick="() => SaveResource(resource.Id)">
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="mentorship-card">
+                    <div class="card-header">
+                        <h3>👥 Mentorship & Coaching</h3>
+                        <button class="btn btn-sm btn-outline-light" @onclick="FindMentor">
+                            Find Mentor
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="coaching-sessions">
+                            <div class="session-item upcoming">
+                                <div class="session-header">
+                                    <div class="session-type">1:1 Coaching</div>
+                                    <div class="session-date">Tomorrow, 2:00 PM</div>
+                                </div>
+                                <div class="session-coach">
+                                    <div class="coach-avatar">
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
+                                    <div class="coach-info">
+                                        <div class="coach-name">Dr. Sarah Chen</div>
+                                        <div class="coach-specialty">Executive Leadership</div>
+                                    </div>
+                                </div>
+                                <div class="session-topic">Strategic Decision Making</div>
+                                <div class="session-actions">
+                                    <button class="btn btn-sm btn-primary" @onclick="JoinSession">
+                                        Join Session
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" @onclick="RescheduleSession">
+                                        Reschedule
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mentor-network">
+                                <h4>Your Mentor Network</h4>
+                                <div class="mentors-list">
+                                    @foreach (var mentor in GetMentors())
+                                    {
+                                        <div class="mentor-item">
+                                            <div class="mentor-avatar">
+                                                <i class="@mentor.Icon"></i>
+                                            </div>
+                                            <div class="mentor-info">
+                                                <div class="mentor-name">@mentor.Name</div>
+                                                <div class="mentor-role">@mentor.Role</div>
+                                                <div class="mentor-expertise">@mentor.Expertise</div>
+                                            </div>
+                                            <button class="btn btn-xs btn-outline-primary" @onclick="() => ContactMentor(mentor.Id)">
+                                                Message
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievement & Milestones -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="achievements-card">
+                    <div class="card-header">
+                        <h3>🏆 Achievements & Milestones</h3>
+                        <div class="achievement-stats">
+                            <span class="stat-item">
+                                <span class="stat-value">12</span>
+                                <span class="stat-label">Badges Earned</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-value">Level 4</span>
+                                <span class="stat-label">Leadership Level</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="achievements-timeline">
+                            @foreach (var achievement in GetRecentAchievements())
+                            {
+                                <div class="achievement-item @(achievement.IsCompleted ? "completed" : "pending")">
+                                    <div class="achievement-marker">
+                                        <div class="marker-icon">@achievement.Icon</div>
+                                    </div>
+                                    <div class="achievement-content">
+                                        <div class="achievement-header">
+                                            <h4 class="achievement-title">@achievement.Title</h4>
+                                            <div class="achievement-date">@achievement.Date.ToString("MMM dd, yyyy")</div>
+                                        </div>
+                                        <div class="achievement-description">@achievement.Description</div>
+                                        @if (!achievement.IsCompleted)
+                                        {
+                                            <div class="achievement-progress">
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" style="width: @achievement.Progress%"></div>
+                                                </div>
+                                                <span class="progress-text">@achievement.Progress% complete</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // Initialize component
+    }
+
+    private List<DevelopmentArea> GetActiveDevelopmentAreas()
+    {
+        return new List<DevelopmentArea>
+        {
+            new() {
+                Id = "strategic-thinking",
+                Title = "Strategic Thinking",
+                Icon = "🧠",
+                Description = "Developing long-term vision and strategic planning capabilities",
+                Priority = "High",
+                Progress = 65,
+                CurrentMilestone = "Complete strategic planning framework course"
+            },
+            new() {
+                Id = "communication",
+                Title = "Executive Communication",
+                Icon = "💬",
+                Description = "Enhancing stakeholder engagement and presentation skills",
+                Priority = "Medium",
+                Progress = 40,
+                CurrentMilestone = "Practice public speaking with feedback"
+            },
+            new() {
+                Id = "team-leadership",
+                Title = "Team Leadership",
+                Icon = "👥",
+                Description = "Building high-performing teams and organizational culture",
+                Priority = "Medium",
+                Progress = 75,
+                CurrentMilestone = "Implement team development program"
+            }
+        };
+    }
+
+    private List<NextAction> GetNextActions()
+    {
+        return new List<NextAction>
+        {
+            new() {
+                Id = "strategy-session",
+                Title = "Strategy Deep Dive",
+                Icon = "🎯",
+                Description = "Complete strategic planning exercise for Q2",
+                Priority = "High",
+                EstimatedTime = "2 hours"
+            },
+            new() {
+                Id = "feedback-review",
+                Title = "360 Feedback Review",
+                Icon = "📋",
+                Description = "Review feedback from team and stakeholders",
+                Priority = "Medium",
+                EstimatedTime = "45 min"
+            },
+            new() {
+                Id = "mentor-call",
+                Title = "Mentor Check-in",
+                Icon = "📞",
+                Description = "Monthly progress review with mentor",
+                Priority = "Medium",
+                EstimatedTime = "30 min"
+            }
+        };
+    }
+
+    private List<LearningResource> GetRecommendedResources()
+    {
+        return new List<LearningResource>
+        {
+            new() {
+                Id = "strategic-leadership",
+                Title = "Strategic Leadership Masterclass",
+                Author = "Harvard Business School",
+                Type = "Course",
+                Duration = "6 weeks",
+                Rating = "4.8",
+                Description = "Comprehensive program on strategic thinking and organizational leadership"
+            },
+            new() {
+                Id = "communication-book",
+                Title = "Crucial Conversations",
+                Author = "Kerry Patterson",
+                Type = "Book",
+                Duration = "8 hours",
+                Rating = "4.6",
+                Description = "Tools for talking when stakes are high and emotions run strong"
+            },
+            new() {
+                Id = "leadership-podcast",
+                Title = "Stanford Leadership Podcast",
+                Author = "Stanford GSB",
+                Type = "Podcast",
+                Duration = "45 min/episode",
+                Rating = "4.7",
+                Description = "Insights from world-class leaders and leadership researchers"
+            }
+        };
+    }
+
+    private List<Mentor> GetMentors()
+    {
+        return new List<Mentor>
+        {
+            new() {
+                Id = "sarah-chen",
+                Name = "Dr. Sarah Chen",
+                Role = "Former CEO",
+                Expertise = "Strategic Leadership",
+                Icon = "fas fa-user-tie"
+            },
+            new() {
+                Id = "mike-rodriguez",
+                Name = "Mike Rodriguez",
+                Role = "VP of Operations",
+                Expertise = "Team Building",
+                Icon = "fas fa-users"
+            }
+        };
+    }
+
+    private List<Achievement> GetRecentAchievements()
+    {
+        return new List<Achievement>
+        {
+            new() {
+                Id = "strategic-badge",
+                Title = "Strategic Thinker Badge",
+                Icon = "🎯",
+                Description = "Completed advanced strategic planning certification",
+                Date = DateTime.Now.AddDays(-7),
+                IsCompleted = true,
+                Progress = 100
+            },
+            new() {
+                Id = "communication-milestone",
+                Title = "Executive Presenter",
+                Icon = "🎤",
+                Description = "Complete 10 executive presentations with 4.5+ rating",
+                Date = DateTime.Now.AddDays(14),
+                IsCompleted = false,
+                Progress = 70
+            },
+            new() {
+                Id = "team-builder",
+                Title = "Team Builder Certification",
+                Icon = "👥",
+                Description = "Successfully implement team development program",
+                Date = DateTime.Now.AddDays(30),
+                IsCompleted = false,
+                Progress = 25
+            }
+        };
+    }
+
+    private string GetResourceTypeIcon(string type)
+    {
+        return type switch
+        {
+            "Course" => "🎓",
+            "Book" => "📚",
+            "Podcast" => "🎧",
+            "Video" => "📹",
+            "Article" => "📄",
+            _ => "📖"
+        };
+    }
+
+    private string GetResourceActionText(string type)
+    {
+        return type switch
+        {
+            "Course" => "Enroll",
+            "Book" => "Read",
+            "Podcast" => "Listen",
+            "Video" => "Watch",
+            "Article" => "Read",
+            _ => "Access"
+        };
+    }
+
+    // Event handlers
+    private void ViewAllAreas() => Navigation.NavigateTo("/development-areas");
+    private void ContinueDevelopment(string areaId) => Navigation.NavigateTo($"/development/{areaId}");
+    private void ViewAreaDetails(string areaId) => Navigation.NavigateTo($"/development/{areaId}/details");
+    private void StartAction(string actionId) => Navigation.NavigateTo($"/action/{actionId}");
+    private void ViewAllResources() => Navigation.NavigateTo("/learning-resources");
+    private void AccessResource(string resourceId) => Navigation.NavigateTo($"/resource/{resourceId}");
+    private void SaveResource(string resourceId) { /* Save logic */ }
+    private void FindMentor() => Navigation.NavigateTo("/mentor-network");
+    private void JoinSession() => Navigation.NavigateTo("/coaching-session");
+    private void RescheduleSession() { /* Reschedule logic */ }
+    private void ContactMentor(string mentorId) => Navigation.NavigateTo($"/mentor/{mentorId}/message");
+
+    public void Dispose() { }
+
+    // Data classes
+    public class DevelopmentArea
+    {
+        public string Id { get; set; } = "";
+        public string Title { get; set; } = "";
+        public string Icon { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Priority { get; set; } = "";
+        public int Progress { get; set; }
+        public string CurrentMilestone { get; set; } = "";
+    }
+
+    public class NextAction
+    {
+        public string Id { get; set; } = "";
+        public string Title { get; set; } = "";
+        public string Icon { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Priority { get; set; } = "";
+        public string EstimatedTime { get; set; } = "";
+    }
+
+    public class LearningResource
+    {
+        public string Id { get; set; } = "";
+        public string Title { get; set; } = "";
+        public string Author { get; set; } = "";
+        public string Type { get; set; } = "";
+        public string Duration { get; set; } = "";
+        public string Rating { get; set; } = "";
+        public string Description { get; set; } = "";
+    }
+
+    public class Mentor
+    {
+        public string Id { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string Role { get; set; } = "";
+        public string Expertise { get; set; } = "";
+        public string Icon { get; set; } = "";
+    }
+
+    public class Achievement
+    {
+        public string Id { get; set; } = "";
+        public string Title { get; set; } = "";
+        public string Icon { get; set; } = "";
+        public string Description { get; set; } = "";
+        public DateTime Date { get; set; }
+        public bool IsCompleted { get; set; }
+        public int Progress { get; set; }
+    }
+}
+
+<style>
+    /* Leadership Development Styles */
+    .leadership-development-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+
+    /* Coach Welcome Section - Operations Theme */
+    .hub-operations-theme {
+        background: linear-gradient(135deg, #4c5fd715, #05966915);
+        border-bottom: 3px solid #4c5fd725;
+    }
+
+    .hub-operations-avatar {
+        background: linear-gradient(135deg, #4c5fd7, #059669);
+    }
+
+    /* Progress Overview Card */
+    .progress-overview-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .progress-overview-card .card-header {
+        background: linear-gradient(135deg, #4c5fd7, #059669);
+        color: white;
+        padding: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .progress-overview-card .card-header h2 {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+
+    .overall-score {
+        text-align: center;
+    }
+
+    .score-circle {
+        width: 80px;
+        height: 80px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .score-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: white;
+        line-height: 1;
+    }
+
+    .score-label {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.8);
+        text-transform: uppercase;
+    }
+
+    .progress-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        padding: 2rem;
+    }
+
+    .metric-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .metric-icon {
+        font-size: 2rem;
+        width: 3rem;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .metric-content {
+        flex: 1;
+    }
+
+    .metric-label {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+    }
+
+    .metric-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 0.25rem;
+    }
+
+    .metric-detail {
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+
+    .metric-progress {
+        margin-top: 0.5rem;
+    }
+
+    .progress-bar {
+        height: 6px;
+        background: #e2e8f0;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #4c5fd7, #059669);
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    /* Development Areas Card */
+    .development-areas-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .development-areas-card .card-header {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: white;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .development-areas-card .card-header h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .development-area {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        border-left: 4px solid transparent;
+    }
+
+    .development-area:last-child {
+        border-bottom: none;
+    }
+
+    .development-area.high {
+        border-left-color: #dc2626;
+        background: #fef2f2;
+    }
+
+    .development-area.medium {
+        border-left-color: #d97706;
+        background: #fffbeb;
+    }
+
+    .development-area.low {
+        border-left-color: #059669;
+        background: #ecfdf5;
+    }
+
+    .area-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .area-info {
+        display: flex;
+        gap: 1rem;
+        flex: 1;
+    }
+
+    .area-icon {
+        font-size: 2rem;
+        width: 3rem;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .area-content {
+        flex: 1;
+    }
+
+    .area-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .area-description {
+        color: #64748b;
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    .area-progress {
+        flex-shrink: 0;
+    }
+
+    .progress-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: white;
+        font-size: 0.875rem;
+    }
+
+    .progress-circle.high {
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+    }
+
+    .progress-circle.medium {
+        background: linear-gradient(135deg, #d97706, #b45309);
+    }
+
+    .progress-circle.low {
+        background: linear-gradient(135deg, #059669, #047857);
+    }
+
+    .area-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+    }
+
+    .current-milestone {
+        font-size: 0.875rem;
+        color: #64748b;
+        flex: 1;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    /* Next Actions Card */
+    .next-actions-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .next-actions-card .card-header {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        color: white;
+        padding: 1.5rem;
+    }
+
+    .next-actions-card .card-header h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .next-action {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .next-action:last-child {
+        border-bottom: none;
+    }
+
+    .action-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .action-icon {
+        font-size: 1.5rem;
+        width: 2rem;
+        text-align: center;
+    }
+
+    .action-info {
+        flex: 1;
+    }
+
+    .action-title {
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 0.25rem;
+    }
+
+    .action-time {
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+
+    .action-priority {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+    }
+
+    .action-priority.high {
+        color: #dc2626;
+        background: #fecaca;
+    }
+
+    .action-priority.medium {
+        color: #d97706;
+        background: #fed7aa;
+    }
+
+    .action-description {
+        color: #64748b;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+
+    .action-btn {
+        width: 100%;
+    }
+
+    /* Resources and Mentorship Cards */
+    .resources-card,
+    .mentorship-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .resources-card .card-header,
+    .mentorship-card .card-header {
+        background: linear-gradient(135deg, #059669, #047857);
+        color: white;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .resources-card .card-header h3,
+    .mentorship-card .card-header h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .resource-item {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .resource-item:last-child {
+        border-bottom: none;
+    }
+
+    .resource-header {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .resource-type {
+        font-size: 1.5rem;
+        width: 2.5rem;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .resource-info {
+        flex: 1;
+    }
+
+    .resource-title {
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0 0 0.5rem 0;
+        font-size: 1.125rem;
+    }
+
+    .resource-meta {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+
+    .resource-description {
+        color: #64748b;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+
+    .resource-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    /* Coaching Sessions */
+    .session-item {
+        padding: 1.5rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+    }
+
+    .session-item.upcoming {
+        border-color: #3b82f6;
+        background: #eff6ff;
+    }
+
+    .session-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .session-type {
+        font-weight: 600;
+        color: #1a202c;
+    }
+
+    .session-date {
+        font-size: 0.875rem;
+        color: #3b82f6;
+        font-weight: 500;
+    }
+
+    .session-coach {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .coach-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4c5fd7, #059669);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+    .coach-name {
+        font-weight: 600;
+        color: #1a202c;
+    }
+
+    .coach-specialty {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .session-topic {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-bottom: 1rem;
+    }
+
+    .session-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    /* Mentor Network */
+    .mentor-network {
+        margin-top: 2rem;
+    }
+
+    .mentor-network h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 1rem;
+    }
+
+    .mentor-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 0.75rem;
+    }
+
+    .mentor-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.875rem;
+    }
+
+    .mentor-info {
+        flex: 1;
+    }
+
+    .mentor-name {
+        font-weight: 600;
+        color: #1a202c;
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .mentor-role {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+    }
+
+    .mentor-expertise {
+        font-size: 0.75rem;
+        color: #4c5fd7;
+    }
+
+    /* Achievements Card */
+    .achievements-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .achievements-card .card-header {
+        background: linear-gradient(135deg, #1f2937, #111827);
+        color: white;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .achievements-card .card-header h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .achievement-stats {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-value {
+        display: block;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .achievements-timeline {
+        padding: 2rem;
+    }
+
+    .achievement-item {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .achievement-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .achievement-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        left: 1.75rem;
+        top: 3.5rem;
+        width: 2px;
+        height: calc(100% - 2rem);
+        background: #e2e8f0;
+    }
+
+    .achievement-item.completed::after {
+        background: #059669;
+    }
+
+    .achievement-marker {
+        flex-shrink: 0;
+    }
+
+    .marker-icon {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        background: #e2e8f0;
+        color: #64748b;
+        border: 3px solid white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .achievement-item.completed .marker-icon {
+        background: linear-gradient(135deg, #059669, #047857);
+        color: white;
+    }
+
+    .achievement-content {
+        flex: 1;
+        padding-top: 0.5rem;
+    }
+
+    .achievement-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+    }
+
+    .achievement-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0;
+    }
+
+    .achievement-date {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .achievement-description {
+        color: #64748b;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+    }
+
+    .achievement-progress {
+        margin-top: 0.75rem;
+    }
+
+    .achievement-progress .progress-bar {
+        height: 6px;
+        margin-bottom: 0.25rem;
+    }
+
+    .progress-text {
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .progress-metrics {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .achievement-stats {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .resource-actions,
+        .session-actions {
+            flex-direction: column;
+        }
+
+        .area-header {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .area-actions {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: stretch;
+        }
+
+        .action-buttons {
+            width: 100%;
+        }
+    }
+</style>

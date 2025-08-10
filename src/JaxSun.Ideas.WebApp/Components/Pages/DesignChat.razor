@@ -1,0 +1,869 @@
+@page "/design-chat/{SessionId}"
+@using JaxSun.Ideas.Mock.Services.Interfaces
+@using JaxSun.Ideas.Mock.Models
+@inject IProductDesignService ProductDesignService
+@inject NavigationManager Navigation
+
+<PageTitle>Design Modifications - Ideas Matter</PageTitle>
+
+<div class="design-chat-container">
+    <!-- Header -->
+    <div class="chat-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="back-button" @onclick="NavigateBack">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Preview
+                            </button>
+                            <div>
+                                <h1 class="chat-title">Design Modifications</h1>
+                                <p class="chat-subtitle">Tell me how you'd like to change your mockup</p>
+                            </div>
+                        </div>
+                        <div class="chat-status">
+                            <span class="status-indicator online"></span>
+                            <span class="status-text">AI Assistant Ready</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="chat-content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Chat Interface -->
+                <div class="col-lg-4">
+                    <div class="chat-panel compact-chat">
+                        <!-- Chat Messages -->
+                        <div class="chat-messages" @ref="chatMessagesRef">
+                            @if (!chatMessages.Any())
+                            {
+                                <div class="welcome-message">
+                                    <div class="ai-avatar">
+                                        <i class="fas fa-robot"></i>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-bubble ai">
+                                            <p>Hi! I'm your design assistant. I can help you modify your mockup using natural language.</p>
+                                            <p>Try saying things like:</p>
+                                            <ul>
+                                                <li>"Make the header bigger"</li>
+                                                <li>"Change the color scheme to blue"</li>
+                                                <li>"Add a search bar to the navigation"</li>
+                                                <li>"Move the login button to the top right"</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            
+                            @foreach (var message in chatMessages)
+                            {
+                                <div class="chat-message @(message.IsUser ? "user" : "ai")">
+                                    <div class="message-avatar">
+                                        @if (message.IsUser)
+                                        {
+                                            <i class="fas fa-user"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-robot"></i>
+                                        }
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-bubble @(message.IsUser ? "user" : "ai")">
+                                            <p>@message.Text</p>
+                                            @if (!message.IsUser && !string.IsNullOrEmpty(message.Timestamp))
+                                            {
+                                                <div class="message-meta">
+                                                    <span class="timestamp">@message.Timestamp</span>
+                                                    @if (message.HasChanges)
+                                                    {
+                                                        <span class="change-indicator">
+                                                            <i class="fas fa-check text-success"></i>
+                                                            Changes Applied
+                                                        </span>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            
+                            @if (isProcessing)
+                            {
+                                <div class="chat-message ai">
+                                    <div class="message-avatar">
+                                        <i class="fas fa-robot"></i>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-bubble ai typing">
+                                            <div class="typing-indicator">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Chat Input -->
+                        <div class="chat-input">
+                            <div class="input-group">
+                                <input type="text" class="form-control" 
+                                       @bind="currentMessage" 
+                                       @onkeypress="HandleKeyPress"
+                                       placeholder="Describe the changes you want to make..."
+                                       disabled="@isProcessing" />
+                                <button class="btn btn-primary" 
+                                        @onclick="SendMessage" 
+                                        disabled="@(isProcessing || string.IsNullOrWhiteSpace(currentMessage))">
+                                    @if (isProcessing)
+                                    {
+                                        <div class="spinner-border spinner-border-sm" role="status">
+                                            <span class="visually-hidden">Processing...</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-paper-plane"></i>
+                                    }
+                                </button>
+                            </div>
+                            
+                            <!-- Quick Actions -->
+                            <div class="quick-actions">
+                                <button class="quick-action-btn" @onclick="@(() => SetQuickMessage("Make the header larger"))">
+                                    Larger Header
+                                </button>
+                                <button class="quick-action-btn" @onclick="@(() => SetQuickMessage("Change the color scheme to blue"))">
+                                    Blue Colors
+                                </button>
+                                <button class="quick-action-btn" @onclick="@(() => SetQuickMessage("Add a search bar"))">
+                                    Add Search
+                                </button>
+                                <button class="quick-action-btn" @onclick="@(() => SetQuickMessage("Make it more modern"))">
+                                    Modern Style
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Preview -->
+                <div class="col-lg-8">
+                    <div class="preview-panel expanded-preview">
+                        <div class="preview-header">
+                            <h3><i class="fas fa-eye me-2"></i>Live Preview</h3>
+                            <div class="preview-controls">
+                                <div class="btn-group">
+                                    <button class="btn @(previewMode == "desktop" ? "btn-primary" : "btn-outline-primary") btn-sm" 
+                                            @onclick="@(() => previewMode = "desktop")">
+                                        <i class="fas fa-desktop"></i>
+                                    </button>
+                                    <button class="btn @(previewMode == "mobile" ? "btn-primary" : "btn-outline-primary") btn-sm" 
+                                            @onclick="@(() => previewMode = "mobile")">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="preview-container">
+                            <div class="device-frame @previewMode">
+                                <div class="device-screen">
+                                    @if (selectedTemplate != null)
+                                    {
+                                        <iframe class="preview-frame" 
+                                                srcdoc="@GetUpdatedMockupHTML()" 
+                                                frameborder="0"
+                                                scrolling="auto"></iframe>
+                                    }
+                                    else
+                                    {
+                                        <div class="no-preview">
+                                            <i class="fas fa-image"></i>
+                                            <p>No mockup selected</p>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Change History -->
+                        <div class="change-history">
+                            <h4><i class="fas fa-history me-2"></i>Recent Changes</h4>
+                            @if (recentChanges.Any())
+                            {
+                                <div class="change-list">
+                                    @foreach (var change in recentChanges.Take(5))
+                                    {
+                                        <div class="change-item">
+                                            <div class="change-icon">
+                                                <i class="fas fa-edit"></i>
+                                            </div>
+                                            <div class="change-details">
+                                                <span class="change-description">@change.Description</span>
+                                                <span class="change-time">@change.Time</span>
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="@(() => UndoChange(change))">
+                                                <i class="fas fa-undo"></i>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="no-changes">No changes yet. Start making modifications!</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.design-chat-container {
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+.chat-header {
+    background: white;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.5rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.chat-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.chat-subtitle {
+    color: #6c757d;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.back-button {
+    background: none;
+    border: 2px solid #e9ecef;
+    color: #6c757d;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.back-button:hover {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    color: #495057;
+}
+
+.chat-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #28a745;
+    animation: pulse 2s infinite;
+}
+
+.status-text {
+    color: #28a745;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+@@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.chat-content {
+    padding: 2rem 0;
+    height: calc(100vh - 120px);
+}
+
+.chat-panel, .preview-panel {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    height: calc(100vh - 150px);
+    min-height: 700px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    max-height: calc(100vh - 350px);
+}
+
+.welcome-message, .chat-message {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.chat-message.user {
+    flex-direction: row-reverse;
+}
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.chat-message.user .message-avatar {
+    background: #667eea;
+}
+
+.chat-message.ai .message-avatar, .ai-avatar {
+    background: #28a745;
+}
+
+.message-bubble {
+    padding: 1rem 1.25rem;
+    border-radius: 18px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.message-bubble.user {
+    background: #667eea;
+    color: white;
+    border-bottom-right-radius: 6px;
+}
+
+.message-bubble.ai {
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #e9ecef;
+    border-bottom-left-radius: 6px;
+}
+
+.message-bubble.typing {
+    padding: 1rem 1.5rem;
+}
+
+.typing-indicator {
+    display: flex;
+    gap: 4px;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #6c757d;
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+@@keyframes typing {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+}
+
+.message-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.change-indicator {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.chat-input {
+    padding: 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.input-group .form-control {
+    border-radius: 25px 0 0 25px;
+    border: 2px solid #e9ecef;
+    padding: 0.75rem 1.25rem;
+}
+
+.input-group .btn {
+    border-radius: 0 25px 25px 0;
+    padding: 0.75rem 1.5rem;
+}
+
+.quick-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.quick-action-btn {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    color: #495057;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.quick-action-btn:hover {
+    background: #e9ecef;
+    border-color: #667eea;
+    color: #667eea;
+}
+
+.preview-panel {
+    margin-left: 1rem;
+}
+
+.expanded-preview {
+    margin-left: 0.5rem;
+}
+
+.compact-chat {
+    margin-right: 0.5rem;
+}
+
+.compact-chat .chat-messages {
+    padding: 0.75rem;
+}
+
+.compact-chat .chat-input {
+    padding: 1rem;
+}
+
+.compact-chat .message-bubble {
+    max-width: 95%;
+    font-size: 0.9rem;
+}
+
+.compact-chat .quick-actions {
+    gap: 0.25rem;
+}
+
+.compact-chat .quick-action-btn {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+}
+
+.preview-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.preview-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+.preview-container {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 300px);
+    min-height: 600px;
+}
+
+.device-frame {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    background: #333;
+    padding: 15px;
+}
+
+.device-frame.desktop {
+    width: 100%;
+    max-width: 1000px;
+    min-height: 600px;
+    height: 70vh;
+    aspect-ratio: 16/10;
+}
+
+.device-frame.mobile {
+    width: 350px;
+    min-height: 600px;
+    height: 70vh;
+    aspect-ratio: 9/16;
+}
+
+.device-screen {
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.preview-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.no-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #6c757d;
+}
+
+.no-preview i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.change-history {
+    padding: 1rem;
+    border-top: 1px solid #e9ecef;
+    max-height: 150px;
+    overflow-y: auto;
+    font-size: 0.85rem;
+}
+
+.change-history h4 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+.change-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.change-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.change-icon {
+    width: 30px;
+    height: 30px;
+    background: #667eea;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.change-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.change-description {
+    font-size: 0.9rem;
+    color: #495057;
+    font-weight: 500;
+}
+
+.change-time {
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+.no-changes {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+@@media (max-width: 992px) {
+    .chat-content {
+        height: auto;
+    }
+    
+    .chat-panel, .preview-panel {
+        margin-bottom: 1rem;
+        height: calc(100vh - 200px);
+        min-height: 500px;
+    }
+    
+    .preview-panel {
+        margin-left: 0;
+    }
+    
+    .expanded-preview {
+        margin-left: 0;
+    }
+    
+    .compact-chat {
+        margin-right: 0;
+    }
+    
+    .chat-messages {
+        max-height: calc(100vh - 400px);
+        min-height: 300px;
+    }
+    
+    .preview-container {
+        height: calc(100vh - 350px);
+        min-height: 400px;
+    }
+    
+    .device-frame.desktop {
+        max-width: 100%;
+        height: 50vh;
+        min-height: 300px;
+    }
+    
+    .device-frame.mobile {
+        width: 250px;
+        height: 50vh;
+        min-height: 400px;
+    }
+}
+</style>
+
+@code {
+    [Parameter] public string SessionId { get; set; } = "";
+    
+    private ProductDesignMockSession? currentSession;
+    private MockupTemplate? selectedTemplate;
+    private List<ChatMessage> chatMessages = new();
+    private List<DesignChange> recentChanges = new();
+    private string currentMessage = "";
+    private string previewMode = "desktop";
+    private bool isProcessing = false;
+    private ElementReference chatMessagesRef;
+
+    public class ChatMessage
+    {
+        public string Text { get; set; } = "";
+        public bool IsUser { get; set; }
+        public string Timestamp { get; set; } = "";
+        public bool HasChanges { get; set; }
+    }
+
+    public class DesignChange
+    {
+        public string Description { get; set; } = "";
+        public string Time { get; set; } = "";
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSession();
+        await LoadSelectedTemplate();
+    }
+
+    private async Task LoadSession()
+    {
+        currentSession = await ProductDesignService.GetSessionAsync(SessionId);
+    }
+
+    private async Task LoadSelectedTemplate()
+    {
+        if (currentSession?.SelectedMockupId != null)
+        {
+            selectedTemplate = await ProductDesignService.GetMockupTemplateAsync(currentSession.SelectedMockupId);
+        }
+    }
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(currentMessage) || isProcessing) return;
+
+        var userMessage = new ChatMessage
+        {
+            Text = currentMessage,
+            IsUser = true,
+            Timestamp = DateTime.Now.ToString("HH:mm")
+        };
+
+        chatMessages.Add(userMessage);
+        var messageToProcess = currentMessage;
+        currentMessage = "";
+        isProcessing = true;
+
+        await InvokeAsync(StateHasChanged);
+        await ScrollToBottom();
+
+        // Simulate processing delay
+        await Task.Delay(2000);
+
+        // Process the modification request
+        var response = await ProductDesignService.ProcessModificationRequestAsync(SessionId, messageToProcess);
+        
+        var aiMessage = new ChatMessage
+        {
+            Text = response,
+            IsUser = false,
+            Timestamp = DateTime.Now.ToString("HH:mm"),
+            HasChanges = true
+        };
+
+        chatMessages.Add(aiMessage);
+
+        // Add to change history
+        recentChanges.Insert(0, new DesignChange
+        {
+            Description = GetChangeDescription(messageToProcess),
+            Time = DateTime.Now.ToString("HH:mm")
+        });
+
+        isProcessing = false;
+        await InvokeAsync(StateHasChanged);
+        await ScrollToBottom();
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !isProcessing)
+        {
+            await SendMessage();
+        }
+    }
+
+    private void SetQuickMessage(string message)
+    {
+        currentMessage = message;
+    }
+
+    private async Task UndoChange(DesignChange change)
+    {
+        recentChanges.Remove(change);
+        await ProductDesignService.UndoLastModificationAsync(SessionId);
+        
+        var undoMessage = new ChatMessage
+        {
+            Text = $"Undid change: {change.Description}",
+            IsUser = false,
+            Timestamp = DateTime.Now.ToString("HH:mm"),
+            HasChanges = true
+        };
+        
+        chatMessages.Add(undoMessage);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ScrollToBottom()
+    {
+        await Task.Delay(100);
+        await chatMessagesRef.FocusAsync();
+    }
+
+    private void NavigateBack()
+    {
+        Navigation.NavigateTo($"/mockup-preview/{SessionId}");
+    }
+
+    private string GetChangeDescription(string request)
+    {
+        var lower = request.ToLower();
+        if (lower.Contains("color")) return "Changed color scheme";
+        if (lower.Contains("header") || lower.Contains("title")) return "Modified header";
+        if (lower.Contains("button")) return "Updated button style";
+        if (lower.Contains("navigation") || lower.Contains("nav")) return "Changed navigation";
+        if (lower.Contains("font") || lower.Contains("text")) return "Updated typography";
+        if (lower.Contains("layout")) return "Modified layout";
+        return "Applied design changes";
+    }
+
+    private string GetUpdatedMockupHTML()
+    {
+        if (selectedTemplate == null) return "";
+        
+        var html = selectedTemplate.HtmlContent;
+        var css = selectedTemplate.CssContent;
+        
+        // Apply mock modifications based on recent changes
+        foreach (var change in recentChanges)
+        {
+            if (change.Description.Contains("color"))
+            {
+                css = css.Replace("#667eea", "#3498db").Replace("#764ba2", "#2980b9");
+            }
+            if (change.Description.Contains("header"))
+            {
+                css += "\n.header, h1, h2 { font-size: 1.5em !important; }";
+            }
+        }
+        
+        return $@"
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>{selectedTemplate.Name}</title>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css' rel='stylesheet'>
+    <style>
+        {css}
+        
+        body {{
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }}
+    </style>
+</head>
+<body>
+    {html}
+</body>
+</html>";
+    }
+}

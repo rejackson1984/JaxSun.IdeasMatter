@@ -233,7 +233,9 @@
       "Bash(/mnt/c/Program Files/dotnet/dotnet.exe clean src/Jackson.Ideas.Mock/Jackson.Ideas.Mock.csproj)",
       "mcp__playwright__browser_navigate",
       "mcp__playwright__browser_install",
-      "Bash(/mnt/c/Program Files/dotnet/dotnet.exe build src/Jackson.Ideas.Mock/Jackson.Ideas.Mock.csproj)"
+      "Bash(/mnt/c/Program Files/dotnet/dotnet.exe build src/Jackson.Ideas.Mock/Jackson.Ideas.Mock.csproj)",
+      "Bash([ -n \"$GITHUB_TOKEN\" ])",
+      "Bash(env)"
     ],
     "deny": []
   }

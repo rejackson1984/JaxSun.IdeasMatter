@@ -1,0 +1,786 @@
+@page "/idea-validation"
+@page "/idea-validation/{IdeaId}"
+@layout HubLayout
+@using JaxSun.Ideas.Mock.Services.Interfaces
+@using JaxSun.Ideas.Mock.Models
+@inject IIdeaValidationService ValidationService
+@inject ICoachPersonaService CoachPersonaService
+@inject IHubContextService HubContextService
+@inject NavigationManager Navigation
+
+<PageTitle>Idea Validation Results - IdeaCoach Pro</PageTitle>
+
+<div class="validation-results-container">
+    @if (_validationResult != null && _currentCoach != null)
+    {
+        <!-- Header Section with Coach -->
+        <div class="validation-header">
+            <div class="coach-celebration">
+                <div class="coach-avatar-validation">
+                    <i class="@_currentCoach.Avatar"></i>
+                </div>
+                <div class="celebration-content">
+                    <h1 class="validation-title">🎉 Idea Validation Complete!</h1>
+                    <p class="coach-message">@GetCoachValidationMessage()</p>
+                </div>
+            </div>
+            
+            <div class="validation-score-card">
+                <div class="score-circle">
+                    <div class="score-value">@_validationResult.OverallScore</div>
+                    <div class="score-label">Overall Score</div>
+                </div>
+                <div class="score-interpretation">
+                    <span class="score-status @GetScoreStatusClass()">@GetScoreStatus()</span>
+                    <p class="score-description">@GetScoreDescription()</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="category-scores-section">
+            <h2 class="section-title">📊 Detailed Analysis</h2>
+            <div class="category-scores-grid">
+                @foreach (var category in _validationResult.CategoryScores)
+                {
+                    <div class="category-card">
+                        <div class="category-header">
+                            <span class="category-name">@category.Key</span>
+                            <span class="category-score @GetCategoryScoreClass(category.Value)">@category.Value</span>
+                        </div>
+                        <div class="category-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: @category.Value%; background: @GetCategoryColor(category.Value);"></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- SWOT Analysis -->
+        <div class="swot-analysis-section">
+            <h2 class="section-title">🎯 SWOT Analysis</h2>
+            <div class="swot-grid">
+                <div class="swot-card strengths">
+                    <h3 class="swot-title">
+                        <i class="fas fa-thumbs-up"></i>
+                        Strengths
+                    </h3>
+                    <ul class="swot-list">
+                        @foreach (var strength in _validationResult.Strengths)
+                        {
+                            <li>@strength</li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="swot-card weaknesses">
+                    <h3 class="swot-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Areas to Improve
+                    </h3>
+                    <ul class="swot-list">
+                        @foreach (var weakness in _validationResult.Weaknesses)
+                        {
+                            <li>@weakness</li>
+                        }
+                        @if (!_validationResult.Weaknesses.Any())
+                        {
+                            <li>No major weaknesses identified - great work!</li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="swot-card opportunities">
+                    <h3 class="swot-title">
+                        <i class="fas fa-rocket"></i>
+                        Opportunities
+                    </h3>
+                    <ul class="swot-list">
+                        @foreach (var opportunity in _validationResult.Opportunities)
+                        {
+                            <li>@opportunity</li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="swot-card threats">
+                    <h3 class="swot-title">
+                        <i class="fas fa-shield-alt"></i>
+                        Potential Challenges
+                    </h3>
+                    <ul class="swot-list">
+                        @foreach (var threat in _validationResult.Threats)
+                        {
+                            <li>@threat</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Market Analysis -->
+        <div class="market-analysis-section">
+            <h2 class="section-title">📈 Market Opportunity</h2>
+            <div class="market-cards">
+                <div class="market-card">
+                    <div class="market-metric">
+                        <span class="metric-value">@_validationResult.MarketOpportunity.MarketSize</span>
+                        <span class="metric-label">Market Size</span>
+                    </div>
+                </div>
+                <div class="market-card">
+                    <div class="market-metric">
+                        <span class="metric-value">@_validationResult.MarketOpportunity.GrowthRate</span>
+                        <span class="metric-label">Annual Growth</span>
+                    </div>
+                </div>
+                <div class="market-card">
+                    <div class="market-metric">
+                        <span class="metric-value">@_validationResult.MarketOpportunity.SizeCategory</span>
+                        <span class="metric-label">Opportunity Size</span>
+                    </div>
+                </div>
+                <div class="market-card">
+                    <div class="market-metric">
+                        <span class="metric-value">@_validationResult.Competition.CompetitionIntensity/10</span>
+                        <span class="metric-label">Competition Level</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="next-steps-section">
+            <h2 class="section-title">🚀 Your Next Steps</h2>
+            <div class="next-steps-list">
+                @foreach (var step in _validationResult.NextSteps)
+                {
+                    <div class="next-step-item">
+                        <i class="fas fa-check-circle step-icon"></i>
+                        <span class="step-text">@step</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons-section">
+            @if (_validationResult.ReadyForNextHub)
+            {
+                <div class="ready-advancement">
+                    <div class="advancement-message">
+                        <i class="fas fa-star"></i>
+                        <span>Congratulations! Your idea is ready for Business Planning.</span>
+                    </div>
+                    <button class="btn btn-primary-large" @onclick="AdvanceToBusinessPlanning">
+                        <i class="fas fa-arrow-right"></i>
+                        Continue to Business Planning Hub
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="improvement-needed">
+                    <div class="improvement-message">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Let's refine your idea further before moving to business planning.</span>
+                    </div>
+                    <button class="btn btn-secondary-large" @onclick="ReturnToIdeaInput">
+                        <i class="fas fa-edit"></i>
+                        Refine Your Idea
+                    </button>
+                </div>
+            }
+            
+            <div class="additional-actions">
+                <button class="btn btn-outline" @onclick="ShareResults">
+                    <i class="fas fa-share"></i>
+                    Share Results
+                </button>
+                <button class="btn btn-outline" @onclick="SaveResults">
+                    <i class="fas fa-save"></i>
+                    Save Report
+                </button>
+                <button class="btn btn-outline" @onclick="StartNewValidation">
+                    <i class="fas fa-plus"></i>
+                    Validate Another Idea
+                </button>
+            </div>
+        </div>
+    }
+    else if (_isLoading)
+    {
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <h2>Analyzing Your Idea...</h2>
+            <p>Our AI is conducting a comprehensive validation analysis</p>
+        </div>
+    }
+    else
+    {
+        <div class="error-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h2>No Validation Data Found</h2>
+            <p>We couldn't find validation results for this idea.</p>
+            <button class="btn btn-primary" @onclick='() => Navigation.NavigateTo("/idea-input")'>
+                <i class="fas fa-lightbulb"></i>
+                Submit an Idea for Validation
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string? IdeaId { get; set; }
+    
+    private IdeaValidationResult? _validationResult;
+    private CoachPersona? _currentCoach;
+    private bool _isLoading = true;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadValidationData();
+        _currentCoach = await CoachPersonaService.GetCoachForHubAsync(BusinessHub.IdeaDevelopment);
+        _isLoading = false;
+        StateHasChanged();
+    }
+    
+    private async Task LoadValidationData()
+    {
+        // For demo purposes, create a sample validation request
+        // In a real app, this would load from storage or route parameters
+        var demoRequest = new IdeaValidationRequest
+        {
+            Description = "An app that helps busy parents find healthy meal ideas their kids will actually eat. Every night is a struggle to figure out what to make for dinner that's nutritious but also appealing to picky eaters.",
+            ProblemSolved = "Parents waste 30+ minutes daily deciding what to cook and often resort to unhealthy options because they don't know what their kids will eat",
+            TargetAudience = "Working parents with children ages 3-12 who want to provide healthy meals but struggle with meal planning and picky eaters",
+            RevenueModel = "Monthly subscription ($9.99/month) for unlimited access to personalized meal plans, recipes, and shopping lists",
+            Strategy = "deep"
+        };
+        
+        _validationResult = await ValidationService.ValidateIdeaAsync(demoRequest);
+    }
+    
+    private string GetCoachValidationMessage()
+    {
+        if (_validationResult == null || _currentCoach == null) return "";
+        
+        return _validationResult.OverallScore >= 80 
+            ? $"Wow! {_currentCoach.Name} here - your idea is absolutely sparking with potential! ⚡ This analysis shows real promise."
+            : _validationResult.OverallScore >= 60
+            ? $"Hey! {_currentCoach.Name} here - your idea has solid foundations! ✨ Let's polish it up even more."
+            : $"Hi! {_currentCoach.Name} here - every great business starts somewhere! 💪 Let's strengthen your idea together.";
+    }
+    
+    private string GetScoreStatus()
+    {
+        return _validationResult?.OverallScore switch
+        {
+            >= 80 => "Excellent",
+            >= 70 => "Strong",
+            >= 60 => "Good",
+            >= 40 => "Developing",
+            _ => "Needs Work"
+        };
+    }
+    
+    private string GetScoreStatusClass()
+    {
+        return _validationResult?.OverallScore switch
+        {
+            >= 80 => "excellent",
+            >= 70 => "strong", 
+            >= 60 => "good",
+            >= 40 => "developing",
+            _ => "needs-work"
+        };
+    }
+    
+    private string GetScoreDescription()
+    {
+        return _validationResult?.OverallScore switch
+        {
+            >= 80 => "Your idea shows exceptional potential for success",
+            >= 70 => "Your idea is ready for business planning phase",
+            >= 60 => "Your idea has good foundations with room for improvement",
+            >= 40 => "Your idea needs refinement before advancing",
+            _ => "Let's work together to strengthen your concept"
+        };
+    }
+    
+    private string GetCategoryScoreClass(int score)
+    {
+        return score switch
+        {
+            >= 80 => "excellent",
+            >= 70 => "strong",
+            >= 60 => "good", 
+            >= 40 => "fair",
+            _ => "poor"
+        };
+    }
+    
+    private string GetCategoryColor(int score)
+    {
+        return score switch
+        {
+            >= 80 => "linear-gradient(90deg, #10b981, #059669)",
+            >= 70 => "linear-gradient(90deg, #3b82f6, #1d4ed8)",
+            >= 60 => "linear-gradient(90deg, #f59e0b, #d97706)",
+            >= 40 => "linear-gradient(90deg, #f97316, #ea580c)",
+            _ => "linear-gradient(90deg, #ef4444, #dc2626)"
+        };
+    }
+    
+    private async Task AdvanceToBusinessPlanning()
+    {
+        // Switch to Business Planning hub
+        await HubContextService.SwitchToHubAsync(BusinessHub.BusinessPlanning);
+        Navigation.NavigateTo("/financial-projections");
+    }
+    
+    private void ReturnToIdeaInput()
+    {
+        Navigation.NavigateTo("/idea-input");
+    }
+    
+    private void ShareResults()
+    {
+        // TODO: Implement share functionality
+    }
+    
+    private void SaveResults()
+    {
+        // TODO: Implement save functionality
+    }
+    
+    private void StartNewValidation()
+    {
+        Navigation.NavigateTo("/idea-input");
+    }
+}
+
+<style>
+    .validation-results-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: var(--hub-background, #f8fafc);
+    }
+
+    /* Header Section */
+    .validation-header {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 3rem;
+        align-items: flex-start;
+    }
+
+    .coach-celebration {
+        flex: 1;
+        background: var(--hub-gradient, linear-gradient(135deg, #7b8fef 0%, #22d3ee 100%));
+        color: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .coach-avatar-validation {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        flex-shrink: 0;
+    }
+
+    .validation-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .coach-message {
+        font-size: 1.125rem;
+        margin: 0;
+        opacity: 0.95;
+    }
+
+    .validation-score-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        min-width: 300px;
+    }
+
+    .score-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: var(--hub-gradient, linear-gradient(135deg, #7b8fef 0%, #22d3ee 100%));
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .score-value {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .score-label {
+        font-size: 0.75rem;
+        opacity: 0.9;
+    }
+
+    .score-interpretation {
+        flex: 1;
+    }
+
+    .score-status {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .score-status.excellent { background: #dcfce7; color: #166534; }
+    .score-status.strong { background: #dbeafe; color: #1e40af; }
+    .score-status.good { background: #fef3c7; color: #92400e; }
+    .score-status.developing { background: #fed7aa; color: #c2410c; }
+    .score-status.needs-work { background: #fecaca; color: #991b1b; }
+
+    .score-description {
+        color: #64748b;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    /* Category Scores */
+    .category-scores-section {
+        margin-bottom: 3rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .category-scores-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .category-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .category-name {
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .category-score {
+        font-weight: 700;
+        font-size: 1.125rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem;
+    }
+
+    .category-score.excellent { background: #dcfce7; color: #166534; }
+    .category-score.strong { background: #dbeafe; color: #1e40af; }
+    .category-score.good { background: #fef3c7; color: #92400e; }
+    .category-score.fair { background: #fed7aa; color: #c2410c; }
+    .category-score.poor { background: #fecaca; color: #991b1b; }
+
+    .category-progress {
+        width: 100%;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+
+    /* SWOT Analysis */
+    .swot-analysis-section {
+        margin-bottom: 3rem;
+    }
+
+    .swot-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .swot-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid;
+    }
+
+    .swot-card.strengths { border-left-color: #10b981; }
+    .swot-card.weaknesses { border-left-color: #f59e0b; }
+    .swot-card.opportunities { border-left-color: #3b82f6; }
+    .swot-card.threats { border-left-color: #ef4444; }
+
+    .swot-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #374151;
+    }
+
+    .swot-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .swot-list li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f3f4f6;
+        color: #4b5563;
+    }
+
+    .swot-list li:last-child {
+        border-bottom: none;
+    }
+
+    /* Market Analysis */
+    .market-analysis-section {
+        margin-bottom: 3rem;
+    }
+
+    .market-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .market-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .market-metric {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .metric-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--hub-primary, #7b8fef);
+    }
+
+    .metric-label {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    /* Next Steps */
+    .next-steps-section {
+        margin-bottom: 3rem;
+    }
+
+    .next-steps-list {
+        background: white;
+        padding: 2rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .next-step-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .next-step-item:last-child {
+        border-bottom: none;
+    }
+
+    .step-icon {
+        color: var(--hub-primary, #7b8fef);
+        font-size: 1.125rem;
+    }
+
+    .step-text {
+        font-size: 1rem;
+        color: #374151;
+    }
+
+    /* Action Buttons */
+    .action-buttons-section {
+        text-align: center;
+    }
+
+    .ready-advancement,
+    .improvement-needed {
+        background: white;
+        padding: 2rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .advancement-message,
+    .improvement-message {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        font-size: 1.125rem;
+        font-weight: 600;
+    }
+
+    .advancement-message { color: #059669; }
+    .improvement-message { color: #f59e0b; }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .btn-primary-large,
+    .btn-secondary-large {
+        padding: 1rem 2rem;
+        font-size: 1.125rem;
+    }
+
+    .btn-primary-large {
+        background: var(--hub-gradient, linear-gradient(135deg, #7b8fef 0%, #22d3ee 100%));
+        color: white;
+    }
+
+    .btn-secondary-large {
+        background: #f59e0b;
+        color: white;
+    }
+
+    .btn-outline {
+        background: transparent;
+        border: 2px solid #e5e7eb;
+        color: #374151;
+        margin: 0 0.5rem;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .additional-actions {
+        margin-top: 1rem;
+    }
+
+    /* Loading and Error States */
+    .loading-state,
+    .error-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #e5e7eb;
+        border-top: 4px solid var(--hub-primary, #7b8fef);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 2rem auto;
+    }
+
+    @@keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .validation-header {
+            flex-direction: column;
+        }
+
+        .coach-celebration {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .validation-score-card {
+            flex-direction: column;
+            text-align: center;
+            min-width: unset;
+        }
+
+        .swot-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .market-cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>

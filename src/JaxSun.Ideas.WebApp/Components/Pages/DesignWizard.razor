@@ -1,0 +1,672 @@
+@page "/design-wizard/{ScenarioId}"
+@using JaxSun.Ideas.Mock.Services.Interfaces
+@using JaxSun.Ideas.Mock.Models
+@inject IProductDesignService ProductDesignService
+@inject IMockDataService MockDataService
+@inject NavigationManager Navigation
+
+<PageTitle>Product Design Wizard - Ideas Matter</PageTitle>
+
+<div class="design-wizard-container">
+    <!-- Header -->
+    <div class="wizard-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="back-button" @onclick="NavigateBack">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Scenario
+                            </button>
+                            <div>
+                                <h1 class="wizard-title">Product Design Wizard</h1>
+                                <p class="wizard-subtitle">Let's create your software specification</p>
+                            </div>
+                        </div>
+                        <div class="wizard-progress">
+                            <div class="progress-info">
+                                <span class="progress-text">@(currentStep + 1) of @totalSteps</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: @(((currentStep + 1) / (double)totalSteps) * 100)%"></div>
+                                </div>
+                            </div>
+                            <div class="demo-actions">
+                                <button class="btn btn-outline-warning btn-sm demo-fill-btn" @onclick="FillAllSampleAnswers">
+                                    <i class="fas fa-magic me-1"></i>Demo: Fill All
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="wizard-content">
+        <div class="container-fluid">
+            @if (isLoading)
+            {
+                <div class="loading-section">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3">Setting up your design session...</p>
+                    </div>
+                </div>
+            }
+            else if (currentQuestion != null)
+            {
+                <div class="question-section">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8 col-xl-6">
+                            <div class="question-card">
+                                <div class="question-category">@currentQuestion.Category</div>
+                                <h2 class="question-text">@currentQuestion.Text</h2>
+                                
+                                @if (!string.IsNullOrEmpty(currentQuestion.HelpText))
+                                {
+                                    <p class="question-help">@currentQuestion.HelpText</p>
+                                }
+
+                                <div class="answer-section">
+                                    @if (currentQuestion.Type == "text")
+                                    {
+                                        <div class="form-group">
+                                            <textarea class="form-control answer-textarea" 
+                                                      @bind="currentAnswer" 
+                                                      placeholder="Type your answer here..."
+                                                      rows="4"></textarea>
+                                        </div>
+                                    }
+                                    else if (currentQuestion.Type == "multiple-choice")
+                                    {
+                                        <div class="choice-options">
+                                            @foreach (var option in currentQuestion.Options)
+                                            {
+                                                <label class="choice-option">
+                                                    <input type="radio" name="answer" value="@option" 
+                                                           @onchange="@((e) => currentAnswer = e.Value?.ToString())" />
+                                                    <span class="choice-text">@option</span>
+                                                </label>
+                                            }
+                                        </div>
+                                    }
+                                    else if (currentQuestion.Type == "boolean")
+                                    {
+                                        <div class="boolean-options">
+                                            @foreach (var option in currentQuestion.Options)
+                                            {
+                                                <button class="btn @(currentAnswer == option ? "btn-primary" : "btn-outline-primary") boolean-btn"
+                                                        onclick="@(() => currentAnswer = option)">
+                                                    @option
+                                                </button>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+
+                                @if (!string.IsNullOrEmpty(currentQuestion.SampleAnswer))
+                                {
+                                    <div class="sample-answer-section">
+                                        <div class="sample-answer-header">
+                                            <i class="fas fa-lightbulb text-warning me-2"></i>
+                                            <span class="sample-label">Need inspiration? Here's a sample answer:</span>
+                                        </div>
+                                        <div class="sample-answer-content">
+                                            @currentQuestion.SampleAnswer
+                                        </div>
+                                        <button class="btn btn-outline-info btn-sm sample-use-btn" @onclick="UseSampleAnswer">
+                                            <i class="fas fa-copy me-1"></i>Use This Sample
+                                        </button>
+                                    </div>
+                                }
+
+                                <div class="question-actions">
+                                    <button class="btn btn-outline-secondary" 
+                                            @onclick="PreviousQuestion" 
+                                            disabled="@(currentStep == 0)">
+                                        <i class="fas fa-chevron-left me-2"></i>Previous
+                                    </button>
+                                    <button class="btn btn-primary" 
+                                            @onclick="NextQuestion" 
+                                            disabled="@string.IsNullOrWhiteSpace(currentAnswer)">
+                                        Next<i class="fas fa-chevron-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (isComplete)
+            {
+                <div class="completion-section">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="completion-card">
+                                <div class="completion-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <h2>Great! Your responses are complete.</h2>
+                                <p>We've gathered all the information needed to create your product specification and visual mockup.</p>
+                                
+                                <div class="next-steps">
+                                    <h3>What's Next?</h3>
+                                    <div class="step-options">
+                                        <button class="btn btn-primary btn-lg" @onclick="GeneratePRD">
+                                            <i class="fas fa-file-alt me-2"></i>
+                                            Generate Product Requirements
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-lg" @onclick="CreateMockup">
+                                            <i class="fas fa-paint-brush me-2"></i>
+                                            Create Visual Mockup
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+.design-wizard-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.wizard-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1.5rem 0;
+}
+
+.wizard-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.wizard-subtitle {
+    color: #6c757d;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.back-button {
+    background: none;
+    border: 2px solid #e9ecef;
+    color: #6c757d;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.back-button:hover {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    color: #495057;
+}
+
+.wizard-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+}
+
+.demo-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.demo-fill-btn {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.progress-text {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+}
+
+.progress-bar {
+    width: 200px;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    transition: width 0.3s ease;
+}
+
+.wizard-content {
+    padding: 3rem 0;
+}
+
+.loading-section {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: white;
+}
+
+.question-section {
+    animation: slideInUp 0.6s ease;
+}
+
+.question-card {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.question-category {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+.question-text {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.question-help {
+    color: #6c757d;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.answer-section {
+    margin-bottom: 2.5rem;
+}
+
+.answer-textarea {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1rem;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 120px;
+    transition: border-color 0.3s ease;
+}
+
+.answer-textarea:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.choice-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.choice-option {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0;
+}
+
+.choice-option:hover {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.choice-option input[type="radio"] {
+    margin-right: 1rem;
+    transform: scale(1.2);
+}
+
+.choice-text {
+    font-weight: 500;
+    color: #495057;
+}
+
+.boolean-options {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.boolean-btn {
+    padding: 1rem 2rem;
+    font-weight: 600;
+    border-radius: 50px;
+    min-width: 120px;
+}
+
+.sample-answer-section {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    position: relative;
+    animation: slideInUp 0.5s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.sample-answer-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.sample-label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+}
+
+.sample-answer-content {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    white-space: pre-line;
+}
+
+.sample-use-btn {
+    border-radius: 20px;
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.sample-use-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.question-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.question-actions .btn {
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    border-radius: 50px;
+    min-width: 140px;
+}
+
+.completion-section {
+    animation: slideInUp 0.6s ease;
+}
+
+.completion-card {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.completion-icon {
+    font-size: 3rem;
+    color: #28a745;
+    margin-bottom: 1.5rem;
+}
+
+.completion-card h2 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.completion-card p {
+    color: #6c757d;
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+.next-steps h3 {
+    color: #495057;
+    margin-bottom: 1.5rem;
+}
+
+.step-options {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.step-options .btn {
+    padding: 1rem 2rem;
+    font-weight: 600;
+    border-radius: 12px;
+    min-width: 200px;
+}
+
+@@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@@media (max-width: 768px) {
+    .wizard-header {
+        padding: 1rem 0;
+    }
+    
+    .wizard-title {
+        font-size: 1.4rem;
+    }
+    
+    .question-card {
+        padding: 2rem 1.5rem;
+        margin: 0 1rem;
+    }
+    
+    .wizard-progress {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: stretch;
+    }
+    
+    .demo-actions {
+        justify-content: center;
+    }
+    
+    .question-actions {
+        flex-direction: column;
+    }
+    
+    .step-options {
+        flex-direction: column;
+    }
+}
+</style>
+
+@code {
+    [Parameter] public string ScenarioId { get; set; } = "";
+    
+    private ProductDesignMockSession? currentSession;
+    private BusinessIdeaScenario? businessScenario;
+    private List<ProductDesignQuestion> questions = new();
+    private ProductDesignQuestion? currentQuestion;
+    private string currentAnswer = "";
+    private int currentStep = 0;
+    private int totalSteps = 10;
+    private bool isLoading = true;
+    private bool isComplete = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBusinessScenario();
+        await InitializeSession();
+        await LoadQuestions();
+        await LoadCurrentQuestion();
+        isLoading = false;
+    }
+
+    private async Task LoadBusinessScenario()
+    {
+        var scenarios = await MockDataService.GetAllScenariosAsync();
+        businessScenario = scenarios.FirstOrDefault(s => s.Id == ScenarioId);
+    }
+
+    private async Task InitializeSession()
+    {
+        if (businessScenario != null)
+        {
+            var sessionName = $"{businessScenario.Name} - Design Session";
+            currentSession = await ProductDesignService.CreateSessionAsync("demo-user", ScenarioId, sessionName);
+        }
+    }
+
+    private async Task LoadQuestions()
+    {
+        questions = await ProductDesignService.GetQuestionBankAsync();
+        totalSteps = questions.Count;
+    }
+
+    private async Task LoadCurrentQuestion()
+    {
+        if (currentSession != null)
+        {
+            currentQuestion = await ProductDesignService.GetNextQuestionAsync(currentSession.Id);
+            if (currentQuestion == null)
+            {
+                isComplete = true;
+            }
+            else
+            {
+                // Pre-fill answer if already answered
+                if (currentSession.Responses.ContainsKey(currentQuestion.Id))
+                {
+                    currentAnswer = currentSession.Responses[currentQuestion.Id];
+                }
+                else
+                {
+                    currentAnswer = "";
+                }
+            }
+        }
+    }
+
+    private async Task NextQuestion()
+    {
+        if (currentQuestion != null && !string.IsNullOrWhiteSpace(currentAnswer) && currentSession != null)
+        {
+            await ProductDesignService.SubmitAnswerAsync(currentSession.Id, currentQuestion.Id, currentAnswer);
+            currentStep++;
+            await LoadCurrentQuestion();
+        }
+    }
+
+    private async Task PreviousQuestion()
+    {
+        if (currentStep > 0)
+        {
+            currentStep--;
+            var previousQuestion = questions.Where((q, index) => index == currentStep).FirstOrDefault();
+            if (previousQuestion != null)
+            {
+                currentQuestion = previousQuestion;
+                if (currentSession != null && currentSession.Responses.ContainsKey(currentQuestion.Id))
+                {
+                    currentAnswer = currentSession.Responses[currentQuestion.Id];
+                }
+            }
+        }
+    }
+
+    private async Task GeneratePRD()
+    {
+        if (currentSession != null)
+        {
+            Navigation.NavigateTo($"/prd-review/{currentSession.Id}");
+        }
+    }
+
+    private async Task CreateMockup()
+    {
+        if (currentSession != null)
+        {
+            Navigation.NavigateTo($"/mockup-preview/{currentSession.Id}");
+        }
+    }
+
+    private void NavigateBack()
+    {
+        Navigation.NavigateTo($"/scenario/{ScenarioId}");
+    }
+
+    private void UseSampleAnswer()
+    {
+        if (currentQuestion != null && !string.IsNullOrEmpty(currentQuestion.SampleAnswer))
+        {
+            currentAnswer = currentQuestion.SampleAnswer;
+        }
+    }
+
+    private async Task FillAllSampleAnswers()
+    {
+        if (currentSession != null)
+        {
+            // Fill all questions with sample answers
+            foreach (var question in questions)
+            {
+                if (!string.IsNullOrEmpty(question.SampleAnswer))
+                {
+                    await ProductDesignService.SubmitAnswerAsync(currentSession.Id, question.Id, question.SampleAnswer);
+                }
+            }
+            
+            // Mark as complete and navigate to completion
+            isComplete = true;
+            currentQuestion = null;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}

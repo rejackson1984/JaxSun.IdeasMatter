@@ -1,0 +1,22 @@
+@page "/simple-test"
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Test</title>
+</head>
+<body>
+    <h1 style="color: red; font-size: 3rem;">🔴 SIMPLE TEST WORKS!</h1>
+    <p style="font-size: 1.5rem;">This page uses no layout and no services.</p>
+    <p>Current time: @DateTime.Now</p>
+    <p>If you see this, basic Blazor routing is working.</p>
+    
+    <hr />
+    <p><strong>Next test:</strong> <a href="/test-dashboard">Test Dashboard (with HubLayout)</a></p>
+    <p><strong>Main test:</strong> <a href="/dashboard">Main Dashboard</a></p>
+</body>
+</html>
+
+@code {
+    // No services, no dependencies, pure Blazor
+}

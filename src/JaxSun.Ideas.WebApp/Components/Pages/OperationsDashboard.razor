@@ -1,0 +1,1027 @@
+@page "/operations-dashboard"
+@layout HubLayout
+@using JaxSun.Ideas.Mock.Services.Interfaces
+@using JaxSun.Ideas.Mock.Models
+@inject IHubContextService HubContextService
+@inject ICoachPersonaService CoachPersonaService
+@inject IMockDataService MockDataService
+@inject ILaunchedBusinessService LaunchedBusinessService
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<PageTitle>Business Operations Hub - Execute Dashboard</PageTitle>
+
+<div class="operations-dashboard-container">
+    <!-- Execute Coach Welcome Section -->
+    <div class="coach-welcome-section hub-operations-theme">
+        <div class="coach-welcome-content">
+            <div class="coach-avatar-large hub-operations-avatar">
+                <i class="@(_currentCoach?.Avatar ?? "fas fa-chart-line")"></i>
+            </div>
+            <div class="welcome-text-content">
+                <h1 class="coach-welcome-title">Business Operations Command Center 📈</h1>
+                <p class="coach-message-text">@GetCoachWelcomeMessage()</p>
+                <div class="coach-guidance">
+                    <div class="guidance-item">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Monitor KPIs and drive operational excellence</span>
+                    </div>
+                    <div class="guidance-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Track growth metrics and performance indicators</span>
+                    </div>
+                    <div class="guidance-item">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Optimize team performance and leadership effectiveness</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        
+        <!-- Key Performance Indicators -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="section-header">
+                    <h2>📊 Key Performance Indicators</h2>
+                    <p>Real-time business metrics and operational health</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="kpi-card revenue">
+                    <div class="kpi-header">
+                        <div class="kpi-icon">💰</div>
+                        <div class="kpi-trend positive">+12.5%</div>
+                    </div>
+                    <div class="kpi-value">$47,250</div>
+                    <div class="kpi-label">Monthly Revenue</div>
+                    <div class="kpi-target">Target: $50,000</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card customers">
+                    <div class="kpi-header">
+                        <div class="kpi-icon">👥</div>
+                        <div class="kpi-trend positive">+8.2%</div>
+                    </div>
+                    <div class="kpi-value">1,247</div>
+                    <div class="kpi-label">Active Customers</div>
+                    <div class="kpi-target">Target: 1,500</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card conversion">
+                    <div class="kpi-header">
+                        <div class="kpi-icon">📈</div>
+                        <div class="kpi-trend negative">-2.1%</div>
+                    </div>
+                    <div class="kpi-value">3.4%</div>
+                    <div class="kpi-label">Conversion Rate</div>
+                    <div class="kpi-target">Target: 4.0%</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card satisfaction">
+                    <div class="kpi-header">
+                        <div class="kpi-icon">⭐</div>
+                        <div class="kpi-trend positive">+1.3%</div>
+                    </div>
+                    <div class="kpi-value">4.8</div>
+                    <div class="kpi-label">Customer Satisfaction</div>
+                    <div class="kpi-target">Target: 4.5+</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Operations Overview -->
+        <div class="row mb-4">
+            <div class="col-lg-8">
+                <div class="operations-chart-card">
+                    <div class="card-header">
+                        <h3>📊 Revenue & Growth Trends</h3>
+                        <div class="chart-controls">
+                            <button class="btn btn-sm @(selectedPeriod == "7d" ? "btn-primary" : "btn-outline-primary")" 
+                                    @onclick='() => SetTimePeriod("7d")'>7D</button>
+                            <button class="btn btn-sm @(selectedPeriod == "30d" ? "btn-primary" : "btn-outline-primary")" 
+                                    @onclick='() => SetTimePeriod("30d")'>30D</button>
+                            <button class="btn btn-sm @(selectedPeriod == "90d" ? "btn-primary" : "btn-outline-primary")" 
+                                    @onclick='() => SetTimePeriod("90d")'>90D</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-placeholder">
+                            <div class="revenue-chart">
+                                @for (int i = 0; i < 12; i++)
+                                {
+                                    var height = Random.Shared.Next(20, 80);
+                                    <div class="chart-bar" style="height: @(height)%">
+                                        <div class="bar-value">$@(Random.Shared.Next(35, 55))k</div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="operations-metrics-card">
+                    <div class="card-header">
+                        <h3>⚡ Operational Health</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="health-metric">
+                            <div class="metric-header">
+                                <span class="metric-name">System Uptime</span>
+                                <span class="metric-status excellent">99.8%</span>
+                            </div>
+                            <div class="metric-bar">
+                                <div class="metric-fill excellent" style="width: 99.8%"></div>
+                            </div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-header">
+                                <span class="metric-name">Response Time</span>
+                                <span class="metric-status good">245ms</span>
+                            </div>
+                            <div class="metric-bar">
+                                <div class="metric-fill good" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-header">
+                                <span class="metric-name">Error Rate</span>
+                                <span class="metric-status excellent">0.02%</span>
+                            </div>
+                            <div class="metric-bar">
+                                <div class="metric-fill excellent" style="width: 98%"></div>
+                            </div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-header">
+                                <span class="metric-name">Team Efficiency</span>
+                                <span class="metric-status good">87%</span>
+                            </div>
+                            <div class="metric-bar">
+                                <div class="metric-fill good" style="width: 87%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Growth Analytics & CEO Development -->
+        <div class="row mb-4">
+            <div class="col-lg-6">
+                <div class="growth-analytics-card">
+                    <div class="card-header">
+                        <h3>🚀 Growth Analytics</h3>
+                        <span class="period-indicator">Last 30 days</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="growth-metrics">
+                            <div class="growth-item">
+                                <div class="growth-icon">📈</div>
+                                <div class="growth-content">
+                                    <div class="growth-title">Customer Acquisition</div>
+                                    <div class="growth-value">+247 new customers</div>
+                                    <div class="growth-change positive">↗ 15.3% vs last month</div>
+                                </div>
+                            </div>
+                            <div class="growth-item">
+                                <div class="growth-icon">💎</div>
+                                <div class="growth-content">
+                                    <div class="growth-title">Customer Lifetime Value</div>
+                                    <div class="growth-value">$1,847 avg</div>
+                                    <div class="growth-change positive">↗ 8.7% vs last month</div>
+                                </div>
+                            </div>
+                            <div class="growth-item">
+                                <div class="growth-icon">🔄</div>
+                                <div class="growth-content">
+                                    <div class="growth-title">Retention Rate</div>
+                                    <div class="growth-value">94.2%</div>
+                                    <div class="growth-change positive">↗ 2.1% vs last month</div>
+                                </div>
+                            </div>
+                            <div class="growth-item">
+                                <div class="growth-icon">🎯</div>
+                                <div class="growth-content">
+                                    <div class="growth-title">Market Share</div>
+                                    <div class="growth-value">2.7%</div>
+                                    <div class="growth-change positive">↗ 0.4% vs last month</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="ceo-development-card">
+                    <div class="card-header">
+                        <h3>👔 CEO Development Center</h3>
+                        <button class="btn btn-sm btn-outline-primary" @onclick="OpenCEOAssessment">
+                            Take Assessment
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="leadership-scores">
+                            <div class="score-item">
+                                <div class="score-label">Strategic Thinking</div>
+                                <div class="score-bar">
+                                    <div class="score-fill" style="width: 85%"></div>
+                                    <span class="score-value">85%</span>
+                                </div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-label">Team Leadership</div>
+                                <div class="score-bar">
+                                    <div class="score-fill" style="width: 78%"></div>
+                                    <span class="score-value">78%</span>
+                                </div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-label">Decision Making</div>
+                                <div class="score-bar">
+                                    <div class="score-fill" style="width: 92%"></div>
+                                    <span class="score-value">92%</span>
+                                </div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-label">Communication</div>
+                                <div class="score-bar">
+                                    <div class="score-fill" style="width: 73%"></div>
+                                    <span class="score-value">73%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="development-actions">
+                            <button class="btn btn-sm btn-primary" @onclick="ViewLeadershipPlan">
+                                <i class="fas fa-roadmap"></i>
+                                Development Plan
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary" @onclick="ViewMentorResources">
+                                <i class="fas fa-users"></i>
+                                Mentor Network
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Portfolio -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="portfolio-card">
+                    <div class="card-header">
+                        <h3>🏢 Business Portfolio Overview</h3>
+                        <button class="btn btn-sm btn-success" @onclick="AddNewBusiness">
+                            <i class="fas fa-plus"></i>
+                            Add Business
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="portfolio-grid">
+                            @if (businessPortfolio?.Any() == true)
+                            {
+                                @foreach (var business in businessPortfolio)
+                                {
+                                    <div class="portfolio-item @GetBusinessStatusClass(business.Status)">
+                                        <div class="business-header">
+                                            <div class="business-icon">🏢</div>
+                                            <div class="business-info">
+                                                <h4 class="business-name">@business.Name</h4>
+                                                <p class="business-industry">@business.Industry</p>
+                                            </div>
+                                            <div class="business-status">
+                                                <span class="status-badge @business.Status.ToLower()">@business.Status</span>
+                                            </div>
+                                        </div>
+                                        <div class="business-metrics">
+                                            <div class="metric">
+                                                <span class="metric-label">Revenue</span>
+                                                <span class="metric-value">@business.CurrentMetrics.Revenue.ToString("C0")</span>
+                                            </div>
+                                            <div class="metric">
+                                                <span class="metric-label">Growth</span>
+                                                <span class="metric-value @(business.CurrentMetrics.MonthlyGrowthRate >= 0 ? "positive" : "negative")">
+                                                    @business.CurrentMetrics.MonthlyGrowthRate.ToString("+0.0%;-0.0%")
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="business-actions">
+                                            <button class="btn btn-sm btn-primary" @onclick="() => ViewBusinessDetails(business.Id)">
+                                                View Details
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="empty-portfolio">
+                                    <i class="fas fa-building"></i>
+                                    <h4>No businesses in portfolio yet</h4>
+                                    <p>Start by launching your first validated business idea</p>
+                                    <button class="btn btn-primary" @onclick="LaunchFirstBusiness">
+                                        Launch Your First Business
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    private HubContext? _currentContext;
+    private CoachPersona? _currentCoach;
+    private string _currentCoachMessage = "";
+    private string selectedPeriod = "30d";
+    private List<LaunchedBusiness>? businessPortfolio;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadOperationsData();
+        
+        // Subscribe to hub context changes
+        HubContextService.ContextChanged += OnHubContextChanged;
+    }
+
+    private async Task LoadOperationsData()
+    {
+        _currentContext = await HubContextService.GetCurrentContextAsync();
+        
+        if (_currentContext != null)
+        {
+            _currentCoach = await CoachPersonaService.GetCoachForHubAsync(_currentContext.CurrentHub);
+            
+            // Get coaching message for operations context
+            var coachingContext = new CoachingContext
+            {
+                CurrentHub = _currentContext.CurrentHub,
+                UserProgress = _currentContext.Progress.GetValueOrDefault(_currentContext.CurrentHub)?.CompletionPercentage ?? 0,
+                CompletedMilestones = _currentContext.Progress.GetValueOrDefault(_currentContext.CurrentHub)?.CompletedMilestones ?? new List<string>(),
+                IsFirstTimeInHub = false
+            };
+            
+            _currentCoachMessage = await CoachPersonaService.GetCoachMessageAsync(_currentContext.CurrentHub, coachingContext);
+        }
+
+        // Load business portfolio
+        businessPortfolio = await LaunchedBusinessService.GetUserBusinessesAsync("demo-user");
+    }
+
+    private void OnHubContextChanged(object? sender, HubContextChangedEventArgs e)
+    {
+        InvokeAsync(async () =>
+        {
+            await LoadOperationsData();
+            StateHasChanged();
+        });
+    }
+
+    private string GetCoachWelcomeMessage()
+    {
+        if (_currentCoach != null)
+        {
+            return _currentCoach.ContextualMessages.GetValueOrDefault("kpi_dashboard", _currentCoachMessage);
+        }
+        return "Welcome to your Operations Command Center. Let's drive results and scale your success.";
+    }
+
+    private void SetTimePeriod(string period)
+    {
+        selectedPeriod = period;
+        StateHasChanged();
+    }
+
+    private string GetBusinessStatusClass(string status)
+    {
+        return status.ToLower() switch
+        {
+            "active" => "status-active",
+            "launching" => "status-launching", 
+            "planning" => "status-planning",
+            "paused" => "status-paused",
+            _ => "status-unknown"
+        };
+    }
+
+    private void OpenCEOAssessment()
+    {
+        Navigation.NavigateTo("/ceo-assessment");
+    }
+
+    private void ViewLeadershipPlan()
+    {
+        Navigation.NavigateTo("/leadership-development");
+    }
+
+    private void ViewMentorResources()
+    {
+        Navigation.NavigateTo("/mentor-network");
+    }
+
+    private void AddNewBusiness()
+    {
+        Navigation.NavigateTo("/idea-input");
+    }
+
+    private void ViewBusinessDetails(string businessId)
+    {
+        Navigation.NavigateTo($"/business-details/{businessId}");
+    }
+
+    private void LaunchFirstBusiness()
+    {
+        Navigation.NavigateTo("/idea-input");
+    }
+
+    public void Dispose()
+    {
+        if (HubContextService != null)
+        {
+            HubContextService.ContextChanged -= OnHubContextChanged;
+        }
+    }
+}
+
+<style>
+    /* Operations Dashboard Styles */
+    .operations-dashboard-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+
+    /* Coach Welcome Section - Operations Theme */
+    .hub-operations-theme {
+        background: linear-gradient(135deg, #4c5fd715, #05966915);
+        border-bottom: 3px solid #4c5fd725;
+    }
+
+    .hub-operations-avatar {
+        background: linear-gradient(135deg, #4c5fd7, #059669);
+    }
+
+    /* Section Headers */
+    .section-header {
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .section-header h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+    }
+
+    .section-header p {
+        color: #64748b;
+        font-size: 1rem;
+    }
+
+    /* KPI Cards */
+    .kpi-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+    }
+
+    .kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .kpi-card.revenue { border-left-color: #10b981; }
+    .kpi-card.customers { border-left-color: #3b82f6; }
+    .kpi-card.conversion { border-left-color: #f59e0b; }
+    .kpi-card.satisfaction { border-left-color: #8b5cf6; }
+
+    .kpi-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .kpi-icon {
+        font-size: 1.5rem;
+    }
+
+    .kpi-trend {
+        font-size: 0.875rem;
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+    }
+
+    .kpi-trend.positive {
+        color: #059669;
+        background: #d1fae5;
+    }
+
+    .kpi-trend.negative {
+        color: #dc2626;
+        background: #fee2e2;
+    }
+
+    .kpi-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+    }
+
+    .kpi-label {
+        font-size: 1rem;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+    }
+
+    .kpi-target {
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+
+    /* Operations Chart Card */
+    .operations-chart-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .operations-chart-card .card-header {
+        background: linear-gradient(135deg, #4c5fd7, #059669);
+        color: white;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .operations-chart-card .card-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .chart-controls {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .chart-controls .btn {
+        font-size: 0.875rem;
+        padding: 0.375rem 0.75rem;
+    }
+
+    .revenue-chart {
+        display: flex;
+        align-items: end;
+        gap: 0.5rem;
+        height: 200px;
+        padding: 1rem 0;
+    }
+
+    .chart-bar {
+        flex: 1;
+        background: linear-gradient(135deg, #4c5fd7, #059669);
+        border-radius: 4px 4px 0 0;
+        position: relative;
+        min-height: 20px;
+        display: flex;
+        align-items: end;
+        justify-content: center;
+    }
+
+    .bar-value {
+        position: absolute;
+        top: -25px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    /* Operations Metrics Card */
+    .operations-metrics-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .operations-metrics-card .card-header {
+        background: linear-gradient(135deg, #059669, #047857);
+        color: white;
+        padding: 1.5rem;
+    }
+
+    .operations-metrics-card .card-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .health-metric {
+        padding: 1rem 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .health-metric:last-child {
+        border-bottom: none;
+    }
+
+    .metric-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .metric-name {
+        font-weight: 500;
+        color: #374151;
+    }
+
+    .metric-status {
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .metric-status.excellent { color: #059669; }
+    .metric-status.good { color: #0891b2; }
+    .metric-status.warning { color: #d97706; }
+    .metric-status.poor { color: #dc2626; }
+
+    .metric-bar {
+        height: 6px;
+        background: #e5e7eb;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .metric-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    .metric-fill.excellent { background: #059669; }
+    .metric-fill.good { background: #0891b2; }
+    .metric-fill.warning { background: #d97706; }
+    .metric-fill.poor { background: #dc2626; }
+
+    /* Growth Analytics Card */
+    .growth-analytics-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .growth-analytics-card .card-header {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: white;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .growth-analytics-card .card-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .period-indicator {
+        font-size: 0.875rem;
+        opacity: 0.9;
+    }
+
+    .growth-metrics {
+        padding: 1.5rem;
+    }
+
+    .growth-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .growth-item:last-child {
+        border-bottom: none;
+    }
+
+    .growth-icon {
+        font-size: 1.5rem;
+        width: 3rem;
+        text-align: center;
+    }
+
+    .growth-content {
+        flex: 1;
+    }
+
+    .growth-title {
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.25rem;
+    }
+
+    .growth-value {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 0.25rem;
+    }
+
+    .growth-change {
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .growth-change.positive {
+        color: #059669;
+    }
+
+    .growth-change.negative {
+        color: #dc2626;
+    }
+
+    /* CEO Development Card */
+    .ceo-development-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .ceo-development-card .card-header {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        color: white;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .ceo-development-card .card-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .leadership-scores {
+        padding: 1.5rem;
+    }
+
+    .score-item {
+        margin-bottom: 1.5rem;
+    }
+
+    .score-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .score-label {
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .score-bar {
+        position: relative;
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .score-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+
+    .score-value {
+        position: absolute;
+        right: 0;
+        top: -25px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .development-actions {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    /* Portfolio Card */
+    .portfolio-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .portfolio-card .card-header {
+        background: linear-gradient(135deg, #1f2937, #111827);
+        color: white;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .portfolio-card .card-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .portfolio-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .portfolio-item {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .portfolio-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .portfolio-item.status-active {
+        border-color: #10b981;
+        background: #ecfdf5;
+    }
+
+    .portfolio-item.status-launching {
+        border-color: #f59e0b;
+        background: #fffbeb;
+    }
+
+    .business-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .business-icon {
+        font-size: 2rem;
+        width: 3rem;
+        text-align: center;
+    }
+
+    .business-info {
+        flex: 1;
+    }
+
+    .business-name {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0 0 0.25rem 0;
+    }
+
+    .business-industry {
+        color: #64748b;
+        margin: 0;
+        font-size: 0.875rem;
+    }
+
+    .status-badge {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        text-transform: uppercase;
+    }
+
+    .status-badge.active {
+        color: #059669;
+        background: #d1fae5;
+    }
+
+    .status-badge.launching {
+        color: #d97706;
+        background: #fef3c7;
+    }
+
+    .business-metrics {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 8px;
+    }
+
+    .metric {
+        text-align: center;
+    }
+
+    .metric-label {
+        display: block;
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+    }
+
+    .metric-value {
+        font-weight: 600;
+        color: #1a202c;
+    }
+
+    .metric-value.positive {
+        color: #059669;
+    }
+
+    .metric-value.negative {
+        color: #dc2626;
+    }
+
+    .business-actions {
+        text-align: center;
+    }
+
+    .empty-portfolio {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+        color: #64748b;
+    }
+
+    .empty-portfolio i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .empty-portfolio h4 {
+        margin-bottom: 0.5rem;
+        color: #374151;
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .coach-welcome-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 1.5rem;
+        }
+
+        .kpi-card {
+            margin-bottom: 1rem;
+        }
+
+        .portfolio-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-controls {
+            flex-wrap: wrap;
+        }
+
+        .development-actions {
+            flex-direction: column;
+        }
+    }
+</style>

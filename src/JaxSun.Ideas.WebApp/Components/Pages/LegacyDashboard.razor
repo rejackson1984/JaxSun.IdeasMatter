@@ -1,0 +1,2974 @@
+@* Legacy Dashboard - Route removed to prevent conflicts with new hub-aware dashboard *@
+@* Original route was: @page "/dashboard" *@
+@using JaxSun.Ideas.Mock.Components.Shared
+@using JaxSun.Ideas.Mock.Services
+@using JaxSun.Ideas.Mock.Services.Interfaces
+@using JaxSun.Ideas.Mock.Models
+@using Microsoft.AspNetCore.Components
+@inject NavigationManager Navigation
+@inject BusinessTranslationService TranslationService
+@inject IPdfGenerationService PdfService
+@inject IDataExportService DataExportService
+@inject IJSRuntime JSRuntime
+@inject IMockDataService MockDataService
+@inject ILaunchedBusinessService LaunchedBusinessService
+@inject BusinessPlanService BusinessPlanService
+
+<PageTitle>Dashboard - IdeaCoach Pro</PageTitle>
+
+
+<!-- Main Content -->
+<main class="main-content">
+
+        <!-- Header Section -->
+        <div class="dashboard-header">
+            <div class="project-info">
+                <h1>MyFitnessPal Clone</h1>
+                <p class="project-description">A fitness tracking app that helps users monitor their daily nutrition and exercise habits</p>
+                <div class="project-meta">
+                    <span class="meta-item" title="When you started this business idea">
+                        <i class="fas fa-calendar"></i>
+                        Started: March 15, 2024
+                    </span>
+                    <span class="meta-item" title="Current development phase of your business">
+                        <i class="fas fa-flag"></i>
+                        Phase: Research & Planning
+                    </span>
+                    <span class="meta-item" title="Time invested in developing this idea">
+                        <i class="fas fa-clock"></i>
+                        Time Invested: 24 hours
+                    </span>
+                </div>
+            </div>
+            <div class="project-actions">
+                <button class="btn btn-secondary" title="Share your progress with mentors or investors">
+                    <i class="fas fa-share"></i>
+                    Share Progress
+                </button>
+                <button class="btn btn-primary" title="Continue with your next recommended task">
+                    <i class="fas fa-play"></i>
+                    Continue Journey
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress Overview -->
+        <div class="progress-section">
+            <div class="section-header">
+                <h2>Your Progress</h2>
+                <div class="overall-progress" title="Overall completion across all business development phases">
+                    <span class="progress-text">32% Complete</span>
+                    <div class="progress-circle">
+                        <svg width="60" height="60">
+                            <circle cx="30" cy="30" r="25" fill="none" stroke="#e2e8f0" stroke-width="5" />
+                            <circle cx="30" cy="30" r="25" fill="none" stroke="url(#gradient)" stroke-width="5"
+                                    stroke-dasharray="157" stroke-dashoffset="107" stroke-linecap="round" />
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#667eea" />
+                                    <stop offset="100%" style="stop-color:#764ba2" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span class="progress-percentage">32%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Milestone Progress & Achievements -->
+            <div class="milestone-progress">
+                <div class="milestone-header">
+                    <h3 class="milestone-title">🎯 Next Milestone: Strategic Foundation</h3>
+                    <span class="milestone-percentage">68%</span>
+                </div>
+                <div class="milestone-bar">
+                    <div class="milestone-fill" style="width: 68%"></div>
+                </div>
+                <p class="milestone-next">Complete financial projections to unlock Design & Prototyping phase</p>
+            </div>
+
+            <!-- Achievement Badges -->
+            <div class="achievements-display">
+                <div class="achievement-badge">
+                    <i class="fas fa-trophy achievement-badge-icon"></i>
+                    Market Validator
+                </div>
+                <div class="achievement-badge">
+                    <i class="fas fa-lightbulb achievement-badge-icon"></i>
+                    Idea Generator
+                </div>
+                <span class="achievement-level">Level 3 Entrepreneur</span>
+            </div>
+
+            <!-- Experience Progress -->
+            <div style="margin: 16px 0;">
+                <div class="level-display">
+                    <div class="level-icon">3</div>
+                    <span>Entrepreneur Level 3</span>
+                </div>
+                <div class="experience-bar">
+                    <div class="experience-fill" style="width: 75%"></div>
+                </div>
+                <small style="color: var(--text-secondary);">850/1000 XP to Level 4</small>
+            </div>
+
+            <div class="progress-phases">
+                <div class="phase-card completed coach-tooltip" title="Market research validates your business idea has strong potential">
+                    <div class="phase-icon">
+                        <i class="fas fa-search"></i>
+                        <div class="completion-check">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    <div class="phase-content">
+                        <h3>Research & Validation</h3>
+                        <p>Market analysis complete</p>
+                        <div class="phase-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                    <div class="phase-insights">
+                        <span class="insight-badge positive">87% Market Demand</span>
+                    </div>
+                    <div class="tooltip-content">
+                        <div class="tooltip-header">
+                            <i class="fas fa-search tooltip-icon"></i>
+                            <h4 class="tooltip-title">Market Research Insights</h4>
+                        </div>
+                        <p class="tooltip-text">Your market research revealed strong demand (87%) for fitness tracking solutions. We analyzed 2,500+ potential customers and found clear demand for personalized nutrition features.</p>
+                        <div class="tooltip-tip">💡 This validation score means you're in the top 20% of ideas we analyze!</div>
+                    </div>
+                </div>
+
+                <div class="phase-card active coach-tooltip" title="Currently building your comprehensive business strategy and financial plan">
+                    <div class="phase-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                        <div class="active-indicator">
+                            <div class="pulse"></div>
+                        </div>
+                    </div>
+                    <div class="phase-content">
+                        <h3>Strategic Planning</h3>
+                        <p>Business plan in progress</p>
+                        <div class="phase-progress">
+                            <div class="progress-bar" style="width: 65%"></div>
+                            <span>65%</span>
+                        </div>
+                    </div>
+                    <div class="phase-insights">
+                        <span class="insight-badge warning">3 tasks remaining</span>
+                    </div>
+                    <div class="tooltip-content">
+                        <div class="tooltip-header">
+                            <i class="fas fa-clipboard-list tooltip-icon"></i>
+                            <h4 class="tooltip-title">Strategic Planning in Progress</h4>
+                        </div>
+                        <p class="tooltip-text">We're currently building your comprehensive business strategy including financial projections, marketing plan, and operational roadmap. You're 65% complete!</p>
+                        <div class="tooltip-tip">🎯 Next up: Finalize your revenue model and competitive positioning</div>
+                    </div>
+                </div>
+
+                <div class="phase-card upcoming" title="Design phase will focus on creating your brand identity and user experience">
+                    <div class="phase-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <div class="phase-content">
+                        <h3>Design & Prototyping</h3>
+                        <p>Coming next</p>
+                        <div class="phase-progress">
+                            <div class="progress-bar" style="width: 0%"></div>
+                            <span>0%</span>
+                        </div>
+                    </div>
+                    <div class="phase-insights">
+                        <span class="insight-badge neutral">Unlocks soon</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Tasks -->
+        <div class="tasks-section">
+            <div class="section-header">
+                <h2>Today's Tasks</h2>
+                <div class="task-summary" title="Your AI coach prioritizes the most important tasks for your success">
+                    <span>3 of 5 completed</span>
+                    <div class="task-progress">
+                        <div class="progress-bar" style="width: 60%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tasks-list">
+                <div class="task-item completed" title="Completed: Understanding your target market is crucial for business success">
+                    <div class="task-checkbox checked">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="task-content">
+                        <h4>Complete target audience analysis</h4>
+                        <p>Identify demographics, pain points, and user behaviors</p>
+                        <div class="task-meta">
+                            <span class="priority high">High Priority</span>
+                            <span class="time-estimate">30 min</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn-ghost" title="Review your completed analysis">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="task-item active" title="Current task: Financial planning is crucial before moving to design phase">
+                    <div class="task-checkbox">
+                        <div class="progress-ring">
+                            <div class="ring-fill" style="transform: rotate(126deg)"></div>
+                        </div>
+                    </div>
+                    <div class="task-content">
+                        <h4>Create financial projections</h4>
+                        <p>Estimate costs, revenue, and break-even point for first 2 years</p>
+                        <div class="task-meta">
+                            <span class="priority high">High Priority</span>
+                            <span class="time-estimate">60 min</span>
+                            <span class="progress-text">35% complete</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn btn-primary" title="Continue working on financial projections">
+                            <i class="fas fa-play"></i>
+                            Continue
+                        </button>
+                    </div>
+                </div>
+
+                <div class="task-item" title="Next task: A strong value proposition differentiates you from competitors">
+                    <div class="task-checkbox">
+                    </div>
+                    <div class="task-content">
+                        <h4>Develop unique value proposition</h4>
+                        <p>Create compelling messaging that sets you apart from competitors</p>
+                        <div class="task-meta">
+                            <span class="priority medium">Medium Priority</span>
+                            <span class="time-estimate">40 min</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn-ghost" title="This task will unlock after completing financial projections">
+                            <i class="fas fa-lock"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coach Educational Insights -->
+        <div class="coach-insight">
+            <div class="coach-insight-header">
+                <div class="coach-insight-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <span class="coach-insight-label">Coach Alex's Learning Tip</span>
+            </div>
+            <p class="coach-insight-text">
+                <strong>Why we research before building:</strong> 72% of startup failures come from building products nobody wants. 
+                Your market research validated real demand - now we're building on solid ground! The strategic planning phase 
+                ensures every feature we design serves your validated customer needs.
+            </p>
+        </div>
+
+        <!-- Educational Step Guide -->
+        <div class="learning-card">
+            <div class="learning-header">
+                <div class="learning-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3 class="learning-title">Understanding Your Business Journey</h3>
+            </div>
+            <p class="learning-text">
+                Every successful business follows these proven stages. We're guiding you through each step with personalized insights and actionable tasks.
+            </p>
+            <div class="learning-actions">
+                <button class="learning-btn">Learn More</button>
+                <button class="learning-btn">Watch Video</button>
+            </div>
+        </div>
+
+        <div class="step-indicator">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h4 class="step-title">Market Validation ✅</h4>
+                <p class="step-description">Research confirmed strong demand (87%) for your fitness tracking solution</p>
+            </div>
+        </div>
+
+        <div class="step-indicator">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h4 class="step-title">Strategic Planning 🚀</h4>
+                <p class="step-description">Building your business model, financial projections, and competitive strategy</p>
+            </div>
+        </div>
+
+        <div class="step-indicator">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h4 class="step-title">Design & Prototyping</h4>
+                <p class="step-description">Coming next: Create your brand identity and user experience design</p>
+            </div>
+        </div>
+
+        <!-- Insights & Recommendations -->
+        <div class="insights-section">
+            <div class="section-header">
+                <h2>AI Coach Insights</h2>
+                <button class="btn-ghost" title="Get personalized coaching based on your progress">
+                    <i class="fas fa-robot"></i>
+                    Ask Coach
+                </button>
+            </div>
+
+            <div class="insights-grid">
+                <div class="insight-card priority coach-tooltip" title="Your coach identified this as critical for your success">
+                    <div class="insight-header">
+                        <div class="insight-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <span class="insight-type">Priority Alert</span>
+                    </div>
+                    <h4>Complete financial projections before design</h4>
+                    <p>Your revenue model needs to be solid before we start designing features. This prevents costly redesigns later.</p>
+                    <div class="insight-actions">
+                        <button class="btn btn-primary btn-sm">Work on it</button>
+                        <button class="btn-ghost btn-sm" title="Learn why financial planning comes before design">
+                            Learn why
+                        </button>
+                    </div>
+                    <div class="tooltip-content">
+                        <div class="tooltip-header">
+                            <i class="fas fa-exclamation-triangle tooltip-icon"></i>
+                            <h4 class="tooltip-title">Why This Is Critical</h4>
+                        </div>
+                        <p class="tooltip-text">Financial projections determine which features are viable and which pricing models work. Designing without this foundation leads to expensive changes later.</p>
+                        <div class="tooltip-tip">💰 Companies that nail their business model first are 40% more likely to succeed</div>
+                    </div>
+                </div>
+
+                <div class="insight-card opportunity" title="Market opportunity identified by your AI coach">
+                    <div class="insight-header">
+                        <div class="insight-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <span class="insight-type">Opportunity</span>
+                    </div>
+                    <h4>Consider adding habit tracking feature</h4>
+                    <p>73% of fitness apps users want habit tracking. This could be your competitive advantage.</p>
+                    <div class="insight-actions">
+                        <button class="btn btn-secondary btn-sm">Explore idea</button>
+                        <button class="btn-ghost btn-sm" title="See market research data supporting this opportunity">
+                            View data
+                        </button>
+                    </div>
+                </div>
+
+                <div class="insight-card success" title="Positive milestone reached in your business development">
+                    <div class="insight-header">
+                        <div class="insight-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <span class="insight-type">Achievement</span>
+                    </div>
+                    <h4>Strong market validation completed!</h4>
+                    <p>Your research shows 87% market demand. This puts you in the top 20% of validated business ideas.</p>
+                    <div class="insight-actions">
+                        <button class="btn btn-secondary btn-sm">Share achievement</button>
+                        <button class="btn-ghost btn-sm" title="See detailed validation report">
+                            View report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ideas in Process Section -->
+        @if (allScenarios.Any())
+        {
+            <div class="ideas-card-grid">
+                @foreach (var idea in allScenarios.Take(4))
+                {
+                    <div class="idea-card" @onclick="() => ViewIdeaDetails(idea)">
+                        <div class="idea-card-header">
+                            <div class="idea-phase-badge">
+                                <span class="phase-icon">@GetPhaseIcon(idea.CurrentPhase)</span>
+                                <span class="phase-name">@GetPhaseDisplayName(idea.CurrentPhase)</span>
+                            </div>
+                            <div class="idea-score">
+                                <span class="score-value">@idea.ViabilityScore</span>
+                                <span class="score-max">/100</span>
+                            </div>
+                        </div>
+
+                        <div class="idea-card-content">
+                            <h4 class="idea-title">@GetIdeaName(idea)</h4>
+                            <p class="idea-industry">@idea.Industry</p>
+
+                            <!-- Progress Chart -->
+                            <div class="progress-section">
+                                <div class="progress-info">
+                                    <span class="progress-label">Progress</span>
+                                    <span class="progress-percentage">@GetProgressPercentage(idea)%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: @(GetProgressPercentage(idea))%"></div>
+                                </div>
+                                <div class="progress-details">
+                                    <span class="next-action">Next: @GetNextAction(idea)</span>
+                                    <span class="days-active">@GetDaysInPhase(idea)d in phase</span>
+                                </div>
+                            </div>
+
+                            <!-- Mini Revenue Chart -->
+                            <div class="revenue-preview">
+                                <div class="revenue-info">
+                                    <span class="revenue-label">Projected Revenue</span>
+                                    <span class="revenue-value">$@idea.ProjectedRevenue.ToString("N0")</span>
+                                </div>
+                                <div class="mini-chart">
+                                    @for (int i = 0; i < 12; i++)
+                                    {
+                                        var height = GetMiniChartHeight(idea, i);
+                                        <div class="chart-bar" style="height: @(height)%"></div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="idea-card-footer">
+                            <button class="quick-action-btn" @onclick:stopPropagation="true" @onclick="() => OpenBusinessPlan(idea)">
+                                📋 Plan
+                            </button>
+                            <button class="quick-action-btn" @onclick:stopPropagation="true" @onclick="() => ViewIdeaDetails(idea)">
+                                👁️ Details
+                            </button>
+                            <div class="urgency-indicator @GetUrgencyClass(idea)">
+                                @GetUrgencyText(idea)
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (allScenarios.Count > 4)
+                {
+                    <div class="more-ideas-card" @onclick="NavigateToBusinessIdeas">
+                        <div class="more-ideas-content">
+                            <div class="more-ideas-icon">➕</div>
+                            <div class="more-ideas-text">
+                                <span class="more-count">+@(allScenarios.Count - 4)</span>
+                                <span class="more-label">more ideas</span>
+                            </div>
+                            <div class="view-all-text">View All →</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="no-ideas-card">
+                <div class="no-ideas-content">
+                    <div class="no-ideas-icon">💡</div>
+                    <h3>Ready to Start Your Journey?</h3>
+                    <p>Turn your next big idea into a thriving business!</p>
+                    <button class="add-first-idea-btn" @onclick="NavigateHome">
+                        <span class="btn-icon">✨</span>
+                        Add Your First Idea
+                    </button>
+                </div>
+            </div>
+        }
+
+        <div class="ideas-overview-actions">
+            <button class="overview-action-btn" @onclick="NavigateToBusinessIdeas">
+                <span class="btn-icon">📊</span>
+                View All Ideas
+            </button>
+            <button class="overview-action-btn primary" @onclick="NavigateHome">
+                <span class="btn-icon">➕</span>
+                Add New Idea
+            </button>
+        </div>
+        <!-- Performance Overview Section (85%) -->
+        <div class="performance-overview-section">
+            <h2 class="section-title">Your Business Success Tracker 🎯</h2>
+
+            @if (isLoadingBusinesses)
+            {
+                <div class="loading-message">
+                    <div class="loading-spinner">⏳</div>
+                    <p>Loading your business performance...</p>
+                </div>
+            }
+            else if (launchedBusinesses.Any())
+            {
+                <!-- Business-Level Tab Navigation -->
+                <div class="business-level-tabs">
+                    @foreach (var business in launchedBusinesses)
+                    {
+                        <button class="business-tab @(GetActiveBusinessTab() == business.Id ? "active" : "")"
+                                @onclick="@(async () => await SetActiveBusinessTabAsync(business.Id))">
+                            <div class="business-tab-icon">🚀</div>
+                            <div class="business-tab-content">
+                                <div class="business-tab-name">@business.Name</div>
+                                <div class="business-tab-meta">@business.BusinessType • $@business.CurrentMetrics.Revenue.ToString("N0")</div>
+                            </div>
+                        </button>
+                    }
+                </div>
+
+                <!-- Active Business Content -->
+                <div class="active-business-content">
+                    @{
+                        var activeBusiness = launchedBusinesses.FirstOrDefault(b => b.Id == GetActiveBusinessTab()) ?? launchedBusinesses.First();
+                    }
+                    <div class="business-at-a-glance">
+                        <!-- Business Header -->
+                        <div class="business-header">
+                            <div class="business-info">
+                                <h3 class="business-name">How @activeBusiness.Name is Crushing It! 🚀</h3>
+                                <div class="business-meta">
+                                    <span class="business-type">@activeBusiness.BusinessType</span>
+                                    <span class="business-age">@GetBusinessAge(activeBusiness) old</span>
+                                    <span class="business-status status-@activeBusiness.Status.ToLower()">@activeBusiness.Status</span>
+                                </div>
+                            </div>
+                            @if (activeBusiness.Education.Achievements.Any(a => a.IsNewlyAchieved))
+                            {
+                                <div class="new-achievement-badge">
+                                    🏆 New Achievement!
+                                </div>
+                            }
+                        </div>
+
+                        <!-- At-a-Glance Grid Layout -->
+                        <div class="at-a-glance-grid">
+                            <!-- Key Metrics Section -->
+                            <div class="metrics-section">
+                                <h4 class="section-subtitle">📊 Key Performance Metrics</h4>
+                                <div class="key-metrics-row">
+                                    <div class="metric-card money-coming-in" title="@GetTooltip("Revenue")">
+                                        <div class="metric-icon">💰</div>
+                                        <div class="metric-content">
+                                            <div class="metric-value">$@activeBusiness.CurrentMetrics.Revenue.ToString("N0")</div>
+                                            <div class="metric-label">Money Coming In</div>
+                                            <div class="metric-trend positive">
+                                                ↗️ +@activeBusiness.CurrentMetrics.MonthlyGrowthRate.ToString("F1")% this month
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="metric-card profit-margin" title="@GetTooltip("ProfitMargin")">
+                                        <div class="metric-icon">📈</div>
+                                        <div class="metric-content">
+                                            <div class="metric-value">@activeBusiness.CurrentMetrics.ProfitMargin.ToString("F1")%</div>
+                                            <div class="metric-label">You Keep</div>
+                                            <div class="metric-benchmark">
+                                                @GetProfitMarginText(activeBusiness.CurrentMetrics.ProfitMargin)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="metric-card customer-love" title="@GetTooltip("CustomerSatisfactionScore")">
+                                        <div class="metric-icon">❤️</div>
+                                        <div class="metric-content">
+                                            <div class="metric-value">@activeBusiness.Support.CustomerSatisfactionScore.ToString("F1")/5</div>
+                                            <div class="metric-label">Customer Love</div>
+                                            <div class="metric-benchmark">
+                                                @GetSatisfactionText(activeBusiness.Support.CustomerSatisfactionScore)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="metric-card growth-rate" title="@GetTooltip("MonthlyGrowthRate")">
+                                        <div class="metric-icon">🚀</div>
+                                        <div class="metric-content">
+                                            <div class="metric-value">@activeBusiness.CurrentMetrics.MonthlyGrowthRate.ToString("F1")%</div>
+                                            <div class="metric-label">Growing</div>
+                                            <div class="metric-benchmark">
+                                                @GetGrowthText(activeBusiness.CurrentMetrics.MonthlyGrowthRate)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="metric-card website-status" title="Website Status and Performance">
+                                        <div class="metric-icon">🌐</div>
+                                        <div class="metric-content">
+                                            <div class="metric-value status-@activeBusiness.Website.Status.ToLower()">@activeBusiness.Website.Status</div>
+                                            <div class="metric-label">Website Status</div>
+                                            <div class="metric-benchmark">
+                                                @activeBusiness.Website.UptimePercentage.ToString("F1")% uptime
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Marketing Section -->
+                            <div class="marketing-section">
+                                <h4 class="section-subtitle">📱 Marketing Performance</h4>
+                                <div class="channel-performance">
+                                    <div class="best-channel">
+                                        <span class="channel-badge">🏆 Best Channel</span>
+                                        <span class="channel-name">@activeBusiness.Marketing.BestPerformingChannel</span>
+                                        <span class="channel-tip">Focus 80% of your time here!</span>
+                                    </div>
+                                    <div class="channels-grid">
+                                        @foreach (var channel in activeBusiness.Marketing.Channels.Take(3))
+                                        {
+                                            <div class="channel-item">
+                                                <span class="channel-name">@channel.Key</span>
+                                                <span class="channel-conversion">@channel.Value.ConversionRate.ToString("F1")% convert</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Website Section -->
+                            <div class="website-section">
+                                <h4 class="section-subtitle">🌐 Website Analytics</h4>
+                                <div class="website-metrics">
+                                    <div class="website-status-card">
+                                        <div class="status-indicator status-@activeBusiness.Website.Status.ToLower()">
+                                            @GetWebsiteStatusIcon(activeBusiness.Website.Status)
+                                        </div>
+                                        <div class="status-details">
+                                            <div class="status-title">@activeBusiness.Website.Status</div>
+                                            <div class="status-url">@activeBusiness.Website.Url</div>
+                                            <div class="status-uptime">@activeBusiness.Website.UptimePercentage.ToString("F1")% uptime this month</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="website-stats-grid">
+                                        <div class="stat-item">
+                                            <div class="stat-value">@activeBusiness.Website.MonthlyVisitors.ToString("N0")</div>
+                                            <div class="stat-label">Monthly Visitors</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-value">@activeBusiness.Website.ConversionRate.ToString("F1")%</div>
+                                            <div class="stat-label">Conversion Rate</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-value">@activeBusiness.Website.BounceRate.ToString("F1")%</div>
+                                            <div class="stat-label">Bounce Rate</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-value">@activeBusiness.Website.AverageSessionDuration.ToString("F1")min</div>
+                                            <div class="stat-label">Avg. Session</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Items Section -->
+                            <div class="action-items-section">
+                                <h4 class="section-subtitle">⚡ Priority Actions</h4>
+                                <div class="action-items-list">
+                                    @foreach (var action in activeBusiness.ActionItems.OrderBy(a => a.Priority == "High" ? 1 : a.Priority == "Medium" ? 2 : 3).Take(3))
+                                    {
+                                        <div class="action-item priority-@action.Priority.ToLower()">
+                                            <div class="action-priority-icon">
+                                                @GetPriorityIcon(action.Priority)
+                                            </div>
+                                            <div class="action-content">
+                                                <span class="action-title">@action.Title</span>
+                                                <span class="action-time">@action.EstimatedTime</span>
+                                            </div>
+                                            @if (action.IsOverdue)
+                                            {
+                                                <div class="overdue-badge">Overdue!</div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Growth Opportunities Section -->
+                            @if (activeBusiness.Opportunities.Any())
+                            {
+                                <div class="opportunities-section">
+                                    <h4 class="section-subtitle">💡 Growth Opportunities</h4>
+                                    <div class="opportunity-highlight">
+                                        @{
+                                            var topOpportunity = activeBusiness.Opportunities.OrderByDescending(o => o.Priority).First();
+                                        }
+                                        <div class="opportunity-card">
+                                            <div class="opportunity-impact">+$@topOpportunity.EstimatedImpact.ToString("N0")</div>
+                                            <div class="opportunity-details">
+                                                <h5 class="opportunity-title">@topOpportunity.Title</h5>
+                                                <p class="opportunity-description">@topOpportunity.Description</p>
+                                                <div class="opportunity-meta">
+                                                    <span class="risk-level risk-@topOpportunity.RiskLevel.ToLower()">@topOpportunity.RiskLevel Risk</span>
+                                                    <span class="effort-level">@topOpportunity.Effort Effort</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="business-actions">
+                            <button class="action-button primary" @onclick="() => ViewBusinessDetails(activeBusiness.Id)">
+                                📊 View Full Analytics
+                            </button>
+                            <button class="action-button" @onclick="() => ViewMarketingInsights(activeBusiness.Id)">
+                                📱 Marketing Tips
+                            </button>
+                            <button class="action-button" @onclick="() => ViewGrowthPlan(activeBusiness.Id)">
+                                🚀 Growth Plan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="no-businesses-message">
+                    <div class="no-business-icon">🎯</div>
+                    <h3>Ready to Launch Your First Business?</h3>
+                    <p>Turn one of your ideas into a real side hustle! Once you launch, this dashboard will track your success and help you grow.</p>
+                    <button class="launch-business-btn" @onclick="NavigateToBusinessIdeas">
+                        <span class="btn-icon">🚀</span>
+                        View Your Ideas
+                    </button>
+                </div>
+            }
+        </div>
+
+    </main>
+<!-- Business Plan Modal -->
+<BusinessPlanModal IsVisible="isBusinessPlanModalVisible"
+                   SelectedIdea="selectedIdeaForBusinessPlan"
+                   OnClose="CloseBusinessPlanModal" />
+
+<!-- Idea Details Modal -->
+<IdeaDetailsModal IsVisible="isIdeaDetailsModalVisible"
+                  SelectedIdea="selectedIdeaForDetails"
+                  OnClose="CloseIdeaDetailsModal"
+                  OnOpenBusinessPlan="OpenBusinessPlan"
+                  OnOpenActionPlan="OpenActionPlan"
+                  OnDownloadPdf="DownloadIdeaPdf"
+                  OnExportData="ExportIdeaData" />
+
+@code {
+    private List<BusinessIdeaScenario> allScenarios = new();
+    private List<LaunchedBusiness> launchedBusinesses = new();
+    private Dictionary<string, EducationalTooltip> tooltips = new();
+    private Dictionary<string, string> activeBusinessTabs = new();
+    private string activeBusinessId = "";
+    private bool isLoading = true;
+    private bool isLoadingBusinesses = true;
+
+    // Business Plan Modal State
+    private bool isBusinessPlanModalVisible = false;
+    private BusinessIdeaScenario? selectedIdeaForBusinessPlan;
+
+    // Idea Details Modal State
+    private bool isIdeaDetailsModalVisible = false;
+    private BusinessIdeaScenario? selectedIdeaForDetails;
+
+    // General selected idea state
+    private BusinessIdeaScenario? selectedIdea;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.WhenAll(
+            LoadAllScenarios(),
+            LoadLaunchedBusinesses(),
+            LoadEducationalContent()
+        );
+
+        isLoading = false;
+        isLoadingBusinesses = false;
+    }
+
+    private async Task LoadAllScenarios()
+    {
+        try
+        {
+            allScenarios = await MockDataService.GetAllScenariosAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading scenarios: {ex.Message}");
+            allScenarios = new List<BusinessIdeaScenario>();
+        }
+    }
+
+    private async Task LoadLaunchedBusinesses()
+    {
+        try
+        {
+            launchedBusinesses = await LaunchedBusinessService.GetAllLaunchedBusinessesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading launched businesses: {ex.Message}");
+            launchedBusinesses = new List<LaunchedBusiness>();
+        }
+    }
+
+    private async Task LoadEducationalContent()
+    {
+        try
+        {
+            tooltips = await LaunchedBusinessService.GetEducationalTooltipsAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading educational content: {ex.Message}");
+            tooltips = new Dictionary<string, EducationalTooltip>();
+        }
+    }
+
+    // Navigation Methods
+    private void NavigateHome() => Navigation.NavigateTo("/");
+    private void NavigateToBusinessIdeas() => Navigation.NavigateTo("/scenarios");
+
+    // Ideas Overview Methods
+    private int GetIdeasInActivePhases()
+    {
+        return allScenarios.Count(s => s.CurrentPhase > IdeaPhase.Concept);
+    }
+
+    private int GetAverageProgressPercentage()
+    {
+        if (!allScenarios.Any()) return 0;
+        return (int)allScenarios.Average(s => GetProgressPercentage(s));
+    }
+
+    private int GetMiniChartHeight(BusinessIdeaScenario idea, int monthIndex)
+    {
+        // Generate a simple projected revenue curve
+        var baseHeight = 20;
+        var growthFactor = Math.Pow(1.1, monthIndex); // 10% monthly growth
+        var randomVariation = (monthIndex * 7 + idea.Id.GetHashCode()) % 30; // Pseudo-random variation
+        return Math.Min(100, (int)(baseHeight * growthFactor + randomVariation));
+    }
+
+    private void ViewIdeaDetails(BusinessIdeaScenario idea)
+    {
+        selectedIdeaForDetails = idea;
+        isIdeaDetailsModalVisible = true;
+    }
+
+    private string GetUrgencyClass(BusinessIdeaScenario idea)
+    {
+        var daysInPhase = GetDaysInPhase(idea);
+        return daysInPhase switch
+        {
+            var d when d > 30 => "urgent",
+            var d when d > 14 => "attention",
+            _ => "normal"
+        };
+    }
+
+    private string GetUrgencyText(BusinessIdeaScenario idea)
+    {
+        var daysInPhase = GetDaysInPhase(idea);
+        return daysInPhase switch
+        {
+            var d when d > 30 => "🔥 Needs attention",
+            var d when d > 14 => "⚠️ Check progress",
+            var d when d > 7 => "📅 On track",
+            _ => "🚀 Fresh"
+        };
+    }
+
+    private string GetIdeaName(BusinessIdeaScenario idea)
+    {
+        return !string.IsNullOrEmpty(idea.Name) ? idea.Name : idea.Title;
+    }
+
+    private int GetDaysInPhase(BusinessIdeaScenario idea)
+    {
+        var lastActivity = idea.LastActivityDate ?? idea.CreatedAt;
+        return (int)(DateTime.UtcNow - lastActivity).TotalDays;
+    }
+
+    // Performance Dashboard Methods
+    private string GetBusinessAge(LaunchedBusiness business)
+    {
+        var age = DateTime.UtcNow - business.LaunchDate;
+        if (age.TotalDays < 30) return $"{(int)age.TotalDays} days";
+        if (age.TotalDays < 365) return $"{(int)(age.TotalDays / 30)} months";
+        return $"{(int)(age.TotalDays / 365)} years";
+    }
+
+    private string GetTooltip(string term)
+    {
+        return tooltips.ContainsKey(term) ? tooltips[term].Definition : "";
+    }
+
+    private string GetProfitMarginText(decimal profitMargin)
+    {
+        return profitMargin switch
+        {
+            var pm when pm >= 30 => "Amazing! 🎉",
+            var pm when pm >= 20 => "Great margins! 💪",
+            var pm when pm >= 10 => "Good job! 👍",
+            _ => "Room to improve 📈"
+        };
+    }
+
+    private string GetSatisfactionText(decimal satisfaction)
+    {
+        return satisfaction switch
+        {
+            var s when s >= 4.5m => "Customers love you! ❤️",
+            var s when s >= 4.0m => "Very happy customers! 😊",
+            var s when s >= 3.5m => "Good satisfaction 👍",
+            _ => "Focus on customer service 📞"
+        };
+    }
+
+    private string GetGrowthText(decimal growth)
+    {
+        return growth switch
+        {
+            var g when g >= 25 => "Incredible growth! 🚀",
+            var g when g >= 15 => "Great momentum! 📈",
+            var g when g >= 5 => "Steady growth 📊",
+            _ => "Growth opportunity 💡"
+        };
+    }
+
+    private string GetPriorityIcon(string priority)
+    {
+        return priority switch
+        {
+            "High" => "🔥",
+            "Medium" => "📅",
+            "Low" => "💡",
+            _ => "📋"
+        };
+    }
+
+    // Business Action Methods
+    private void ViewBusinessDetails(string businessId)
+    {
+        Navigation.NavigateTo($"/business/{businessId}/analytics");
+    }
+
+    private void ViewMarketingInsights(string businessId)
+    {
+        Navigation.NavigateTo($"/business/{businessId}/marketing");
+    }
+
+    private void ViewGrowthPlan(string businessId)
+    {
+        Navigation.NavigateTo($"/business/{businessId}/growth");
+    }
+
+    // Phase Helper Methods (for Ideas Overview)
+    private string GetPhaseIcon(IdeaPhase phase)
+    {
+        return phase switch
+        {
+            IdeaPhase.Concept => "💡",
+            IdeaPhase.BusinessPlan => "📋",
+            IdeaPhase.ProductDesign => "🎨",
+            IdeaPhase.Mockup => "🖼️",
+            IdeaPhase.ActionPlan => "✅",
+            IdeaPhase.Implementation => "🚀",
+            _ => "💡"
+        };
+    }
+
+    private string GetPhaseDisplayName(IdeaPhase phase)
+    {
+        return phase switch
+        {
+            IdeaPhase.Concept => "Initial Concept",
+            IdeaPhase.BusinessPlan => "Business Planning",
+            IdeaPhase.ProductDesign => "Product Design",
+            IdeaPhase.Mockup => "Visual Mockup",
+            IdeaPhase.ActionPlan => "Action Planning",
+            IdeaPhase.Implementation => "Implementation",
+            _ => "Unknown Phase"
+        };
+    }
+
+    // Portfolio Analytics Methods
+    private double GetAverageViabilityScore()
+    {
+        return allScenarios.Any() ? allScenarios.Average(s => s.ViabilityScore) : 0;
+    }
+
+    private decimal GetTotalRevenueProjection()
+    {
+        return allScenarios.Sum(s => s.ProjectedRevenue);
+    }
+
+    private List<string> GetUniqueIndustries()
+    {
+        return allScenarios.Select(s => s.Industry).Distinct().OrderBy(i => i).ToList();
+    }
+
+    private decimal GetStartupCost(BusinessIdeaScenario idea)
+    {
+        return idea.EstimatedStartupCost > 0 ? idea.EstimatedStartupCost : idea.StartupCost;
+    }
+
+    // UI Helper Methods
+    private string GetViabilityEmoji(int score)
+    {
+        return score switch
+        {
+            var s when s >= 80 => "🟢",
+            var s when s >= 60 => "🟡",
+            var s when s >= 40 => "🟠",
+            _ => "🔴"
+        };
+    }
+
+    private string GetIdeaStatus(BusinessIdeaScenario idea)
+    {
+        return idea.ViabilityScore switch
+        {
+            var score when score >= 75 => "excellent",
+            var score when score >= 60 => "good",
+            var score when score >= 40 => "fair",
+            _ => "needs-work"
+        };
+    }
+
+    private string GetIdeaStatusText(BusinessIdeaScenario idea)
+    {
+        return idea.ViabilityScore switch
+        {
+            var score when score >= 75 => "High Potential",
+            var score when score >= 60 => "Good Potential",
+            var score when score >= 40 => "Moderate Risk",
+            _ => "High Risk"
+        };
+    }
+
+    private string TruncateDescription(string description, int maxLength)
+    {
+        if (string.IsNullOrEmpty(description) || description.Length <= maxLength)
+            return description;
+
+        return description.Substring(0, maxLength) + "...";
+    }
+
+    // Action Methods
+    private async Task DownloadIdeaPdf(BusinessIdeaScenario idea)
+    {
+        try
+        {
+            // Convert the idea to the format expected by PdfService
+            var scenarioForPdf = ConvertToLegacyScenario(idea);
+            var healthScore = idea.ViabilityScore / 10; // Convert to 1-10 scale
+
+            var pdfBytes = PdfService.GenerateBusinessAnalysisReport(scenarioForPdf, healthScore);
+            var fileName = $"Business_Analysis_{GetIdeaName(idea).Replace(" ", "_")}_{DateTime.Now:yyyyMMdd}.pdf";
+            await DownloadFile(pdfBytes, fileName, "application/pdf");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error generating PDF for {GetIdeaName(idea)}: {ex.Message}");
+        }
+    }
+
+    private async Task ExportIdeaData(BusinessIdeaScenario idea)
+    {
+        try
+        {
+            var scenarioForExport = ConvertToLegacyScenario(idea);
+            var healthScore = idea.ViabilityScore / 10;
+
+            var csvBytes = DataExportService.ExportScenarioToCsv(scenarioForExport, healthScore);
+            var fileName = $"Business_Data_{GetIdeaName(idea).Replace(" ", "_")}_{DateTime.Now:yyyyMMdd}.csv";
+            await DownloadFile(csvBytes, fileName, "text/csv");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error exporting data for {GetIdeaName(idea)}: {ex.Message}");
+        }
+    }
+
+    private BusinessIdeaScenario ConvertToLegacyScenario(BusinessIdeaScenario idea)
+    {
+        // Create a copy with the legacy format expected by existing services
+        return new BusinessIdeaScenario
+        {
+            Id = idea.Id,
+            Title = GetIdeaName(idea),
+            Description = idea.Description,
+            Industry = idea.Industry,
+            MarketSize = idea.MarketSize > 0 ? idea.MarketSize : 100000,
+            CompetitionLevel = "Medium", // Default since not in new format
+            StartupCost = GetStartupCost(idea),
+            MarketResearch = new MarketResearchData
+            {
+                Industry = idea.Industry
+            },
+            FinancialProjections = new Models.FinancialProjections
+            {
+                Revenue = new Models.RevenueProjections { Year1Total = idea.ProjectedRevenue },
+                CashFlow = new Models.CashFlowProjections { BreakEvenMonth = 8.0m }
+            }
+        };
+    }
+
+    private async Task DownloadBusinessAnalysisReport()
+    {
+        if (selectedIdea != null)
+        {
+            await DownloadIdeaPdf(selectedIdea);
+        }
+    }
+
+    private async Task DownloadSwotAnalysis()
+    {
+        if (selectedIdea != null)
+        {
+            try
+            {
+                var scenarioForPdf = ConvertToLegacyScenario(selectedIdea);
+                var swotAnalysis = GenerateMockSwotAnalysis();
+                var pdfBytes = PdfService.GenerateSwotAnalysisReport(scenarioForPdf, swotAnalysis);
+                var fileName = $"SWOT_Analysis_{GetIdeaName(selectedIdea).Replace(" ", "_")}_{DateTime.Now:yyyyMMdd}.pdf";
+                await DownloadFile(pdfBytes, fileName, "application/pdf");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error generating SWOT PDF: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task DownloadExecutiveSummary()
+    {
+        if (selectedIdea != null)
+        {
+            try
+            {
+                var scenarioForPdf = ConvertToLegacyScenario(selectedIdea);
+                var healthScore = selectedIdea.ViabilityScore / 10;
+                var pdfBytes = PdfService.GenerateExecutiveSummary(scenarioForPdf, healthScore);
+                var fileName = $"Executive_Summary_{GetIdeaName(selectedIdea).Replace(" ", "_")}_{DateTime.Now:yyyyMMdd}.pdf";
+                await DownloadFile(pdfBytes, fileName, "application/pdf");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error generating Executive Summary PDF: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task DownloadFile(byte[] fileBytes, string fileName, string contentType)
+    {
+        var base64 = Convert.ToBase64String(fileBytes);
+        await JSRuntime.InvokeVoidAsync("downloadFile", fileName, contentType, base64);
+    }
+
+    private SwotAnalysis GenerateMockSwotAnalysis()
+    {
+        return new SwotAnalysis(
+            Strengths: new List<string>
+            {
+                "Innovative approach to addressing sustainability in food delivery",
+                "Growing consumer awareness and demand for eco-friendly options",
+                "Potential for strong brand differentiation in competitive market",
+                "Scalable business model with multiple revenue streams"
+            },
+            Weaknesses: new List<string>
+            {
+                "Higher operational costs due to sustainable packaging and electric bikes",
+                "Limited initial geographic coverage compared to established competitors",
+                "Dependency on weather conditions for bike deliveries",
+                "Need for significant upfront investment in sustainable infrastructure"
+            },
+            Opportunities: new List<string>
+            {
+                "Increasing government support for sustainable business practices",
+                "Growing market of environmentally conscious consumers",
+                "Potential partnerships with eco-friendly restaurants and suppliers",
+                "Expansion opportunities in urban areas with sustainability initiatives"
+            },
+            Threats: new List<string>
+            {
+                "Established competitors may adopt similar sustainability practices",
+                "Economic downturns could reduce consumer willingness to pay premium prices",
+                "Regulatory changes in food delivery or environmental standards",
+                "Rising costs of sustainable materials and electric vehicle technology"
+            }
+        );
+    }
+
+    private async Task ExportDataToCsv()
+    {
+        if (selectedIdea != null)
+        {
+            await ExportIdeaData(selectedIdea);
+        }
+    }
+
+    private async Task ExportDataToJson()
+    {
+        if (selectedIdea != null)
+        {
+            try
+            {
+                var scenarioForExport = ConvertToLegacyScenario(selectedIdea);
+                var healthScore = selectedIdea.ViabilityScore / 10;
+                var jsonBytes = DataExportService.ExportScenarioToJson(scenarioForExport, healthScore);
+                var fileName = $"Business_Data_{GetIdeaName(selectedIdea).Replace(" ", "_")}_{DateTime.Now:yyyyMMdd}.json";
+                await DownloadFile(jsonBytes, fileName, "application/json");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error exporting JSON: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task ExportAllData()
+    {
+        // Export all ideas to a single CSV file
+        try
+        {
+            // For now, just export the top idea - could be enhanced to export all
+            if (allScenarios.Any())
+            {
+                var topIdea = allScenarios.OrderByDescending(s => s.ViabilityScore).First();
+                await ExportIdeaData(topIdea);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error exporting portfolio data: {ex.Message}");
+        }
+    }
+
+    private void ViewPortfolioAnalytics()
+    {
+        // For now, just scroll to portfolio overview - could be enhanced with modal
+        // Future enhancement: show detailed analytics modal
+        Console.WriteLine("Portfolio analytics view requested");
+    }
+
+    // If no idea selected, select the first high-potential idea
+    private void EnsureIdeaSelected()
+    {
+        if (selectedIdea == null && allScenarios.Any())
+        {
+            selectedIdea = allScenarios.OrderByDescending(s => s.ViabilityScore).First();
+        }
+    }
+
+    // Modal Control Methods
+    private void CloseBusinessPlanModal()
+    {
+        isBusinessPlanModalVisible = false;
+        selectedIdeaForBusinessPlan = null;
+    }
+
+    private void CloseIdeaDetailsModal()
+    {
+        isIdeaDetailsModalVisible = false;
+        selectedIdeaForDetails = null;
+    }
+
+    private void OpenBusinessPlan(BusinessIdeaScenario idea)
+    {
+        selectedIdeaForBusinessPlan = idea;
+        isBusinessPlanModalVisible = true;
+    }
+
+    private void OpenActionPlan(BusinessIdeaScenario idea)
+    {
+        // Navigate to action plan or show action plan modal
+        Navigation.NavigateTo($"/scenario/{idea.Id}/action-plan");
+    }
+
+
+    private string GetPhaseDescription(IdeaPhase phase)
+    {
+        return phase switch
+        {
+            IdeaPhase.Concept => "Idea captured and evaluated",
+            IdeaPhase.BusinessPlan => "Business model developed",
+            IdeaPhase.ProductDesign => "Product requirements defined",
+            IdeaPhase.Mockup => "Visual design created",
+            IdeaPhase.ActionPlan => "Implementation steps planned",
+            IdeaPhase.Implementation => "Ready for execution",
+            _ => "Phase not defined"
+        };
+    }
+
+    private int GetProgressPercentage(BusinessIdeaScenario idea)
+    {
+        int baseProgress = ((int)idea.CurrentPhase - 1) * 16; // Each phase is worth ~16%
+
+        // Add bonus progress based on completed items within the phase
+        int bonusProgress = 0;
+        if (idea.IsBusinessPlanGenerated) bonusProgress += 8;
+        if (idea.IsPRDGenerated) bonusProgress += 8;
+        if (idea.IsMockupCreated) bonusProgress += 8;
+        if (idea.IsActionPlanGenerated) bonusProgress += 8;
+
+        return Math.Min(100, baseProgress + bonusProgress);
+    }
+
+    private string GetNextAction(BusinessIdeaScenario idea)
+    {
+        return idea.CurrentPhase switch
+        {
+            IdeaPhase.Concept when !idea.IsBusinessPlanGenerated => "Create Business Plan",
+            IdeaPhase.BusinessPlan when !idea.IsPRDGenerated => "Generate Product Requirements",
+            IdeaPhase.ProductDesign when !idea.IsMockupCreated => "Create Visual Mockup",
+            IdeaPhase.Mockup when !idea.IsActionPlanGenerated => "Generate Action Plan",
+            IdeaPhase.ActionPlan => "Begin Implementation",
+            IdeaPhase.Implementation => "Execute Plan",
+            _ => "Continue Development"
+        };
+    }
+
+    // Tab Management Methods
+    private async Task SetActiveTabAsync(string businessId, string tabName)
+    {
+        activeBusinessTabs[businessId] = tabName;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private string GetActiveTab(string businessId)
+    {
+        return activeBusinessTabs.ContainsKey(businessId) ? activeBusinessTabs[businessId] : "overview";
+    }
+
+    private string GetWebsiteStatusIcon(string status)
+    {
+        return status switch
+        {
+            "Live" => "🟢",
+            "Under Maintenance" => "🟡",
+            "Down" => "🔴",
+            "Not Yet Launched" => "⚪",
+            _ => "❓"
+        };
+    }
+
+    // Business-Level Tab Management Methods
+    private async Task SetActiveBusinessTabAsync(string businessId)
+    {
+        activeBusinessId = businessId;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private string GetActiveBusinessTab()
+    {
+        if (string.IsNullOrEmpty(activeBusinessId) && launchedBusinesses.Any())
+        {
+            activeBusinessId = launchedBusinesses.First().Id;
+        }
+        return activeBusinessId;
+    }
+}
+
+<style>
+    /* Entrepreneur Dashboard Styling */
+    .entrepreneur-dashboard {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        min-height: 100vh;
+        padding: 0;
+    }
+
+    /* Header Section */
+    .dashboard-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .project-description {
+        color: rgba(255, 255, 255, 0.95);
+        font-weight: 500;
+        margin: 0.5rem 0 1rem 0;
+        font-size: 1.1rem;
+    }
+
+    .project-meta {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .meta-item i {
+        opacity: 0.8;
+    }
+
+    .welcome-section {
+        margin-bottom: 20px;
+    }
+
+    .welcome-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+        animation: bounce 1s ease-in-out infinite;
+    }
+
+    @@keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+
+        40% {
+            transform: translateY(-10px);
+        }
+
+        60% {
+            transform: translateY(-5px);
+        }
+    }
+
+    .welcome-title {
+        font-size: 48px;
+        font-weight: 700;
+        margin: 0 0 16px 0;
+        line-height: 1.2;
+    }
+
+    .welcome-subtitle {
+        font-size: 20px;
+        opacity: 0.95;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    /* Main Content Layout - Optimized for Wide Monitors */
+    .dashboard-content {
+        width: 100%;
+        margin-left: 0;
+        padding: 24px 32px;
+        margin-top: 0;
+    }
+
+    .content-wrapper {
+        max-width: none;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    /* Wide Monitor Layout (1200px+) */
+    @@media (min-width: 1200px) {
+        .content-wrapper {
+            grid-template-columns: 350px 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+
+        .ideas-overview-section {
+            position: sticky;
+            top: 40px;
+            margin-bottom: 0;
+            width: 350px;
+        }
+
+        .ideas-card-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .idea-card {
+            padding: 14px;
+        }
+
+        .ideas-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .ideas-quick-stats {
+            gap: 12px;
+            width: 100%;
+        }
+
+        .quick-stat {
+            min-width: 60px;
+            padding: 6px 10px;
+            flex: 1;
+        }
+
+        .businesses-grid {
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+        }
+    }
+
+    /* Ultra-wide Monitor Layout (1600px+) */
+    @@media (min-width: 1600px) {
+        .businesses-grid {
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 32px;
+        }
+
+        .content-wrapper {
+            grid-template-columns: 380px 1fr;
+            gap: 40px;
+        }
+
+        .ideas-overview-section {
+            width: 380px;
+        }
+    }
+
+    /* Ideas Overview Section - Compact Card Layout */
+    .ideas-overview-section {
+        margin-bottom: 20px;
+    }
+
+    .ideas-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .section-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #2d3748;
+        margin: 0;
+    }
+
+    .ideas-quick-stats {
+        display: flex;
+        gap: 24px;
+    }
+
+    .quick-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px 16px;
+        background: #f8fafc;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        min-width: 80px;
+    }
+
+        .quick-stat.active {
+            background: #e6fffa;
+            border-color: #38b2ac;
+        }
+
+        .quick-stat.progress {
+            background: #f0fff4;
+            border-color: #68d391;
+        }
+
+    .stat-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #2d3748;
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 12px;
+        color: #718096;
+        margin-top: 4px;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+    /* Ideas Card Grid */
+    .ideas-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+
+    .idea-card {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .idea-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+    .idea-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
+    }
+
+    .idea-phase-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #f7fafc;
+        padding: 6px 12px;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .phase-icon {
+        font-size: 16px;
+    }
+
+    .phase-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: #4a5568;
+    }
+
+    .idea-score {
+        display: flex;
+        align-items: baseline;
+        gap: 2px;
+    }
+
+    .score-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: #667eea;
+    }
+
+    .score-max {
+        font-size: 12px;
+        color: #a0aec0;
+    }
+
+    .idea-card-content {
+        margin-bottom: 20px;
+    }
+
+    .idea-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2d3748;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+    }
+
+    .idea-industry {
+        font-size: 12px;
+        color: #718096;
+        margin: 0 0 16px 0;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+    /* Progress Section */
+    .progress-section {
+        margin-bottom: 16px;
+    }
+
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .progress-label {
+        font-size: 12px;
+        color: #718096;
+        font-weight: 500;
+    }
+
+    .progress-percentage {
+        font-size: 14px;
+        font-weight: 600;
+        color: #667eea;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: #f1f5f9;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 8px;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        transition: width 0.3s ease;
+        border-radius: 3px;
+    }
+
+    .progress-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .next-action {
+        font-size: 11px;
+        color: #4a5568;
+        font-weight: 500;
+    }
+
+    .days-active {
+        font-size: 11px;
+        color: #9f7aea;
+        font-weight: 500;
+    }
+
+    /* Revenue Preview */
+    .revenue-preview {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .revenue-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .revenue-label {
+        font-size: 11px;
+        color: #718096;
+        font-weight: 500;
+    }
+
+    .revenue-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: #10b981;
+    }
+
+    .mini-chart {
+        display: flex;
+        align-items: end;
+        gap: 2px;
+        height: 24px;
+    }
+
+    .chart-bar {
+        flex: 1;
+        background: linear-gradient(to top, #10b981, #6ee7b7);
+        border-radius: 1px;
+        min-height: 2px;
+        opacity: 0.8;
+        transition: all 0.2s ease;
+    }
+
+        .chart-bar:hover {
+            opacity: 1;
+            transform: scaleY(1.1);
+        }
+
+    /* Idea Card Footer */
+    .idea-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        padding-top: 16px;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .quick-action-btn {
+        padding: 6px 12px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 500;
+        color: #4a5568;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .quick-action-btn:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+
+    .urgency-indicator {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
+    }
+
+        .urgency-indicator.urgent {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .urgency-indicator.attention {
+            background: #feebc8;
+            color: #dd6b20;
+        }
+
+        .urgency-indicator.normal {
+            background: #e6fffa;
+            color: #319795;
+        }
+
+    /* More Ideas Card */
+    .more-ideas-card {
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        border: 2px dashed #cbd5e0;
+        border-radius: 16px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .more-ideas-card:hover {
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+            border-color: #a0aec0;
+            transform: translateY(-2px);
+        }
+
+    .more-ideas-content {
+        text-align: center;
+    }
+
+    .more-ideas-icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+        opacity: 0.7;
+    }
+
+    .more-count {
+        font-size: 18px;
+        font-weight: 700;
+        color: #4a5568;
+        display: block;
+    }
+
+    .more-label {
+        font-size: 12px;
+        color: #718096;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .view-all-text {
+        font-size: 11px;
+        color: #667eea;
+        font-weight: 600;
+    }
+
+    /* No Ideas Card */
+    .no-ideas-card {
+        background: white;
+        border: 2px dashed #e2e8f0;
+        border-radius: 16px;
+        padding: 40px 20px;
+        text-align: center;
+        margin-bottom: 24px;
+    }
+
+    .no-ideas-content h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2d3748;
+        margin: 16px 0 8px 0;
+    }
+
+    .no-ideas-content p {
+        color: #718096;
+        margin-bottom: 24px;
+        font-size: 14px;
+    }
+
+    .no-ideas-icon {
+        font-size: 48px;
+        opacity: 0.7;
+    }
+
+    .add-first-idea-btn {
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .add-first-idea-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+    /* Ideas Overview Actions */
+    .ideas-overview-actions {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+    }
+
+    .overview-action-btn {
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 2px solid #e2e8f0;
+        background: white;
+        color: #4a5568;
+    }
+
+    .overview-action-btn.primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: transparent;
+    }
+
+    .overview-action-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .overview-action-btn.primary:hover {
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .overview-action-btn:not(.primary):hover {
+        background: #f7fafc;
+        border-color: #cbd5e0;
+    }
+
+    .btn-icon {
+        font-size: 16px;
+    }
+
+    /* Performance Overview Section (85%) */
+    .performance-overview-section {
+        flex: 1;
+    }
+
+    .loading-message {
+        text-align: center;
+        padding: 60px 20px;
+        color: #718096;
+    }
+
+    .loading-spinner {
+        font-size: 48px;
+        margin-bottom: 20px;
+        animation: spin 1s linear infinite;
+    }
+
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .businesses-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .business-performance-card {
+        background: white;
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+        .business-performance-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+    /* Business Header */
+    .business-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 32px;
+        position: relative;
+    }
+
+    .business-name {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2d3748;
+        margin: 0 0 12px 0;
+        line-height: 1.2;
+    }
+
+    .business-meta {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .business-type {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .business-age {
+        color: #718096;
+        font-size: 14px;
+    }
+
+    .business-status {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .status-active {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-scaling {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .new-achievement-badge {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.8;
+        }
+    }
+
+    /* Key Metrics Row */
+    .key-metrics-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 32px;
+    }
+
+    .metric-card {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        cursor: help;
+    }
+
+        .metric-card:hover {
+            background: #f1f5f9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+    .metric-icon {
+        font-size: 32px;
+        flex-shrink: 0;
+    }
+
+    .metric-content {
+        flex: 1;
+    }
+
+    .metric-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #2d3748;
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+
+    .metric-label {
+        color: #718096;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 4px;
+    }
+
+    .metric-trend {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+        .metric-trend.positive {
+            color: #10b981;
+        }
+
+    .metric-benchmark {
+        font-size: 12px;
+        color: #9f7aea;
+        font-weight: 500;
+    }
+
+    /* Marketing Section */
+    .marketing-section {
+        margin-bottom: 32px;
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .section-subtitle {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2d3748;
+        margin: 0 0 16px 0;
+    }
+
+    .best-channel {
+        background: white;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 2px solid #10b981;
+    }
+
+    .channel-badge {
+        background: #10b981;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .channel-name {
+        font-weight: 600;
+        color: #2d3748;
+    }
+
+    .channel-tip {
+        color: #059669;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .channels-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+    }
+
+    .channel-item {
+        background: white;
+        border-radius: 8px;
+        padding: 12px;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+    }
+
+    .channel-conversion {
+        font-size: 12px;
+        color: #718096;
+        margin-top: 4px;
+    }
+
+    /* Action Items Section */
+    .action-items-section {
+        margin-bottom: 32px;
+        background: #fef3c7;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #f59e0b;
+    }
+
+    .action-items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .action-item {
+        background: white;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .action-priority-icon {
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .action-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .action-title {
+        font-weight: 600;
+        color: #2d3748;
+        font-size: 14px;
+    }
+
+    .action-time {
+        color: #718096;
+        font-size: 12px;
+    }
+
+    .overdue-badge {
+        background: #fecaca;
+        color: #7f1d1d;
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        animation: pulse 1s infinite;
+    }
+
+    .priority-high {
+        border-left: 4px solid #ef4444;
+    }
+
+    .priority-medium {
+        border-left: 4px solid #f59e0b;
+    }
+
+    .priority-low {
+        border-left: 4px solid #10b981;
+    }
+
+    /* Growth Opportunities Section */
+    .opportunities-section {
+        margin-bottom: 32px;
+        background: #f0fdf4;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #10b981;
+    }
+
+    .opportunity-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #e2e8f0;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .opportunity-impact {
+        font-size: 32px;
+        font-weight: 700;
+        color: #10b981;
+        flex-shrink: 0;
+    }
+
+    .opportunity-details {
+        flex: 1;
+    }
+
+    .opportunity-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2d3748;
+        margin: 0 0 8px 0;
+    }
+
+    .opportunity-description {
+        color: #4a5568;
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0 0 12px 0;
+    }
+
+    .opportunity-meta {
+        display: flex;
+        gap: 12px;
+    }
+
+    .risk-level {
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .risk-low {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .risk-medium {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .risk-high {
+        background: #fecaca;
+        color: #7f1d1d;
+    }
+
+    .effort-level {
+        background: #e0e7ff;
+        color: #3730a3;
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    /* Business-Level Tabs */
+    .business-level-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 32px;
+        padding: 0 16px;
+        overflow-x: auto;
+    }
+
+    .business-tab {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 20px;
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 200px;
+        flex-shrink: 0;
+    }
+
+        .business-tab:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+        }
+
+        .business-tab.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+    .business-tab-icon {
+        font-size: 24px;
+    }
+
+    .business-tab-content {
+        flex: 1;
+    }
+
+    .business-tab-name {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        line-height: 1.2;
+    }
+
+    .business-tab-meta {
+        font-size: 12px;
+        opacity: 0.8;
+    }
+
+    /* At-a-Glance Layout */
+    .active-business-content {
+        background: white;
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+    }
+
+    .business-at-a-glance {
+        width: 100%;
+    }
+
+    .at-a-glance-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        margin-bottom: 32px;
+    }
+
+    .metrics-section {
+        grid-column: 1 / -1;
+    }
+
+    .marketing-section,
+    .website-section,
+    .action-items-section,
+    .opportunities-section {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #e2e8f0;
+    }
+
+    /* Business Tabs */
+    .business-tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 24px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .tab-button {
+        padding: 12px 20px;
+        background: transparent;
+        border: none;
+        border-bottom: 3px solid transparent;
+        color: #718096;
+        font-weight: 500;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .tab-button:hover {
+            color: #4a5568;
+            background: #f7fafc;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: #f7fafc;
+            font-weight: 600;
+        }
+
+    .tab-content {
+        min-height: 300px;
+    }
+
+    /* Website Status */
+    .metric-card.website-status .metric-value.status-live {
+        color: #10b981;
+    }
+
+    .metric-card.website-status .metric-value.status-under-maintenance {
+        color: #f59e0b;
+    }
+
+    .metric-card.website-status .metric-value.status-down {
+        color: #ef4444;
+    }
+
+    .metric-card.website-status .metric-value.status-not-yet-launched {
+        color: #9ca3af;
+    }
+
+    /* Website Section */
+    .website-section {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .website-status-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .status-indicator {
+        font-size: 32px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .status-indicator.status-live {
+            background: #d1fae5;
+        }
+
+        .status-indicator.status-under-maintenance {
+            background: #fef3c7;
+        }
+
+        .status-indicator.status-down {
+            background: #fecaca;
+        }
+
+        .status-indicator.status-not-yet-launched {
+            background: #f3f4f6;
+        }
+
+    .status-details {
+        flex: 1;
+    }
+
+    .status-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 4px;
+    }
+
+    .status-url {
+        color: #667eea;
+        font-size: 14px;
+        margin-bottom: 4px;
+        text-decoration: none;
+    }
+
+        .status-url:hover {
+            text-decoration: underline;
+        }
+
+    .status-uptime {
+        color: #718096;
+        font-size: 12px;
+    }
+
+    .website-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 16px;
+    }
+
+    .stat-item {
+        background: white;
+        border-radius: 8px;
+        padding: 16px;
+        text-align: center;
+        border: 1px solid #e2e8f0;
+    }
+
+    .stat-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 4px;
+    }
+
+    .stat-label {
+        color: #718096;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+    /* Business Actions */
+    .business-actions {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .action-button {
+        flex: 1;
+        min-width: 140px;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+        .action-button.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+
+            .action-button.primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+            }
+
+        .action-button:not(.primary) {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+            .action-button:not(.primary):hover {
+                background: #f7fafc;
+                border-color: #cbd5e0;
+                transform: translateY(-1px);
+            }
+
+    /* No Businesses Message */
+    .no-businesses-message {
+        text-align: center;
+        padding: 80px 40px;
+        background: white;
+        border-radius: 20px;
+        border: 2px dashed #e2e8f0;
+        color: #718096;
+    }
+
+    .no-business-icon {
+        font-size: 80px;
+        margin-bottom: 24px;
+        opacity: 0.7;
+    }
+
+    .no-businesses-message h3 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #2d3748;
+        margin: 0 0 16px 0;
+    }
+
+    .no-businesses-message p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0 0 32px 0;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .launch-business-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 16px 32px;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .launch-business-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+    /* Responsive Design */
+    @@media (max-width: 1199px) {
+        .content-wrapper {
+            grid-template-columns: 1fr !important;
+            gap: 40px;
+        }
+
+        .ideas-overview-section {
+            position: static !important;
+        }
+
+        .ideas-card-grid {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .dashboard-content {
+            padding: 24px 16px;
+        }
+
+        .welcome-title {
+            font-size: 36px;
+        }
+
+        .business-name {
+            font-size: 24px;
+        }
+
+        .key-metrics-row {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .business-actions {
+            flex-direction: column;
+        }
+
+        .action-button {
+            min-width: auto;
+        }
+
+        .ideas-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .ideas-quick-stats {
+            width: 100%;
+            justify-content: space-around;
+            gap: 12px;
+        }
+
+        .quick-stat {
+            min-width: 60px;
+            padding: 8px 12px;
+        }
+
+        .ideas-card-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .ideas-overview-actions {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .overview-action-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .at-a-glance-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .business-level-tabs {
+            padding: 0 8px;
+        }
+
+        .business-tab {
+            min-width: 160px;
+            padding: 12px 16px;
+        }
+
+        .active-business-content {
+            padding: 24px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .dashboard-content {
+            padding: 20px 12px;
+        }
+
+        .dashboard-header {
+            padding: 40px 16px;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+        }
+
+        .welcome-subtitle {
+            font-size: 16px;
+        }
+
+        .business-performance-card {
+            padding: 20px;
+        }
+
+        .key-metrics-row {
+            grid-template-columns: 1fr;
+        }
+
+        .metric-card {
+            flex-direction: column;
+            text-align: center;
+            gap: 12px;
+        }
+
+        .at-a-glance-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .business-tab {
+            min-width: 140px;
+            padding: 10px 12px;
+        }
+
+        .business-tab-name {
+            font-size: 14px;
+        }
+
+        .business-tab-meta {
+            font-size: 11px;
+        }
+
+        .active-business-content {
+            padding: 20px;
+        }
+    }
+</style>
+
+<!-- Achievement Celebration Popup (triggered by achievements) -->
+@if (showAchievementCelebration)
+{
+    <div class="achievement-celebration">
+        <div class="achievement-header">
+            <div class="achievement-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div class="achievement-content">
+                <h3 class="achievement-title">Achievement Unlocked!</h3>
+                <p class="achievement-subtitle">Strategic Planner</p>
+            </div>
+        </div>
+        <p class="achievement-description">
+            You've completed 3 strategic planning tasks and proven you can think like a CEO. Your business foundation is getting stronger!
+        </p>
+        <div class="achievement-rewards">
+            <span class="reward-badge">+200 XP</span>
+            <span class="reward-badge">Level Up!</span>
+        </div>
+        <div class="achievement-actions">
+            <button class="achievement-btn secondary" @onclick="DismissAchievement">Dismiss</button>
+            <button class="achievement-btn primary" @onclick="ShareAchievement">Share</button>
+        </div>
+    </div>
+}
+
+<!-- Confetti Animation for Celebrations -->
+@if (showConfetti)
+{
+    <div class="confetti-container">
+        @for (int i = 0; i < 50; i++)
+        {
+            <div class="confetti" style="left: @(Random.Shared.Next(0, 100))%; animation-delay: @(Random.Shared.Next(0, 1000))ms;"></div>
+        }
+    </div>
+}
+
+@code {
+    private bool showAchievementCelebration = false;
+    private bool showConfetti = false;
+
+    private void DismissAchievement()
+    {
+        showAchievementCelebration = false;
+        showConfetti = false;
+    }
+
+    private void ShareAchievement()
+    {
+        // Implement sharing logic
+        DismissAchievement();
+    }
+
+    // Simulate achievement trigger (this would normally be called when user completes tasks)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Simulate achievement after 3 seconds for demonstration
+            await Task.Delay(3000);
+            await TriggerAchievement();
+        }
+    }
+
+    private async Task TriggerAchievement()
+    {
+        showAchievementCelebration = true;
+        showConfetti = true;
+        StateHasChanged();
+        
+        // Auto-dismiss after 8 seconds
+        await Task.Delay(8000);
+        if (showAchievementCelebration)
+        {
+            DismissAchievement();
+            StateHasChanged();
+        }
+    }
+}

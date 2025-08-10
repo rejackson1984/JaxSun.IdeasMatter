@@ -1,0 +1,960 @@
+@using JaxSun.Ideas.Mock.Models
+@using JaxSun.Ideas.Mock.Services
+@using JaxSun.Ideas.Mock.Services.Interfaces
+@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+@inject BusinessPlanService BusinessPlanService
+@inject IPdfGenerationService PdfService
+@inject IDataExportService ExportService
+
+@if (IsVisible)
+{
+    <div class="modal-overlay" @onclick="CloseModal">
+        <div class="business-plan-modal" @onclick:stopPropagation="true">
+            <div class="modal-header">
+                <div class="header-content">
+                    <div class="plan-icon">📋</div>
+                    <div class="header-text">
+                        <h2 class="modal-title">Business Plan</h2>
+                        <p class="modal-subtitle">@SelectedIdea?.Name</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="action-btn export-btn" @onclick="ExportToPdf">
+                        <span class="btn-icon">📄</span>
+                        PDF
+                    </button>
+                    <button class="action-btn print-btn" @onclick="PrintPlan">
+                        <span class="btn-icon">🖨️</span>
+                        Print
+                    </button>
+                    <button class="close-btn" @onclick="CloseModal">
+                        <span class="close-icon">×</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-body" id="business-plan-content">
+                @if (BusinessPlan != null)
+                {
+                    <!-- Executive Summary -->
+                    <section class="plan-section">
+                        <div class="section-header">
+                            <div class="section-icon">🎯</div>
+                            <h3 class="section-title">Executive Summary</h3>
+                        </div>
+                        <div class="section-content">
+                            <div class="summary-grid">
+                                <div class="summary-card">
+                                    <div class="card-label">Business Concept</div>
+                                    <div class="card-value">@BusinessPlan.ExecutiveSummary.BusinessConcept</div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="card-label">Target Market</div>
+                                    <div class="card-value">@BusinessPlan.ExecutiveSummary.TargetMarket</div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="card-label">Revenue Model</div>
+                                    <div class="card-value">@BusinessPlan.ExecutiveSummary.RevenueModel</div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="card-label">Funding Required</div>
+                                    <div class="card-value">@BusinessPlan.ExecutiveSummary.FundingRequired.ToString("C0")</div>
+                                </div>
+                            </div>
+                            <div class="summary-description">
+                                <p>@BusinessPlan.ExecutiveSummary.Description</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Market Analysis -->
+                    <section class="plan-section">
+                        <div class="section-header">
+                            <div class="section-icon">📊</div>
+                            <h3 class="section-title">Market Analysis</h3>
+                        </div>
+                        <div class="section-content">
+                            <div class="market-metrics">
+                                <div class="metric-card">
+                                    <div class="metric-icon">🎯</div>
+                                    <div class="metric-content">
+                                        <div class="metric-label">Market Size</div>
+                                        <div class="metric-value">@BusinessPlan.MarketAnalysis.MarketSize</div>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-icon">⚔️</div>
+                                    <div class="metric-content">
+                                        <div class="metric-label">Competition Level</div>
+                                        <div class="metric-value">@BusinessPlan.MarketAnalysis.CompetitionLevel</div>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-icon">📈</div>
+                                    <div class="metric-content">
+                                        <div class="metric-label">Market Growth</div>
+                                        <div class="metric-value">@BusinessPlan.MarketAnalysis.MarketGrowth</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="market-insights">
+                                <h4 class="insights-title">Market Insights</h4>
+                                <ul class="insights-list">
+                                    @foreach (var insight in BusinessPlan.MarketAnalysis.KeyInsights)
+                                    {
+                                        <li class="insight-item">@insight</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Financial Projections -->
+                    <section class="plan-section">
+                        <div class="section-header">
+                            <div class="section-icon">💰</div>
+                            <h3 class="section-title">Financial Projections</h3>
+                        </div>
+                        <div class="section-content">
+                            <div class="financial-overview">
+                                <div class="financial-card">
+                                    <div class="financial-header">
+                                        <div class="financial-icon">📊</div>
+                                        <div class="financial-title">5-Year Revenue Forecast</div>
+                                    </div>
+                                    <div class="financial-chart">
+                                        <div class="chart-bars">
+                                            @foreach (var projection in BusinessPlan.FinancialProjections.YearlyProjections.Take(5))
+                                            {
+                                                var heightPercent = (double)projection.Revenue / (double)BusinessPlan.FinancialProjections.YearlyProjections.Max(p => p.Revenue) * 100;
+                                                <div class="chart-bar">
+                                                    <div class="bar-fill" style="height: @(heightPercent)%"></div>
+                                                    <div class="bar-label">Year @projection.Year</div>
+                                                    <div class="bar-value">@projection.Revenue.ToString("C0")</div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="financial-metrics">
+                                <div class="metrics-grid">
+                                    <div class="metric-item">
+                                        <div class="metric-label">Break-even Month</div>
+                                        <div class="metric-value">Month @BusinessPlan.FinancialProjections.BreakEvenMonth</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-label">Initial Investment</div>
+                                        <div class="metric-value">@BusinessPlan.FinancialProjections.InitialInvestment.ToString("C0")</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-label">5-Year ROI</div>
+                                        <div class="metric-value">@BusinessPlan.FinancialProjections.ProjectedROI.ToString("P1")</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-label">Gross Margin</div>
+                                        <div class="metric-value">@BusinessPlan.FinancialProjections.GrossMargin.ToString("P1")</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Implementation Timeline -->
+                    <section class="plan-section">
+                        <div class="section-header">
+                            <div class="section-icon">🗓️</div>
+                            <h3 class="section-title">Implementation Timeline</h3>
+                        </div>
+                        <div class="section-content">
+                            <div class="timeline">
+                                @foreach (var milestone in BusinessPlan.ImplementationPlan.Milestones)
+                                {
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker">
+                                            <div class="marker-dot"></div>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-header">
+                                                <h4 class="timeline-title">@milestone.Name</h4>
+                                                <span class="timeline-date">@milestone.Timeline</span>
+                                            </div>
+                                            <p class="timeline-description">@milestone.Description</p>
+                                            @if (milestone.Tasks.Any())
+                                            {
+                                                <ul class="timeline-tasks">
+                                                    @foreach (var task in milestone.Tasks)
+                                                    {
+                                                        <li class="task-item">@task</li>
+                                                    }
+                                                </ul>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Risk Analysis -->
+                    <section class="plan-section">
+                        <div class="section-header">
+                            <div class="section-icon">⚠️</div>
+                            <h3 class="section-title">Risk Analysis & Mitigation</h3>
+                        </div>
+                        <div class="section-content">
+                            <div class="risk-grid">
+                                @foreach (var risk in BusinessPlan.RiskAnalysis.Risks)
+                                {
+                                    <div class="risk-card @GetRiskLevelClass(risk.Level)">
+                                        <div class="risk-header">
+                                            <div class="risk-icon">@GetRiskIcon(risk.Level)</div>
+                                            <div class="risk-title">@risk.Title</div>
+                                            <div class="risk-level">@risk.Level</div>
+                                        </div>
+                                        <div class="risk-description">@risk.Description</div>
+                                        <div class="risk-mitigation">
+                                            <strong>Mitigation:</strong> @risk.MitigationStrategy
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Success Factors -->
+                    <section class="plan-section">
+                        <div class="section-header">
+                            <div class="section-icon">🌟</div>
+                            <h3 class="section-title">Success Factors</h3>
+                        </div>
+                        <div class="section-content">
+                            <div class="success-factors">
+                                @foreach (var factor in BusinessPlan.SuccessFactors)
+                                {
+                                    <div class="success-item">
+                                        <div class="success-icon">✅</div>
+                                        <div class="success-text">@factor</div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </section>
+                }
+                else
+                {
+                    <div class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <p class="loading-text">Generating your business plan...</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public BusinessIdeaScenario? SelectedIdea { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private Services.BusinessPlan? BusinessPlan { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (IsVisible && SelectedIdea != null && BusinessPlan == null)
+        {
+            await GenerateBusinessPlan();
+        }
+        else if (!IsVisible)
+        {
+            BusinessPlan = null;
+        }
+    }
+
+    private async Task GenerateBusinessPlan()
+    {
+        if (SelectedIdea != null)
+        {
+            BusinessPlan = await BusinessPlanService.GenerateBusinessPlanAsync(SelectedIdea);
+            StateHasChanged();
+        }
+    }
+
+    private async Task CloseModal()
+    {
+        IsVisible = false;
+        BusinessPlan = null;
+        await OnClose.InvokeAsync();
+    }
+
+    private async Task ExportToPdf()
+    {
+        if (BusinessPlan != null && SelectedIdea != null)
+        {
+            await PdfService.GenerateBusinessPlanPdfAsync(SelectedIdea, BusinessPlan);
+        }
+    }
+
+    private async Task PrintPlan()
+    {
+        await JSRuntime.InvokeVoidAsync("window.print");
+    }
+
+    private string GetRiskLevelClass(string level)
+    {
+        return level.ToLower() switch
+        {
+            "high" => "risk-high",
+            "medium" => "risk-medium",
+            "low" => "risk-low",
+            _ => "risk-medium"
+        };
+    }
+
+    private string GetRiskIcon(string level)
+    {
+        return level.ToLower() switch
+        {
+            "high" => "🔴",
+            "medium" => "🟡",
+            "low" => "🟢",
+            _ => "🟡"
+        };
+    }
+}
+
+<style>
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.business-plan-modal {
+    background: white;
+    border-radius: 16px;
+    max-width: 1000px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Modal Header */
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.plan-icon {
+    font-size: 32px;
+}
+
+.modal-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.modal-subtitle {
+    font-size: 14px;
+    margin: 4px 0 0 0;
+    opacity: 0.9;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.action-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Modal Body */
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+}
+
+/* Plan Sections */
+.plan-section {
+    margin-bottom: 40px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.section-icon {
+    font-size: 24px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0;
+}
+
+/* Executive Summary */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.summary-card {
+    background: #f7fafc;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.card-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.card-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.summary-description {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Market Analysis */
+.market-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.metric-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.metric-icon {
+    font-size: 24px;
+    background: #4299e1;
+    color: white;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.metric-label {
+    font-size: 12px;
+    color: #718096;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.metric-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.insights-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 12px;
+}
+
+.insights-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.insight-item {
+    background: #f7fafc;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    border-left: 4px solid #4299e1;
+}
+
+/* Financial Projections */
+.financial-overview {
+    margin-bottom: 24px;
+}
+
+.financial-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.financial-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.financial-icon {
+    font-size: 20px;
+    color: #4299e1;
+}
+
+.financial-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.financial-chart {
+    height: 200px;
+}
+
+.chart-bars {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    height: 160px;
+    gap: 12px;
+}
+
+.chart-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.bar-fill {
+    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    min-height: 4px;
+    transition: height 0.5s ease;
+}
+
+.bar-label {
+    font-size: 12px;
+    color: #718096;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.bar-value {
+    font-size: 11px;
+    color: #4a5568;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.metric-item {
+    background: #f7fafc;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+/* Timeline */
+.timeline {
+    position: relative;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 32px;
+    position: relative;
+}
+
+.timeline-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 24px;
+    bottom: -32px;
+    width: 2px;
+    background: #e2e8f0;
+}
+
+.timeline-marker {
+    flex-shrink: 0;
+    position: relative;
+}
+
+.marker-dot {
+    width: 24px;
+    height: 24px;
+    background: #4299e1;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 0 0 2px #4299e1;
+}
+
+.timeline-content {
+    flex: 1;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.timeline-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0;
+}
+
+.timeline-date {
+    font-size: 12px;
+    color: #718096;
+    background: #f7fafc;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.timeline-description {
+    color: #4a5568;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.timeline-tasks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.task-item {
+    background: #f7fafc;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    font-size: 14px;
+    position: relative;
+    padding-left: 28px;
+}
+
+.task-item::before {
+    content: '•';
+    color: #4299e1;
+    position: absolute;
+    left: 12px;
+    font-weight: bold;
+}
+
+/* Risk Analysis */
+.risk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.risk-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    border-left-width: 4px;
+}
+
+.risk-card.risk-high {
+    border-left-color: #e53e3e;
+}
+
+.risk-card.risk-medium {
+    border-left-color: #dd6b20;
+}
+
+.risk-card.risk-low {
+    border-left-color: #38a169;
+}
+
+.risk-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.risk-icon {
+    font-size: 20px;
+}
+
+.risk-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+    flex: 1;
+    margin: 0 12px;
+}
+
+.risk-level {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.risk-high .risk-level {
+    background: #fed7d7;
+    color: #742a2a;
+}
+
+.risk-medium .risk-level {
+    background: #feebc8;
+    color: #744210;
+}
+
+.risk-low .risk-level {
+    background: #c6f6d5;
+    color: #22543d;
+}
+
+.risk-description {
+    color: #4a5568;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.risk-mitigation {
+    font-size: 14px;
+    color: #2d3748;
+    background: #f7fafc;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+/* Success Factors */
+.success-factors {
+    display: grid;
+    gap: 12px;
+}
+
+.success-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    border-left: 4px solid #38a169;
+}
+
+.success-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.success-text {
+    font-size: 16px;
+    color: #2d3748;
+    line-height: 1.5;
+}
+
+/* Loading State */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e2e8f0;
+    border-top: 4px solid #4299e1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+@@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-size: 16px;
+    color: #718096;
+    margin: 0;
+}
+
+/* Responsive Design */
+@@media (max-width: 768px) {
+    .modal-overlay {
+        padding: 10px;
+    }
+    
+    .modal-header {
+        padding: 20px;
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+    
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .summary-grid,
+    .market-metrics,
+    .metrics-grid,
+    .risk-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-bars {
+        height: 120px;
+    }
+    
+    .timeline-item {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .timeline-item::after {
+        display: none;
+    }
+    
+    .timeline-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+@@media print {
+    .modal-overlay {
+        position: static;
+        background: none;
+        padding: 0;
+    }
+    
+    .business-plan-modal {
+        max-width: none;
+        max-height: none;
+        box-shadow: none;
+        border-radius: 0;
+    }
+    
+    .modal-header {
+        background: white;
+        color: black;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    
+    .header-actions {
+        display: none;
+    }
+}
+</style>

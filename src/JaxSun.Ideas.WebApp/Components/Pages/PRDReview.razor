@@ -1,0 +1,549 @@
+@page "/prd-review/{SessionId}"
+@using JaxSun.Ideas.Mock.Services.Interfaces
+@using JaxSun.Ideas.Mock.Models
+@inject IProductDesignService ProductDesignService
+@inject NavigationManager Navigation
+
+<PageTitle>Product Requirements Review - Ideas Matter</PageTitle>
+
+<div class="prd-review-container">
+    <!-- Header -->
+    <div class="prd-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="back-button" @onclick="NavigateBack">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Wizard
+                            </button>
+                            <div>
+                                <h1 class="prd-title">Product Requirements Document</h1>
+                                <p class="prd-subtitle">Review and refine your specifications</p>
+                            </div>
+                        </div>
+                        <div class="prd-actions">
+                            <button class="btn btn-outline-primary me-2" @onclick="ExportPDF">
+                                <i class="fas fa-file-pdf me-2"></i>Export PDF
+                            </button>
+                            <button class="btn btn-success" @onclick="CreateMockup">
+                                <i class="fas fa-paint-brush me-2"></i>Create Mockup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="prd-content">
+        <div class="container-fluid">
+            @if (isLoading)
+            {
+                <div class="loading-section">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Generating your PRD...</span>
+                        </div>
+                        <p class="mt-3">Creating your Product Requirements Document...</p>
+                    </div>
+                </div>
+            }
+            else if (!string.IsNullOrEmpty(prdContent))
+            {
+                <div class="row">
+                    <!-- PRD Display -->
+                    <div class="col-lg-8">
+                        <div class="prd-document">
+                            <div class="document-header">
+                                <h2>Product Requirements Document</h2>
+                                <div class="document-meta">
+                                    <span class="meta-item">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        Generated: @DateTime.Now.ToString("MMMM dd, yyyy")
+                                    </span>
+                                    <span class="meta-item">
+                                        <i class="fas fa-user me-1"></i>
+                                        Demo User
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="document-content">
+                                @if (isEditing)
+                                {
+                                    <textarea class="form-control prd-editor" 
+                                              @bind="editablePRD"></textarea>
+                                    <div class="editor-actions mt-3">
+                                        <button class="btn btn-success me-2" @onclick="SaveChanges">
+                                            <i class="fas fa-save me-2"></i>Save Changes
+                                        </button>
+                                        <button class="btn btn-secondary" @onclick="CancelEdit">
+                                            <i class="fas fa-times me-2"></i>Cancel
+                                        </button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="prd-preview">
+                                        @((MarkupString)ConvertMarkdownToHTML(prdContent))
+                                    </div>
+                                    <div class="preview-actions mt-3">
+                                        <button class="btn btn-outline-primary" @onclick="StartEdit">
+                                            <i class="fas fa-edit me-2"></i>Edit Document
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sidebar -->
+                    <div class="col-lg-4">
+                        <div class="prd-sidebar">
+                            <!-- Progress Section -->
+                            <div class="sidebar-card">
+                                <h4><i class="fas fa-check-circle text-success me-2"></i>Requirements Complete</h4>
+                                <p class="text-muted">Your PRD has been generated based on your responses to the design wizard.</p>
+                                
+                                <div class="progress-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-number">@GetQuestionCount()</span>
+                                        <span class="stat-label">Questions Answered</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">@GetSectionCount()</span>
+                                        <span class="stat-label">Document Sections</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Next Steps -->
+                            <div class="sidebar-card">
+                                <h4><i class="fas fa-arrow-right text-primary me-2"></i>Next Steps</h4>
+                                <div class="next-step-list">
+                                    <div class="step-item completed">
+                                        <i class="fas fa-check"></i>
+                                        <span>Requirements Gathered</span>
+                                    </div>
+                                    <div class="step-item completed">
+                                        <i class="fas fa-check"></i>
+                                        <span>PRD Generated</span>
+                                    </div>
+                                    <div class="step-item current">
+                                        <i class="fas fa-circle"></i>
+                                        <span>Review & Edit</span>
+                                    </div>
+                                    <div class="step-item">
+                                        <i class="fas fa-circle"></i>
+                                        <span>Create Visual Mockup</span>
+                                    </div>
+                                    <div class="step-item">
+                                        <i class="fas fa-circle"></i>
+                                        <span>Refine Design</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Actions -->
+                            <div class="sidebar-card">
+                                <h4><i class="fas fa-lightning-bolt text-warning me-2"></i>Quick Actions</h4>
+                                <div class="action-list">
+                                    <button class="action-btn" @onclick="RegenerateSection">
+                                        <i class="fas fa-refresh me-2"></i>
+                                        Regenerate Sections
+                                    </button>
+                                    <button class="action-btn" @onclick="AddCustomSection">
+                                        <i class="fas fa-plus me-2"></i>
+                                        Add Custom Section
+                                    </button>
+                                    <button class="action-btn" @onclick="ShareDocument">
+                                        <i class="fas fa-share me-2"></i>
+                                        Share Document
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+.prd-review-container {
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+.prd-header {
+    background: white;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.5rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.prd-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.prd-subtitle {
+    color: #6c757d;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.back-button {
+    background: none;
+    border: 2px solid #e9ecef;
+    color: #6c757d;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.back-button:hover {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    color: #495057;
+}
+
+.prd-content {
+    padding: 2rem 0;
+}
+
+.loading-section {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.prd-document {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.document-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+}
+
+.document-header h2 {
+    margin: 0 0 1rem 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.document-meta {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+}
+
+.document-content {
+    padding: 2rem;
+}
+
+.prd-editor {
+    font-family: 'Monaco', 'Monaco', 'Consolas', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    resize: vertical;
+    min-height: calc(100vh - 400px);
+    height: calc(100vh - 400px);
+    width: 100%;
+}
+
+.prd-preview {
+    line-height: 1.6;
+    color: #495057;
+    font-size: 0.95rem;
+}
+
+.prd-preview h1 {
+    color: #2c3e50;
+    font-size: 1.4rem;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.prd-preview h2 {
+    color: #495057;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.prd-preview h3 {
+    color: #6c757d;
+    font-size: 1.05rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.prd-preview p {
+    margin-bottom: 1rem;
+}
+
+.prd-preview ul, .prd-preview ol {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+.prd-sidebar {
+    position: sticky;
+    top: 2rem;
+}
+
+.sidebar-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.sidebar-card h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.progress-stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #667eea;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.next-step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+.step-item.completed {
+    color: #28a745;
+}
+
+.step-item.current {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.step-item i {
+    width: 16px;
+    text-align: center;
+}
+
+.action-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    background: none;
+    border: 1px solid #e9ecef;
+    color: #495057;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    text-align: left;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.action-btn:hover {
+    background: #f8f9fa;
+    border-color: #667eea;
+    color: #667eea;
+}
+
+@@media (max-width: 992px) {
+    .prd-header .d-flex {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .prd-actions {
+        align-self: stretch;
+    }
+    
+    .progress-stats {
+        justify-content: center;
+    }
+}
+</style>
+
+@code {
+    [Parameter] public string SessionId { get; set; } = "";
+    
+    private ProductDesignMockSession? currentSession;
+    private string prdContent = "";
+    private string editablePRD = "";
+    private bool isLoading = true;
+    private bool isEditing = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSession();
+        await GenerateOrLoadPRD();
+        isLoading = false;
+    }
+
+    private async Task LoadSession()
+    {
+        currentSession = await ProductDesignService.GetSessionAsync(SessionId);
+    }
+
+    private async Task GenerateOrLoadPRD()
+    {
+        if (currentSession?.GeneratedPRD != null)
+        {
+            prdContent = currentSession.GeneratedPRD;
+        }
+        else
+        {
+            prdContent = await ProductDesignService.GeneratePRDAsync(SessionId);
+        }
+        editablePRD = prdContent;
+    }
+
+    private void StartEdit()
+    {
+        isEditing = true;
+        editablePRD = prdContent;
+    }
+
+    private async Task SaveChanges()
+    {
+        prdContent = editablePRD;
+        if (currentSession != null)
+        {
+            await ProductDesignService.UpdatePRDAsync(SessionId, prdContent);
+        }
+        isEditing = false;
+    }
+
+    private void CancelEdit()
+    {
+        isEditing = false;
+        editablePRD = prdContent;
+    }
+
+    private async Task ExportPDF()
+    {
+        // Mock PDF export functionality
+        var pdfBytes = await ProductDesignService.ExportPRDAsPDFAsync(SessionId);
+        // In a real application, trigger download of PDF
+        Console.WriteLine($"Exporting PRD as PDF... {pdfBytes.Length} bytes");
+    }
+
+    private async Task CreateMockup()
+    {
+        Navigation.NavigateTo($"/mockup-preview/{SessionId}");
+    }
+
+    private async Task RegenerateSection()
+    {
+        // Mock regeneration - in reality would call AI service
+        Console.WriteLine("Regenerating PRD sections...");
+    }
+
+    private async Task AddCustomSection()
+    {
+        // Mock custom section addition
+        Console.WriteLine("Adding custom section...");
+    }
+
+    private async Task ShareDocument()
+    {
+        // Mock document sharing
+        Console.WriteLine("Sharing document...");
+    }
+
+    private void NavigateBack()
+    {
+        Navigation.NavigateTo($"/design-wizard/{currentSession?.ScenarioId}");
+    }
+
+    private int GetQuestionCount()
+    {
+        return currentSession?.Responses.Count ?? 0;
+    }
+
+    private int GetSectionCount()
+    {
+        return prdContent.Split("##").Length - 1;
+    }
+
+    private string ConvertMarkdownToHTML(string markdown)
+    {
+        // Simple markdown to HTML conversion for display
+        var html = markdown
+            .Replace("# ", "<h1>").Replace("\n# ", "</h1>\n<h1>")
+            .Replace("## ", "<h2>").Replace("\n## ", "</h2>\n<h2>")
+            .Replace("### ", "<h3>").Replace("\n### ", "</h3>\n<h3>")
+            .Replace("**", "<strong>").Replace("**", "</strong>")
+            .Replace("*", "<em>").Replace("*", "</em>")
+            .Replace("\n\n", "</p>\n<p>")
+            .Replace("\n", "<br>");
+
+        // Close any open tags
+        if (html.Contains("<h1>") && !html.Contains("</h1>"))
+            html += "</h1>";
+        if (html.Contains("<h2>") && !html.Contains("</h2>"))
+            html += "</h2>";
+        if (html.Contains("<h3>") && !html.Contains("</h3>"))
+            html += "</h3>";
+
+        return "<p>" + html + "</p>";
+    }
+}
